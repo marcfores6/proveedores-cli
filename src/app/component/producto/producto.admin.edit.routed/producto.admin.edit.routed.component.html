@@ -1,0 +1,101 @@
+<div class="container-fluid py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card border-0 shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="fw-bold">
+            <i class="bi bi-person-circle"></i> Edición de Producto <i class="bi bi-pencil"></i>
+          </h2>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="oProductoForm!" (ngSubmit)="onSubmit()" novalidate>
+            <div class="mb-3">
+              <label for="codigo" class="form-label fw-bold">Código</label>
+              <input
+                type="text"
+                codigo="codigo"
+                class="form-control"
+                formControlName="codigo"
+                placeholder="codigo"
+                readonly
+              />
+              <div class="form-text">No se puede cambiar.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="nombre" class="form-label fw-bold">Nombre</label>
+              <input
+                type="text"
+                id="nombre"
+                class="form-control"
+                formControlName="nombre"
+                placeholder="Nombre"
+              />
+              <div *ngIf="oProductoForm?.get('nombre')?.errors" class="text-danger">
+                <small *ngIf="oProductoForm?.get('nombre')?.hasError('required')">Debes introducir un nombre.</small>
+                <small *ngIf="oProductoForm?.get('nombre')?.hasError('minlength')">El nombre es demasiado corto.</small>
+                <small *ngIf="oProductoForm?.get('nombre')?.hasError('maxlength')">El nombre es demasiado largo.</small>
+              </div>
+            </div>
+           
+            <div class="mt-4 d-flex justify-content-evenly">
+              <button
+              class="btn btn-warning mt-4 mx-1"
+              type="button"
+              [routerLink]="['/admin','producto', 'plist']"
+            >
+              <i class="bi bi-list"></i> Ir a listado de Productos
+            </button>
+              <button class="btn btn-secondary mt-4 mx-1" type="reset" (click)="onReset()">
+                <i class="bi bi-x-lg"></i> Reset
+              </button>
+              <button
+                class="btn btn-success mt-4 mx-1"
+                type="submit"
+                [disabled]="!oProductoForm?.valid"
+              >
+                <i class="bi bi-save"></i> Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    [id]="'mimodal'"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="hideModal()"
+          ></button>
+        </div>
+        <div class="modal-body text-center">
+          <p class="fs-5">{{ strMessage }}</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            (click)="hideModal()"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
