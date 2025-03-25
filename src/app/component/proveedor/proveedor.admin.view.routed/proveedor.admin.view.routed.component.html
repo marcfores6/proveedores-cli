@@ -1,3 +1,66 @@
-<p>
-  proveedor.admin.view.routed works!
-</p>
+<div class="row justify-content-center m-3">
+  <div class="col-lg-7 col-md-10 col-sm-12">
+    <h1 class="my-5 text-center">
+      <i class="bi bi-card-list"></i>
+      Detalle de Proveedor
+      <i class="bi bi-person-circle"></i>
+    </h1>
+    <br />
+    <table class="table table-striped table-bordered my-5 text-center">
+      <tbody>
+        <tr class="text-center">
+          <th scope="row" class="bg-danger text-white text-end pe-5">ID</th>
+          <td class="text-start ps-5">{{ oProveedor.id }}</td>
+        </tr>
+        <tr class="text-center">
+          <th scope="row" class="bg-primary text-white text-end pe-5">
+            Empresa
+          </th>
+          <td class="text-start ps-5">{{ oProveedor.empresa }}</td>
+        </tr>
+        <tr class="text-center">
+          <th scope="row" class="bg-primary text-white text-end pe-5">Email</th>
+          <td class="text-start ps-5">{{ oProveedor.email }}</td>
+        </tr>
+        <tr class="text-center">
+          <th scope="row" class="bg-primary text-white text-end pe-5">Contraseña</th>
+          <td class="text-start ps-5">{{ oProveedor.password }}</td>
+        </tr>
+        <tr>
+          <!-- Foto del DNI -->
+          <div class="col-lg-4">
+            <div class="document-card">
+              <h3 class="document-title">
+                <i class="bi bi-card-image me-2"></i>Imagen del Proveedor
+              </h3>
+              <div class="document-image-container">
+                <img [src]="imagen" alt="ImagenI" class="document-image" />
+              </div>
+            </div>
+          </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <a class="btn btn-warning mt-4 mx-1" href="/admin/proveedor/plist">
+      <i class="bi bi-list"></i>
+      Ir a listado de Proveedors
+    </a>
+    <a
+      class="btn btn-primary mt-4 mx-1"
+      href="admin/proveedor/edit/{{ oProveedor.id }}"
+    >
+      <i class="bi bi-pencil"></i>
+      Editar
+    </a>
+    <a
+      class="btn btn-danger mt-4 mx-1"
+      href="admin/proveedor/delete/{{ oProveedor.id }}"
+    >
+      <i class="bi bi-trash"></i>
+      Borrar
+    </a>
+  </div>
+</div>

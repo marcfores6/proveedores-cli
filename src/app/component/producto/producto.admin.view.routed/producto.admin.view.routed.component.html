@@ -19,6 +19,19 @@
           </th>
           <td class="text-start ps-5">{{ oProducto.nombre }}</td>
         </tr>
+        <tr>
+          <!-- Foto del DNI -->
+          <div class="col-lg-4">
+            <div class="document-card">
+              <h3 class="document-title">
+                <i class="bi bi-card-image me-2"></i>Imagen del Producto
+              </h3>
+              <div class="document-image-container">
+                <img [src]="imagen" alt="ImagenI" class="document-image" />
+              </div>
+            </div>
+          </div>
+        </tr>
       </tbody>
     </table>
   </div>

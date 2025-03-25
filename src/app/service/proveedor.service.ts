@@ -74,7 +74,13 @@ export class ProveedorService {
   }
 
   delete(id: number) {
-    return this.oHttp.delete('http://localhost:8086/proveedor/' + id);
+    return this.oHttp.delete('http://localhost:8086/proveedor/delete/' + id);
+  }
+
+  getImagen(id: number): Observable<Blob> {
+    return this.oHttp.get('http://localhost:8086/proveedor/'+ id +'/imagen', {
+      responseType: 'blob',
+    });
   }
 
 }

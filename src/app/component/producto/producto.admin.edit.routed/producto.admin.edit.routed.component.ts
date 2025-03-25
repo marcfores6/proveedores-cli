@@ -54,6 +54,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         this.oProducto= oProducto;
         this.updateForm();
       },
+
       error: (error) => {
         console.error(error);
       },

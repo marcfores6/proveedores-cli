@@ -24,6 +24,10 @@
             <mat-error> El nombre debe ser mas corto </mat-error>
             }
           </mat-form-field>
+          <div>
+            <label for="imagen">Imagen del Producto</label>
+            <input type="file" id="imagen" (change)="onFileSelect($event)" accept="image/*" formControlName="imagen" />
+          </div>
         </div>
         <br />
         <button

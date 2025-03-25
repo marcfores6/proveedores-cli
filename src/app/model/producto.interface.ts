@@ -1,4 +1,5 @@
 export interface IProducto {
     codigo:number,
-    nombre:string
+    nombre:string,
+    imagen:string | null,
 }

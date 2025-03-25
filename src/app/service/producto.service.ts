@@ -51,10 +51,10 @@ export class ProductoService {
     return this.oHttp.get<IProducto>(URL);
   }
 
-  create(oProducto: IProducto): Observable<IProducto> {
+  create(formData: FormData): Observable<IProducto> {
     let URL: string = '';
     URL += this.serverURL;
-    return this.oHttp.post<IProducto>('http://localhost:8086/producto/new', oProducto);
+    return this.oHttp.put<IProducto>('http://localhost:8086/producto/new', formData);
   }
 
   update(oProducto: IProducto): Observable<IProducto> {
@@ -73,6 +73,12 @@ export class ProductoService {
 
   delete(codigo: number) {
     return this.oHttp.delete('http://localhost:8086/producto/delete/' + codigo);
+  }
+
+  getImagen(codigo: number): Observable<Blob> {
+    return this.oHttp.get('http://localhost:8086/producto/'+ codigo +'/imagen', {
+      responseType: 'blob',
+    });
   }
 
 }

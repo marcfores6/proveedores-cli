@@ -4,6 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import {
+  FormBuilder,
   FormControl,
   FormGroup,  
   ReactiveFormsModule,
@@ -33,6 +34,7 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
   oProductoForm: FormGroup | undefined = undefined;
   oProducto: IProducto |null = null;
   strMessage: string = '';
+  imagen: File | null = null;
 
   myModal: any;
 
@@ -40,22 +42,28 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
 
   constructor(
     private oRouter: Router,
-    private oProductoService: ProductoService
-  ) { }
-
-  ngOnInit() {
-    this.createForm();
-    this.oProductoForm?.markAllAsTouched();
-  }
-
-  createForm(){
-    this.oProductoForm = new FormGroup({
+    private oProductoService: ProductoService,
+    private fb: FormBuilder
+  ) {
+    this.oProductoForm =  this.fb.group({
       nombre: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
-      ])
-    })
+      ]),
+      imagen: [null]
+    });
+  }
+
+  ngOnInit() {
+    this.oProductoForm?.markAllAsTouched();
+  }
+
+  onFileSelect(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.imagen = file;
+    }
   }
 
   updateForm() {
@@ -85,7 +93,11 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
       this.showModal('Formulario inválido');
       return;
     } else {      
-      this.oProductoService.create(this.oProductoForm?.value).subscribe({
+      const formData = new FormData();
+      formData.append('Nombre', this.oProductoForm?.get('nombre')?.value);
+      formData.append('Imagen', this.imagen!);
+
+      this.oProductoService.create(formData).subscribe({
         next: (oProducto: IProducto) => {
           this.oProducto = oProducto;
           this.showModal('Producto creado con el codigo: ' + this.oProducto.codigo);
