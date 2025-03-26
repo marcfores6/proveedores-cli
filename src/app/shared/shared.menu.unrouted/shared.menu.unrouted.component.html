@@ -21,7 +21,19 @@
             href="admin/producto/plist">Productos</a>
         </li>
       </ul>
-
+      
+    @if(!activeSession){
+    <span class="navbar-text">
+      <a href="/login" class="btn btn-outline-primary">Iniciar Sesión</a>
+    </span>
+    } @else {
+    <span class="navbar-text" style="margin-right: 10px;">
+      <a href="/byemail/{{userEmail}}">{{userEmail}}</a>
+    </span>
+    <span class="navbar-text">
+      <a href="/logout" class="btn btn-outline-primary">Logout</a>
+    </span>
+    }
     </div>
   </div>
 </nav>

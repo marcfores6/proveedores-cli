@@ -81,4 +81,12 @@ export class ProveedorService {
     });
   }
 
+  getProveedorByEmail(email: string): Observable<IProveedor> {
+    let URL: string = '';
+    URL += this.serverURL;
+    URL += '/byemail';
+    URL += '/' + email;
+    return this.oHttp.get<IProveedor>(URL);
+  }
+
 }

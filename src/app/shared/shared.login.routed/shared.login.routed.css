@@ -1,0 +1,84 @@
+
+
+/* Contenedor del formulario */
+.login-container {
+    background-color: #bebebe;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(70, 70, 70, 0.4);
+    width: 100%;
+    max-width: 400px; /* Limita el ancho máximo a 400px */
+    text-align: center;
+    box-sizing: border-box;  /* Asegura que el padding no afecte el tamaño total */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Título del formulario */
+h2 {
+    font-size: 28px;    
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* Estilos para los campos de entrada */
+.input-group {
+    margin-bottom: 25px;
+}
+
+/* Etiquetas de los campos */
+.input-group label {
+    font-size: 14px;
+    color: #bbb;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Inputs */
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #555;
+    
+    background-color: #ffffff;
+    color: #333;
+    margin-top: 5px;
+    outline: none;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+
+/* Estilo para el botón de submit */
+.login-btn {
+    margin-top: 25px;
+    width: 100%;
+    padding: 14px;
+    background-color: #005507;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 600;
+}
+
+.login-btn:hover {
+    background-color: #005c8a;
+}
+
+/* Estilo para el mensaje de error */
+.error-message {
+    color: #ff6666;
+    font-size: 14px;
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #422424;
+    border-radius: 8px;
+    border: 1px solid #ff6666;
+}
+
+.error-message p {
+    margin: 0;
+}

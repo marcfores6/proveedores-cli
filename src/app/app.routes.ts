@@ -10,12 +10,18 @@ import { ProveedorAdminDeleteRoutedComponent } from './component/proveedor/prove
 import { ProveedorAdminEditRoutedComponent } from './component/proveedor/proveedor.admin.edit.routed/proveedor.admin.edit.routed.component';
 import { ProveedorAdminPlistRoutedComponent } from './component/proveedor/proveedor.admin.plist.routed/proveedor.admin.plist.routed.component';
 import { ProveedorAdminViewRoutedComponent } from './component/proveedor/proveedor.admin.view.routed/proveedor.admin.view.routed.component';
+import { SharedLoginRoutedComponent } from './shared/shared.login.routed/shared.login.routed';
+import { SharedLogoutRoutedComponent } from './shared/shared.logout.routed/shared.logout.routed';
+import { SharedByemailRoutedComponent } from './shared/shared.byemail.routed/shared.byemail.routed.component';
 
 
 export const routes: Routes = [
 
     { path: '', component: SharedHomeRoutedComponent },
     { path: 'home', component: SharedHomeRoutedComponent },
+    { path: 'login', component: SharedLoginRoutedComponent },
+    { path: 'logout', component: SharedLogoutRoutedComponent },
+    { path: 'byemail/:email', component: SharedByemailRoutedComponent },
 
     { path: 'admin/producto/create', component: ProductoAdminCreateRoutedComponent},
     { path: 'admin/producto/delete/:codigo', component: ProductoAdminDeleteRoutedComponent},
