@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IProducto } from '../../../model/producto.interface';
 import { ProductoService } from '../../../service/producto.service';
@@ -11,74 +11,78 @@ declare let bootstrap: any;
   templateUrl: './producto.admin.edit.routed.component.html',
   styleUrls: ['./producto.admin.edit.routed.component.css'],
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule,CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule],
 })
 export class ProductoAdminEditRoutedComponent implements OnInit {
 
   codigo: number = 0;
   oProductoForm: FormGroup | undefined = undefined;
   oProducto: IProducto | null = null;
+  imagen: string | null = null;
+  nuevaImagen: File | null = null;
   strMessage: string = '';
   myModal: any;
 
   constructor(
     private oActivatedRoute: ActivatedRoute,
     private oProductoService: ProductoService,
-    private oRouter: Router
-  ) { 
-    this.oActivatedRoute.params.subscribe((params) => {
-      this.codigo = params['codigo'];
-    });
-  }
+    private oRouter: Router,
+    private fb: FormBuilder
+  ) { }
 
   ngOnInit() {
-    this.createForm();
-    this.get();
-    this.oProductoForm?.markAllAsTouched();
-  }
-
-  createForm(){
-    this.oProductoForm = new FormGroup({
-      codigo: new FormControl<number | null>(null, [Validators.required]),
-      nombre: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-      ])
-    })
-  }
-
-  onReset() {
-    this.oProductoService.get(this.codigo).subscribe({
-      next: (oProducto: IProducto) => {
-        this.oProducto= oProducto;
-        this.updateForm();
-      },
-
-      error: (error) => {
-        console.error(error);
-      },
+    this.codigo = this.oActivatedRoute.snapshot.params['codigo'];
+    this.oProductoForm = this.fb.group({
+      codigo: ['', [Validators.required]],
+      nombre: ['', [Validators.required]]
     });
-    return false;
+    this.cargarProducto();
   }
 
-  updateForm() {
-    this.oProductoForm?.controls['codigo'].setValue(this.oProducto?.codigo);
-    this.oProductoForm?.controls['nombre'].setValue(this.oProducto?.nombre);
-  }
-
-  get() {
+  cargarProducto(): void {
     this.oProductoService.get(this.codigo).subscribe({
-      next: (oProducto: IProducto) => {
-        this.oProducto = oProducto;
-        this.updateForm();
+      next: (data: IProducto) => {
+        this.oProducto = data;
+        this.oProductoForm?.patchValue({
+          nombre: data.nombre
+        });
+        this.cargarImagen();
       },
       error: (error) => {
         console.error(error);
-      },
+      }
     });
   }
 
+  cargarImagen(): void {
+    this.oProductoService.getImagen(this.codigo).subscribe({
+      next: (blob: Blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imagen = reader.result as string;
+        };
+        reader.readAsDataURL(blob);
+      },
+      error: () => {
+        this.imagen = null;
+      }
+    });
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      this.nuevaImagen = input.files[0];
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagen = reader.result as string;
+      };
+      reader.readAsDataURL(this.nuevaImagen);
+    }
+  }
+
+  
   showModal(strMessage: string) {
     this.strMessage = strMessage;
     this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), {
@@ -89,23 +93,27 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
   hideModal = () => {
     this.myModal.hide();
-    this.oRouter.navigate(['/producto/plist/']);
+    this.oRouter.navigate(['admin/producto/plist/']);
   };
 
 
-  onSubmit() {
-    this.oProducto = this.oProductoForm?.value;
-    this.oProductoService.update(this.oProductoForm?.value).subscribe({
-      next: (oProducto: IProducto) => {
-        this.oProducto = oProducto;
-        this.showModal('Producto ' + this.oProducto.codigo + ' actualizado correctamente');
+  onSubmit(): void {
+    const formData = new FormData();
+    formData.append('Nombre', this.oProductoForm?.get('nombre')?.value);
+
+    if (this.nuevaImagen) {
+      formData.append('Imagen', this.nuevaImagen);
+    }
+
+    this.oProductoService.update(this.codigo, formData).subscribe({
+      next: () => {
+        this.showModal('Producto actualizado correctamente!');
       },
       error: (error) => {
         console.error(error);
-        this.showModal('Error al actualizar el producto');
-      },
+      }
     });
   }
-    
 
 }
+

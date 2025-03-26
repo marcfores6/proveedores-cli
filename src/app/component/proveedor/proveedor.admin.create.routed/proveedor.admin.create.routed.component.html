@@ -1,132 +1,150 @@
-<div class="container-fluid py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card border-0 shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="fw-bold">
-            <i class="bi bi-person-circle"></i> Edición de Proveedor <i class="bi bi-pencil"></i>
-          </h2>
+<div class="container mt-5 d-flex align-items-center justify-content-center">
+  <div class="row">
+    <div class="col text-center">
+      <h2 class="my-2">
+        <i class="bi bi-plus-square"></i>
+        Creación de Proveedor
+        <i class="bi bi-person-circle"></i>
+      </h2>
+      <form [formGroup]="oProveedorForm!" (ngSubmit)="onSubmit()" novalidate>
+        <div class="row mt-4">
+
+          <!-- Empresa -->
+          <mat-form-field class="w-100">
+            <mat-label>Empresa</mat-label>
+            <input
+              matInput
+              formControlName="empresa"
+              placeholder="Pon aquí tu empresa"
+            />
+            <mat-hint align="start">De 3 a 50 caracteres</mat-hint>
+            @if (oProveedorForm?.get('empresa')?.hasError('required')) {
+              <mat-error>El campo empresa es obligatorio</mat-error>
+            }
+            @if (oProveedorForm?.get('empresa')?.hasError('minlength')) {
+              <mat-error>La empresa debe tener más de 3 caracteres</mat-error>
+            }
+            @if (oProveedorForm?.get('empresa')?.hasError('maxlength')) {
+              <mat-error>La empresa debe tener menos de 50 caracteres</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Email -->
+          <mat-form-field class="w-100">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              formControlName="email"
+              placeholder="Pon aquí tu email"
+            />
+            <mat-hint align="start">De 3 a 50 caracteres</mat-hint>
+            @if (oProveedorForm?.get('email')?.hasError('required')) {
+              <mat-error>El campo email es obligatorio</mat-error>
+            }
+            @if (oProveedorForm?.get('email')?.hasError('minlength')) {
+              <mat-error>El email debe tener más de 3 caracteres</mat-error>
+            }
+            @if (oProveedorForm?.get('email')?.hasError('maxlength')) {
+              <mat-error>El email debe tener menos de 50 caracteres</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Password -->
+          <mat-form-field class="w-100">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              type="password"
+              formControlName="password"
+              placeholder="Pon aquí tu contraseña"
+            />
+            <mat-hint align="start">De 3 a 50 caracteres</mat-hint>
+            @if (oProveedorForm?.get('password')?.hasError('required')) {
+              <mat-error>La contraseña es obligatoria</mat-error>
+            }
+            @if (oProveedorForm?.get('password')?.hasError('minlength')) {
+              <mat-error>La contraseña debe tener más de 3 caracteres</mat-error>
+            }
+            @if (oProveedorForm?.get('password')?.hasError('maxlength')) {
+              <mat-error>La contraseña debe tener menos de 50 caracteres</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Imagen -->
+          <div class="w-100 mb-3">
+            <label for="imagen" class="form-label">Imagen del Proveedor</label>
+            <input
+              type="file"
+              id="imagen"
+              (change)="onFileSelect($event)"
+              accept="image/*"
+              class="form-control"
+              formControlName="imagen"
+            />
+          </div>
         </div>
-        <div class="card-body">
-          <form [formGroup]="oProveedorForm!" (ngSubmit)="onSubmit()" novalidate>
-            <div class="mb-3">
-              <label for="id" class="form-label fw-bold">Id</label>
-              <input
-                type="text"
-                id="id"
-                class="form-control"
-                formControlName="id"
-                placeholder="id"
-                readonly
-              />
-              <div class="form-text">No se puede cambiar.</div>
-            </div>
 
-            <div class="mb-3">
-              <label for="Empresa" class="form-label fw-bold">Empresa</label>
-              <input
-                type="text"
-                id="empresa"
-                class="form-control"
-                formControlName="empresa"
-                placeholder="Empresa"
-              />
-              <div *ngIf="oProveedorForm?.get('Empresa')?.errors" class="text-danger">
-                <small *ngIf="oProveedorForm?.get('Empresa')?.hasError('required')">Debes introducir un Empresa.</small>
-                <small *ngIf="oProveedorForm?.get('Empresa')?.hasError('minlength')">El Empresa es demasiado corto.</small>
-                <small *ngIf="oProveedorForm?.get('Empresa')?.hasError('maxlength')">El Empresa es demasiado largo.</small>
-              </div>
-            </div>
+        <!-- Botones -->
+        <button
+          class="btn btn-warning mt-4 mx-1"
+          type="button"
+          [routerLink]="['/admin', 'proveedor', 'plist']"
+        >
+          <i class="bi bi-list"></i>
+          Ir a listado de Proveedores
+        </button>
 
-            <div class="mb-3">
-              <label for="Email" class="form-label fw-bold">Email</label>
-              <input
-                type="text"
-                id="email"
-                class="form-control"
-                formControlName="email"
-                placeholder="Email"
-              />
-              <div *ngIf="oProveedorForm?.get('Email')?.errors" class="text-danger">
-                <small *ngIf="oProveedorForm?.get('Email')?.hasError('required')">Debes introducir un Email.</small>
-                <small *ngIf="oProveedorForm?.get('Email')?.hasError('minlength')">El Email es demasiado corto.</small>
-                <small *ngIf="oProveedorForm?.get('Email')?.hasError('maxlength')">El Email es demasiado largo.</small>
-              </div>
-            </div>
+        <button class="btn btn-secondary mt-4 mx-1" (click)="onReset()">
+          <i class="bi bi-x-lg"></i>
+          Reset
+        </button>
 
-            <div class="mb-3">
-              <label for="Password" class="form-label fw-bold">Password</label>
-              <input
-                type="text"
-                id="Password"
-                class="form-control"
-                formControlName="Password"
-                placeholder="Password"
-              />
-              <div *ngIf="oProveedorForm?.get('Password')?.errors" class="text-danger">
-                <small *ngIf="oProveedorForm?.get('Password')?.hasError('required')">Debes introducir un Password.</small>
-                <small *ngIf="oProveedorForm?.get('Password')?.hasError('minlength')">El Password es demasiado corto.</small>
-                <small *ngIf="oProveedorForm?.get('Password')?.hasError('maxlength')">El Password es demasiado largo.</small>
-              </div>
-            </div>
-           
-            <div class="mt-4 d-flex justify-content-evenly">
-              <button
-              class="btn btn-warning mt-4 mx-1"
-              type="button"
-              [routerLink]="['/admin','proveedor', 'plist']"
-            >
-              <i class="bi bi-list"></i> Ir a listado de Proveedores
-            </button>
-              <button class="btn btn-secondary mt-4 mx-1" type="reset" (click)="onReset()">
-                <i class="bi bi-x-lg"></i> Reset
-              </button>
-              <button
-                class="btn btn-success mt-4 mx-1"
-                type="submit"
-                [disabled]="!oProveedorForm?.valid"
-              >
-                <i class="bi bi-save"></i> Guardar
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+        <button
+          class="btn btn-primary mt-4 mx-1"
+          type="submit"
+          [disabled]="!oProveedorForm?.valid"
+        >
+          <i class="bi bi-floppy"></i>
+          Guardar
+        </button>
+      </form>
     </div>
   </div>
+</div>
 
-  <div
-    class="modal fade"
-    [id]="'mimodal'"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            (click)="hideModal()"
-          ></button>
-        </div>
-        <div class="modal-body text-center">
-          <p class="fs-5">{{ strMessage }}</p>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-dismiss="modal"
-            (click)="hideModal()"
-          >
-            Cerrar
-          </button>
-        </div>
+<!-- Modal de confirmación -->
+<div
+  class="modal fade"
+  [id]="'mimodal'"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Proveedor</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="hideModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ strMessage }}</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="hideModal()"
+        >
+          Cerrar
+        </button>
       </div>
     </div>
   </div>

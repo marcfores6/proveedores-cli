@@ -4,13 +4,15 @@
       <div class="card border-0 shadow-lg">
         <div class="card-header bg-primary text-white text-center">
           <h2 class="fw-bold">
-            <i class="bi bi-person-circle"></i> Edición de Proveedor <i class="bi bi-pencil"></i>
+            <i class="bi bi-person-circle"></i> Edición de Proveedor
+            <i class="bi bi-pencil"></i>
           </h2>
         </div>
         <div class="card-body">
           <form [formGroup]="oProveedorForm!" (ngSubmit)="onSubmit()" novalidate>
+            <!-- ID -->
             <div class="mb-3">
-              <label for="id" class="form-label fw-bold">Id</label>
+              <label for="id" class="form-label fw-bold">ID</label>
               <input
                 type="text"
                 id="id"
@@ -19,11 +21,13 @@
                 placeholder="id"
                 readonly
               />
-              <div class="form-text">No se puede cambiar.</div>
+              <div *ngIf="oProveedorForm?.get('id')?.errors" class="text-danger">
+              </div>
             </div>
 
+            <!-- Empresa -->
             <div class="mb-3">
-              <label for="Empresa" class="form-label fw-bold">Empresa</label>
+              <label for="empresa" class="form-label fw-bold">Empresa</label>
               <input
                 type="text"
                 id="empresa"
@@ -31,55 +35,110 @@
                 formControlName="empresa"
                 placeholder="Empresa"
               />
-              <div *ngIf="oProveedorForm?.get('Empresa')?.errors" class="text-danger">
-                <small *ngIf="oProveedorForm?.get('Empresa')?.hasError('required')">Debes introducir un Empresa.</small>
-                <small *ngIf="oProveedorForm?.get('Empresa')?.hasError('minlength')">El Empresa es demasiado corto.</small>
-                <small *ngIf="oProveedorForm?.get('Empresa')?.hasError('maxlength')">El Empresa es demasiado largo.</small>
+              <div *ngIf="oProveedorForm?.get('empresa')?.errors" class="text-danger">
+                <small *ngIf="oProveedorForm?.get('empresa')?.hasError('required')">
+                  Debes introducir una empresa.
+                </small>
+                <small *ngIf="oProveedorForm?.get('empresa')?.hasError('minlength')">
+                  La empresa es demasiado corta.
+                </small>
+                <small *ngIf="oProveedorForm?.get('empresa')?.hasError('maxlength')">
+                  La empresa es demasiado larga.
+                </small>
               </div>
             </div>
 
+            <!-- Email -->
             <div class="mb-3">
-              <label for="Email" class="form-label fw-bold">Email</label>
+              <label for="email" class="form-label fw-bold">Email</label>
               <input
-                type="text"
+                type="email"
                 id="email"
                 class="form-control"
                 formControlName="email"
                 placeholder="Email"
               />
-              <div *ngIf="oProveedorForm?.get('Email')?.errors" class="text-danger">
-                <small *ngIf="oProveedorForm?.get('Email')?.hasError('required')">Debes introducir un Email.</small>
-                <small *ngIf="oProveedorForm?.get('Email')?.hasError('minlength')">El Email es demasiado corto.</small>
-                <small *ngIf="oProveedorForm?.get('Email')?.hasError('maxlength')">El Email es demasiado largo.</small>
+              <div *ngIf="oProveedorForm?.get('email')?.errors" class="text-danger">
+                <small *ngIf="oProveedorForm?.get('email')?.hasError('required')">
+                  Debes introducir un email.
+                </small>
+                <small *ngIf="oProveedorForm?.get('email')?.hasError('minlength')">
+                  El email es demasiado corto.
+                </small>
+                <small *ngIf="oProveedorForm?.get('email')?.hasError('maxlength')">
+                  El email es demasiado largo.
+                </small>
               </div>
             </div>
 
+            <!-- Password -->
             <div class="mb-3">
-              <label for="password" class="form-label fw-bold">password</label>
+              <label for="password" class="form-label fw-bold">Password</label>
               <input
-                type="text"
+                type="password"
                 id="password"
                 class="form-control"
                 formControlName="password"
-                placeholder="password"
+                placeholder="Password"
               />
               <div *ngIf="oProveedorForm?.get('password')?.errors" class="text-danger">
-                <small *ngIf="oProveedorForm?.get('password')?.hasError('required')">Debes introducir un password.</small>
-                <small *ngIf="oProveedorForm?.get('password')?.hasError('minlength')">El password es demasiado corto.</small>
-                <small *ngIf="oProveedorForm?.get('password')?.hasError('maxlength')">El password es demasiado largo.</small>
+                <small *ngIf="oProveedorForm?.get('password')?.hasError('required')">
+                  Debes introducir una contraseña.
+                </small>
+                <small *ngIf="oProveedorForm?.get('password')?.hasError('minlength')">
+                  La contraseña es demasiado corta.
+                </small>
+                <small *ngIf="oProveedorForm?.get('password')?.hasError('maxlength')">
+                  La contraseña es demasiado larga.
+                </small>
               </div>
             </div>
-           
+
+            <!-- Imagen actual -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700"
+                >Imagen actual</label
+              >
+              <div class="flex justify-center mt-2">
+                <img
+                  *ngIf="imagen"
+                  [src]="imagen"
+                  alt="Imagen del producto"
+                  class="w-40 h-56 rounded-lg shadow-md"
+                />
+                <p *ngIf="!imagen" class="text-gray-500">
+                  Imagen no disponible
+                </p>
+              </div>
+            </div>
+
+            <!-- Cambiar Imagen -->
+            <div class="mb-4">
+              <label
+                for="imagen"
+                class="block text-sm font-medium text-gray-700"
+                >Cambiar imagen</label
+              >
+              <input
+                id="imagen"
+                type="file"
+                (change)="onFileChange($event)"
+                accept=".png,.jpg,.jpeg,.webp"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+              />
+              <p class="text-gray-500 text-sm mt-2">
+                Formatos permitidos: PNG, JPG, JPEG, WEBP
+              </p>
+            </div>
+
+            <!-- Botones -->
             <div class="mt-4 d-flex justify-content-evenly">
               <button
-              class="btn btn-warning mt-4 mx-1"
-              type="button"
-              [routerLink]="['/admin','proveedor', 'plist']"
-            >
-              <i class="bi bi-list"></i> Ir a listado de Proveedores
-            </button>
-              <button class="btn btn-secondary mt-4 mx-1" type="reset" (click)="onReset()">
-                <i class="bi bi-x-lg"></i> Reset
+                class="btn btn-warning mt-4 mx-1"
+                type="button"
+                [routerLink]="['/admin', 'proveedor', 'plist']"
+              >
+                <i class="bi bi-list"></i> Ir a listado de Proveedores
               </button>
               <button
                 class="btn btn-success mt-4 mx-1"
@@ -95,6 +154,7 @@
     </div>
   </div>
 
+  <!-- Modal -->
   <div
     class="modal fade"
     [id]="'mimodal'"

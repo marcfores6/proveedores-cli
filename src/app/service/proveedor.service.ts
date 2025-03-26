@@ -53,16 +53,14 @@ export class ProveedorService {
     return this.oHttp.get<IProveedor>(URL);
   }
 
-  create(oProveedor: IProveedor): Observable<IProveedor> {
+  create(formData: FormData): Observable<IProveedor> {
     let URL: string = '';
     URL += this.serverURL;
-    return this.oHttp.put<IProveedor>(URL, oProveedor);
+    return this.oHttp.post<IProveedor>('http://localhost:8086/proveedor/new', formData);
   }
 
-  update(oProveedor: IProveedor): Observable<IProveedor> {
-    let URL: string = '';
-    URL += this.serverURL;
-    return this.oHttp.put<IProveedor>(URL, oProveedor);
+  update(id: number, formData: FormData): Observable<IProveedor> {
+    return this.oHttp.put<IProveedor>('http://localhost:8086/proveedor/update/' + id, formData);
   }
 
   getOne(id: number): Observable<IProveedor> {

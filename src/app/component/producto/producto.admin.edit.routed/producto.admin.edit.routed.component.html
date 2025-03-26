@@ -4,7 +4,8 @@
       <div class="card border-0 shadow-lg">
         <div class="card-header bg-primary text-white text-center">
           <h2 class="fw-bold">
-            <i class="bi bi-person-circle"></i> Edición de Producto <i class="bi bi-pencil"></i>
+            <i class="bi bi-person-circle"></i> Edición de Producto
+            <i class="bi bi-pencil"></i>
           </h2>
         </div>
         <div class="card-body">
@@ -31,23 +32,69 @@
                 formControlName="nombre"
                 placeholder="Nombre"
               />
-              <div *ngIf="oProductoForm?.get('nombre')?.errors" class="text-danger">
-                <small *ngIf="oProductoForm?.get('nombre')?.hasError('required')">Debes introducir un nombre.</small>
-                <small *ngIf="oProductoForm?.get('nombre')?.hasError('minlength')">El nombre es demasiado corto.</small>
-                <small *ngIf="oProductoForm?.get('nombre')?.hasError('maxlength')">El nombre es demasiado largo.</small>
+              <div
+                *ngIf="oProductoForm?.get('nombre')?.errors"
+                class="text-danger"
+              >
+                <small
+                  *ngIf="oProductoForm?.get('nombre')?.hasError('required')"
+                  >Debes introducir un nombre.</small
+                >
+                <small
+                  *ngIf="oProductoForm?.get('nombre')?.hasError('minlength')"
+                  >El nombre es demasiado corto.</small
+                >
+                <small
+                  *ngIf="oProductoForm?.get('nombre')?.hasError('maxlength')"
+                  >El nombre es demasiado largo.</small
+                >
               </div>
             </div>
-           
+
+            <!-- Imagen actual -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700"
+                >Imagen actual</label
+              >
+              <div class="flex justify-center mt-2">
+                <img
+                  *ngIf="imagen"
+                  [src]="imagen"
+                  alt="Imagen del producto"
+                  class="w-40 h-56 rounded-lg shadow-md"
+                />
+                <p *ngIf="!imagen" class="text-gray-500">
+                  Imagen no disponible
+                </p>
+              </div>
+            </div>
+
+            <!-- Cambiar Imagen -->
+            <div class="mb-4">
+              <label
+                for="imagen"
+                class="block text-sm font-medium text-gray-700"
+                >Cambiar imagen</label
+              >
+              <input
+                id="imagen"
+                type="file"
+                (change)="onFileChange($event)"
+                accept=".png,.jpg,.jpeg,.webp"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+              />
+              <p class="text-gray-500 text-sm mt-2">
+                Formatos permitidos: PNG, JPG, JPEG, WEBP
+              </p>
+            </div>
+
             <div class="mt-4 d-flex justify-content-evenly">
               <button
-              class="btn btn-warning mt-4 mx-1"
-              type="button"
-              [routerLink]="['/admin','producto', 'plist']"
-            >
-              <i class="bi bi-list"></i> Ir a listado de Productos
-            </button>
-              <button class="btn btn-secondary mt-4 mx-1" type="reset" (click)="onReset()">
-                <i class="bi bi-x-lg"></i> Reset
+                class="btn btn-warning mt-4 mx-1"
+                type="button"
+                [routerLink]="['/admin', 'producto', 'plist']"
+              >
+                <i class="bi bi-list"></i> Ir a listado de Productos
               </button>
               <button
                 class="btn btn-success mt-4 mx-1"
