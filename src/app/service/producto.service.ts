@@ -54,7 +54,7 @@ export class ProductoService {
   create(formData: FormData): Observable<IProducto> {
     let URL: string = '';
     URL += this.serverURL;
-    return this.oHttp.post<IProducto>('http://localhost:8086/producto/new', formData);
+    return this.oHttp.post<IProducto>('http://localhost:8086/producto/new-url', formData);
   }
 
   update(codigo: number, formData: FormData): Observable<IProducto> {

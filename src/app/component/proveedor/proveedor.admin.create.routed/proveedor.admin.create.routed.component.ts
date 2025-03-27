@@ -56,8 +56,7 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
       ]),
       email: new FormControl('', [
         Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
+        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
       ]),
       password: new FormControl('', [
         Validators.required,
@@ -68,6 +67,7 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
         id: new FormControl('', Validators.required),
         descripcion: new FormControl(''),
       }),
+      imagenUrl: new FormControl('', [Validators.pattern('https?://.+')]), // URL válida (opcional)
       imagen: [null],
     });
   }
@@ -111,7 +111,7 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
     this.oRouter.navigate(['admin/proveedor/view/' + this.oProveedor?.id]);
   };
 
-  onSubmit() {
+ onSubmit() {
     if (this.oProveedorForm?.invalid) {
       this.showModal('Formulario inválido');
       return;
@@ -150,6 +150,52 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
       });
     }
   }
+
+  /*  onSubmit() {
+      if (this.oProveedorForm?.invalid) {
+        this.showModal('Formulario inválido');
+        return;
+      } else {
+        const formData = new FormData();
+        formData.append('Empresa', this.oProveedorForm?.get('empresa')?.value);
+        formData.append('Email', this.oProveedorForm?.get('email')?.value);
+    
+        const plainPassword = this.oProveedorForm?.get('password')?.value;
+        const hashedPassword = this.oCryptoService.getHashSHA256(plainPassword);
+        formData.append('Password', hashedPassword);
+    
+        formData.append('TipoProveedor', this.oProveedorForm?.get('tipoproveedor')?.value.id);
+    
+        if (this.imagen) {
+          formData.append('Imagen', this.imagen);
+        }
+    
+        const imagenUrl = this.oProveedorForm?.get('imagenUrl')?.value;
+        if (imagenUrl) {
+          formData.append('ImagenUrl', imagenUrl); // 👈 esto debe estar soportado en el backend
+        }
+    
+        this.oProveedorService.create(formData).subscribe({
+          next: (oProveedor: IProveedor) => {
+            this.oProveedor = oProveedor;
+            this.showModal('Proveedor creado con el código: ' + this.oProveedor.id);
+          },
+          error: (err) => {
+            let mensaje = 'Error al crear el Proveedor';
+            if (err.status === 400 || err.status === 500) {
+              if (err.error?.message) {
+                mensaje = err.error.message;
+              } else if (typeof err.error === 'string') {
+                mensaje = err.error;
+              }
+            }
+            this.showModal(mensaje);
+            console.error(err);
+          }
+        });
+      }
+    }
+    */
 
   showTipoProveedorSelectorModal() {
     const dialogRef = this.dialog.open(TipoProveedorSelectorComponent, {
