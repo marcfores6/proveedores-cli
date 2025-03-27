@@ -89,6 +89,12 @@
                 } @else {
                 <i class="bi bi-caret-up-fill"></i>} }
               </th>
+              <th (click)="sort('tipoproducto')" class="bg-primary text-white">
+                Tipo de Producto @if (strField === 'tipoproducto') { @if (strDir === 'desc') {
+                <i class="bi bi-caret-down-fill"></i>
+                } @else {
+                <i class="bi bi-caret-up-fill"></i>} }
+              </th>
               <th class="bg-warning text-black">Acciones</th>
             </tr>
           </thead>
@@ -98,6 +104,13 @@
             <tr>
               <td class="text-center">{{ producto.codigo }}</td>
               <td class="text-start">{{ producto.nombre }}</td>
+              <td class="text-start">
+                @if (producto.tipoproducto) {
+                  {{ producto.tipoproducto.descripcion }} ID: {{ producto.tipoproducto.id }}
+                } @else {
+                  <span class="text-muted">Sin tipo de producto asignado</span>
+                }
+              </td>
              
               <td>
                 <div class="btn-group" role="group" aria-label="Basic example">

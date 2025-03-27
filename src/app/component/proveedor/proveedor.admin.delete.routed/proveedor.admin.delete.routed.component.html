@@ -23,8 +23,14 @@
                 <td class="text-start ps-5">{{ oProveedor?.email }}</td>
               </tr>
               <tr class="text-center">
-                <th scope="row" class="bg-primary text-white text-end pe-5">Password</th>
-                <td class="text-start ps-5">{{ oProveedor?.password }}</td>
+                <th scope="row" class="bg-primary text-white text-end pe-5">Tipo de Proveedor</th>
+                <td class="text-start ps-5">
+                  @if (oProveedor?.tipoproveedor) {
+                    {{ oProveedor?.tipoproveedor?.descripcion }} ID: {{ oProveedor?.tipoproveedor?.id }}
+                  } @else {
+                    <span class="text-muted">Sin tipo de proveedor asignado</span>
+                  }
+                </td>
               </tr>
             </tbody>
           </table>

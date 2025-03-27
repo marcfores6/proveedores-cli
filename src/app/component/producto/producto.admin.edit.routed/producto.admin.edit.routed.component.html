@@ -51,42 +51,63 @@
               </div>
             </div>
 
-            <!-- Imagen actual -->
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Imagen actual</label
-              >
-              <div class="flex justify-center mt-2">
-                <img
-                  *ngIf="imagen"
-                  [src]="imagen"
-                  alt="Imagen del producto"
-                  class="w-40 h-56 rounded-lg shadow-md"
-                />
-                <p *ngIf="!imagen" class="text-gray-500">
-                  Imagen no disponible
-                </p>
+            <div formGroupName="tipoproducto">
+              <div class="row mt-4">
+                  <mat-form-field>
+                      <mat-label>Tipo Producto</mat-label>
+                      <div class="d-flex justify-content-end">
+                          <button class="btn btn-primary" (click)="showTipoProductoSelectorModal()">
+                              <i class="bi bi-search"></i>
+                              Buscar
+                          </button>
+                      </div>
+                      <div class="d-flex justify-content-start">
+                          {{oTipoProducto.descripcion}}
+                      </div>
+  
+                      <input matInput formControlName="id" placeholder="Tipo Producto" />
+                  </mat-form-field>
               </div>
             </div>
-
-            <!-- Cambiar Imagen -->
-            <div class="mb-4">
-              <label
-                for="imagen"
-                class="block text-sm font-medium text-gray-700"
-                >Cambiar imagen</label
-              >
-              <input
-                id="imagen"
-                type="file"
-                (change)="onFileChange($event)"
-                accept=".png,.jpg,.jpeg,.webp"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
-              />
-              <p class="text-gray-500 text-sm mt-2">
-                Formatos permitidos: PNG, JPG, JPEG, WEBP
-              </p>
-            </div>
+  
+              <!-- Imagen actual -->
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Imagen actual</label
+                >
+                <div class="flex justify-center mt-2">
+                  <img
+                    *ngIf="imagen"
+                    [src]="imagen"
+                    alt="Imagen del producto"
+                    style="width: 120px; height: 120px; object-fit: cover"
+                    class="rounded shadow"
+                  />
+  
+                  <p *ngIf="!imagen" class="text-gray-500">
+                    Imagen no disponible
+                  </p>
+                </div>
+              </div>
+  
+              <!-- Cambiar Imagen -->
+              <div class="mb-4">
+                <label
+                  for="imagen"
+                  class="block text-sm font-medium text-gray-700"
+                  >Cambiar imagen</label
+                >
+                <input
+                  id="imagen"
+                  type="file"
+                  (change)="onFileChange($event)"
+                  accept=".png,.jpg,.jpeg,.webp"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+                />
+                <p class="text-gray-500 text-sm mt-2">
+                  Formatos permitidos: PNG, JPG, JPEG, WEBP
+                </p>
+              </div>
 
             <div class="mt-4 d-flex justify-content-evenly">
               <button

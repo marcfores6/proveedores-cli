@@ -23,22 +23,26 @@
           <td class="text-start ps-5">{{ oProveedor.email }}</td>
         </tr>
         <tr class="text-center">
-          <th scope="row" class="bg-primary text-white text-end pe-5">Contraseña</th>
-          <td class="text-start ps-5">{{ oProveedor.password }}</td>
+          <th scope="row" class="bg-primary text-white text-end pe-5">Tipo de Proveedor</th>
+          <td class="text-start ps-5">
+            @if (oProveedor.tipoproveedor) {
+              {{ oProveedor.tipoproveedor.descripcion }} ID: {{ oProveedor.tipoproveedor.id }}
+            } @else {
+              <span class="text-muted">Sin tipo de proveedor asignado</span>
+            }
+          </td>
         </tr>
-        <tr>
-          <!-- Foto del DNI -->
-          <div class="col-lg-4">
-            <div class="document-card">
-              <h3 class="document-title">
-                <i class="bi bi-card-image me-2"></i>Imagen del Proveedor
-              </h3>
-              <div class="document-image-container">
-                <img [src]="imagen" alt="ImagenI" class="document-image" />
-              </div>
-            </div>
-          </div>
+        <tr class="text-center">
+          <th scope="row" class="bg-primary text-white text-end pe-5">Imagen</th>
+          <td class="text-start ps-5">
+            <img 
+              [src]="imagen"
+              alt="Imagen del proveedor"
+              style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc; border-radius: 8px;"
+            />
+          </td>
         </tr>
+        
       </tbody>
     </table>
   </div>

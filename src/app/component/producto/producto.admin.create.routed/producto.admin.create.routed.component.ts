@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +12,9 @@ import {
 } from '@angular/forms';
 import { IProducto } from '../../../model/producto.interface';
 import { ProductoService } from '../../../service/producto.service';
+import { ITipoProducto } from '../../../model/tipoproducto.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { TipoProductoSelectorComponent } from '../../tipoproducto/tipoproductoselector/tipoproductoselector.component';
 
 declare let bootstrap: any;
 
@@ -36,8 +39,10 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
   strMessage: string = '';
   imagen: File | null = null;
 
-  myModal: any;
+  readonly dialog = inject(MatDialog);
+  oTipoProducto: ITipoProducto = {} as ITipoProducto;
 
+  myModal: any;
   form: FormGroup = new FormGroup({});
 
   constructor(
@@ -51,6 +56,10 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
         Validators.minLength(3),
         Validators.maxLength(50),
       ]),
+      tipoproducto: new FormGroup({
+        id: new FormControl('', Validators.required), // ID de tipocuenta
+        descripcion: new FormControl(''), // Descripción de tipocuenta
+      }),
       imagen: [null]
     });
   }
@@ -68,6 +77,10 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
 
   updateForm() {
     this.oProductoForm?.controls['nombre'].setValue('');
+    this.oProductoForm?.controls['tipoproducto'].setValue({
+      id: null,
+      descripcion: null,
+    });
   }
 
   showModal(mensaje: string) {
@@ -95,7 +108,10 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
     } else {      
       const formData = new FormData();
       formData.append('Nombre', this.oProductoForm?.get('nombre')?.value);
-      formData.append('Imagen', this.imagen!);
+      formData.append('TipoProducto', this.oProductoForm?.get('tipoproducto')?.value.id);
+          if (this.imagen) {
+            formData.append('Imagen', this.imagen);
+          }
 
       this.oProductoService.create(formData).subscribe({
         next: (oProducto: IProducto) => {
@@ -109,5 +125,31 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
       });
     }
   }
+
+showTipoProductoSelectorModal() {
+  const dialogRef = this.dialog.open(TipoProductoSelectorComponent, {
+    height: '800px',
+    maxHeight: '1200px',
+    width: '80%',
+    maxWidth: '90%',
+    data: { origen: '', idProducto: '' },
+
+
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('The dialog was closed');
+    if (result !== undefined) {
+      console.log(result);
+      this.oProductoForm?.controls['tipoproducto'].setValue({
+        id: result.id,
+        descripcion: result.descripcion,
+      });
+    }
+  });
+  return false;
+}
+
+
 
 }

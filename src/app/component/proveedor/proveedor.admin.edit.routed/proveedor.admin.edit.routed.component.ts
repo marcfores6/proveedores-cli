@@ -1,17 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { IProveedor } from '../../../model/proveedor.interface';
 import { ProveedorService } from '../../../service/proveedor.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
+import { ITipoProveedor } from '../../../model/tipoproveedor.interface';
+import { TipoProveedorSelectorComponent } from '../../tipoproveedor/tipoproveedorselector/tipoproveedorselector.component';
+import { CryptoService } from '../../../service/crypto.service'; // 👈 Hasher importado
 
 declare let bootstrap: any;
+
 @Component({
   selector: 'app-proveedor.admin.edit.routed',
   templateUrl: './proveedor.admin.edit.routed.component.html',
   styleUrls: ['./proveedor.admin.edit.routed.component.css'],
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
 })
 export class ProveedorAdminEditRoutedComponent implements OnInit {
 
@@ -23,13 +31,17 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
   strMessage: string = '';
   myModal: any;
 
+  originalPassword: string = ''; // 👈 Aquí guardamos la original
+  readonly dialog = inject(MatDialog);
+  oTipoProveedor: ITipoProveedor = {} as ITipoProveedor;
+
   constructor(
     private oActivatedRoute: ActivatedRoute,
     private oProveedorService: ProveedorService,
     private oRouter: Router,
-    private fb: FormBuilder
-  ) {
-  }
+    private fb: FormBuilder,
+    private oCryptoService: CryptoService // 👈 Inyectado
+  ) {}
 
   ngOnInit() {
     this.id = this.oActivatedRoute.snapshot.params['id'];
@@ -37,7 +49,11 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
       id: ['', [Validators.required]],
       empresa: ['', [Validators.required]],
       email: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
+      tipoproveedor: new FormGroup({
+        id: new FormControl('', Validators.required),
+        descripcion: new FormControl(''),
+      }),
     });
     this.cargarProducto();
   }
@@ -46,11 +62,21 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
     this.oProveedorService.get(this.id).subscribe({
       next: (data: IProveedor) => {
         this.oProveedor = data;
+        this.originalPassword = data.password; // 👈 Guardamos el original
         this.oProveedorForm?.patchValue({
           id: data.id,
           empresa: data.empresa,
           email: data.email,
-          password: data.password
+          password: data.password,
+          tipoproveedor: data.tipoproveedor
+            ? {
+                id: data.tipoproveedor.id,
+                descripcion: data.tipoproveedor.descripcion,
+              }
+            : {
+                id: null,
+                descripcion: '',
+              },
         });
         this.cargarImagen();
       },
@@ -101,12 +127,21 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
     this.oRouter.navigate(['admin/proveedor/plist/']);
   };
 
-
   onSubmit() {
     const formData = new FormData();
     formData.append('Empresa', this.oProveedorForm?.get('empresa')?.value);
     formData.append('Email', this.oProveedorForm?.get('email')?.value);
-    formData.append('Password', this.oProveedorForm?.get('password')?.value);
+
+    const passwordFormValue = this.oProveedorForm?.get('password')?.value;
+    const isSamePassword = passwordFormValue === this.originalPassword;
+
+    // 🔐 Si ha cambiado la password, se hashea
+    const passwordToSend = isSamePassword
+      ? this.originalPassword
+      : this.oCryptoService.getHashSHA256(passwordFormValue);
+
+    formData.append('Password', passwordToSend);
+    formData.append('TipoProveedor', this.oProveedorForm?.get('tipoproveedor')?.value.id);
 
     if (this.nuevaImagen) {
       formData.append('Imagen', this.nuevaImagen);
@@ -123,6 +158,26 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
     });
   }
 
+  showTipoProveedorSelectorModal() {
+    const dialogRef = this.dialog.open(TipoProveedorSelectorComponent, {
+      height: '800px',
+      maxHeight: '1200px',
+      width: '80%',
+      maxWidth: '90%',
+      data: { origen: '', idProveedor: '' },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result !== undefined) {
+        console.log(result);
+        this.oProveedorForm?.controls['tipoproveedor'].setValue({
+          id: result.id,
+          descripcion: result.descripcion,
+        });
+      }
+    });
+    return false;
+  }
 
 }
-

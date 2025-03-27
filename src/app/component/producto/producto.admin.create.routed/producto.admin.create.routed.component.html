@@ -24,9 +24,38 @@
             <mat-error> El nombre debe ser mas corto </mat-error>
             }
           </mat-form-field>
-          <div>
-            <label for="imagen">Imagen del Producto</label>
-            <input type="file" id="imagen" (change)="onFileSelect($event)" accept="image/*" formControlName="imagen" />
+
+          <div formGroupName="tipoproducto">
+            <div class="row mt-4">
+                <mat-form-field>
+                    <mat-label>Tipo Producto</mat-label>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary" (click)="showTipoProductoSelectorModal()">
+                            <i class="bi bi-search"></i>
+                            Buscar
+                        </button>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        {{oTipoProducto.descripcion}}
+                    </div>
+
+                    <input matInput formControlName="id" placeholder="Tipo Producto" />
+                </mat-form-field>
+            </div>
+          </div>
+
+
+          <!-- Imagen -->
+          <div class="w-100 mb-3">
+            <label for="imagen" class="form-label">Imagen del Producto</label>
+            <input
+              type="file"
+              id="imagen"
+              (change)="onFileSelect($event)"
+              accept="image/*"
+              class="form-control"
+              formControlName="imagen"
+            />
           </div>
         </div>
         <br />
@@ -67,7 +96,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Proveedores</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Productoes</h5>
         <button
           type="button"
           class="btn-close"

@@ -1,9 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IProducto } from '../../../model/producto.interface';
 import { ProductoService } from '../../../service/producto.service';
+import { ITipoProducto } from '../../../model/tipoproducto.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { TipoProductoSelectorComponent } from '../../tipoproducto/tipoproductoselector/tipoproductoselector.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 declare let bootstrap: any;
 @Component({
@@ -11,7 +17,7 @@ declare let bootstrap: any;
   templateUrl: './producto.admin.edit.routed.component.html',
   styleUrls: ['./producto.admin.edit.routed.component.css'],
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
 })
 export class ProductoAdminEditRoutedComponent implements OnInit {
 
@@ -22,6 +28,9 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   nuevaImagen: File | null = null;
   strMessage: string = '';
   myModal: any;
+
+  readonly dialog = inject(MatDialog);
+  oTipoProducto: ITipoProducto = {} as ITipoProducto;
 
   constructor(
     private oActivatedRoute: ActivatedRoute,
@@ -34,8 +43,13 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.codigo = this.oActivatedRoute.snapshot.params['codigo'];
     this.oProductoForm = this.fb.group({
       codigo: ['', [Validators.required]],
-      nombre: ['', [Validators.required]]
+      nombre: ['', [Validators.required]],
+      tipoproducto: new FormGroup({
+        id: new FormControl('', Validators.required), // ID de tipocuenta
+        descripcion: new FormControl(''), // Descripción de tipocuenta
+      }),
     });
+    
     this.cargarProducto();
   }
 
@@ -44,7 +58,11 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       next: (data: IProducto) => {
         this.oProducto = data;
         this.oProductoForm?.patchValue({
-          nombre: data.nombre
+          nombre: data.nombre,
+          tipoproducto: {
+            id: data.tipoproducto.id,
+            descripcion: data.tipoproducto.descripcion,
+          },
         });
         this.cargarImagen();
       },
@@ -100,6 +118,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   onSubmit(): void {
     const formData = new FormData();
     formData.append('Nombre', this.oProductoForm?.get('nombre')?.value);
+    formData.append('TipoProducto', this.oProductoForm?.get('tipoproducto')?.value.id);
 
     if (this.nuevaImagen) {
       formData.append('Imagen', this.nuevaImagen);
@@ -114,6 +133,30 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       }
     });
   }
+
+  showTipoProductoSelectorModal() {
+      const dialogRef = this.dialog.open(TipoProductoSelectorComponent, {
+        height: '800px',
+        maxHeight: '1200px',
+        width: '80%',
+        maxWidth: '90%',
+        data: { origen: '', idProducto: '' },
+    
+    
+      });
+    
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+        if (result !== undefined) {
+          console.log(result);
+          this.oProductoForm?.controls['tipoproducto'].setValue({
+            id: result.id,
+            descripcion: result.descripcion,
+          });
+        }
+      });
+      return false;
+    }
 
 }
 

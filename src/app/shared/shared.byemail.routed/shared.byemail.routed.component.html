@@ -32,6 +32,18 @@
             {{ oProveedor.tipoproveedor?.descripcion }}
           </td>
         </tr>
+        <tr>
+          <!-- Foto del DNI -->
+          <tr class="text-center">
+            <th scope="row" class="bg-primary text-white text-end pe-5">Imagen</th>
+            <td class="text-start ps-5">
+              <img 
+                [src]="imagen"
+                alt="Imagen del proveedor"
+                style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc; border-radius: 8px;"
+              />
+            </td>
+        </tr>
       </tbody>
     </table>
   </div>

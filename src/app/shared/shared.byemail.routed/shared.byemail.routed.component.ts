@@ -11,14 +11,17 @@ import { ProveedorService } from '../../service/proveedor.service';
 })
 export class SharedByemailRoutedComponent implements OnInit {
 
+  id: number=0;
   email: string = "";
   oProveedor: IProveedor = {} as IProveedor;
-  fotoDni: string | undefined;
+  imagen: string | undefined;
   modalImage: string = '';
 
   constructor(private oActivatedRoute: ActivatedRoute, private oProveedorService: ProveedorService) { }
 
   ngOnInit() {
+    
+    this.id = this.oActivatedRoute.snapshot.params['id'];
     this.email = this.oActivatedRoute.snapshot.params['email'];
     this.getOne();
   }
@@ -27,10 +30,27 @@ export class SharedByemailRoutedComponent implements OnInit {
     this.oProveedorService.getProveedorByEmail(this.email).subscribe({
       next: (data: IProveedor) => {
         this.oProveedor = data;
+        this.verImagen(this.oProveedor.id);
       },
       error: (err) => {
         console.error('Error al obtener los datos del Proveedor', err);
       }
+    });
+  }
+
+  verImagen(id: number): void {
+    this.oProveedorService.getImagen(id).subscribe({
+      next: (blob: Blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imagen = reader.result as string;
+        };
+        reader.readAsDataURL(blob);
+      },
+      error: (error) => {
+        console.log('Error al obtener la imagen', error);
+        this.imagen = undefined;
+      },
     });
   }
 
