@@ -30,13 +30,19 @@ export class SharedByemailRoutedComponent implements OnInit {
     this.oProveedorService.getProveedorByEmail(this.email).subscribe({
       next: (data: IProveedor) => {
         this.oProveedor = data;
-        this.verImagen(this.oProveedor.id);
+  
+        if (this.oProveedor.imagenUrl && this.oProveedor.imagenUrl.trim() !== '') {
+          this.imagen = this.oProveedor.imagenUrl;
+        } else {
+          this.verImagen(this.oProveedor.id);
+        }
       },
       error: (err) => {
         console.error('Error al obtener los datos del Proveedor', err);
       }
     });
   }
+  
 
   verImagen(id: number): void {
     this.oProveedorService.getImagen(id).subscribe({

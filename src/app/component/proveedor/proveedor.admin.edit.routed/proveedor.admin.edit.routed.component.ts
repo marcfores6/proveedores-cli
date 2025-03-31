@@ -28,6 +28,7 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
   oProveedor: IProveedor | null = null;
   imagen: string | null = null;
   nuevaImagen: File | null = null;
+  imagenPreview: string | null = null; // Para la vista previa de la imagen
   strMessage: string = '';
   myModal: any;
 
@@ -54,6 +55,9 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
         id: new FormControl('', Validators.required),
         descripcion: new FormControl(''),
       }),
+      imagenUrl: new FormControl('', [
+        Validators.pattern('^(https?:\\/\\/|\\/).+')
+      ]),      
     });
     this.cargarProducto();
   }
@@ -62,7 +66,8 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
     this.oProveedorService.get(this.id).subscribe({
       next: (data: IProveedor) => {
         this.oProveedor = data;
-        this.originalPassword = data.password; // 👈 Guardamos el original
+        this.originalPassword = data.password;
+  
         this.oProveedorForm?.patchValue({
           id: data.id,
           empresa: data.empresa,
@@ -77,14 +82,24 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
                 id: null,
                 descripcion: '',
               },
+          imagenUrl: data.imagenUrl ?? '',
         });
-        this.cargarImagen();
+  
+        // 👉 Mostrar imagen desde URL si existe
+        if (data.imagenUrl && data.imagenUrl.trim() !== '') {
+          // Aseguramos que la imagen se cargue con el dominio del backend
+          this.imagen = 'http://localhost:8086' + data.imagenUrl;
+        } else {
+          this.cargarImagen(); // imagen binaria
+        }
       },
       error: (error) => {
         console.error(error);
-      }
+      },
     });
   }
+  
+  
 
   cargarImagen(): void {
     this.oProveedorService.getImagen(this.id).subscribe({
@@ -105,14 +120,19 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       this.nuevaImagen = input.files[0];
-
+  
+      // ✅ Limpiamos imagenUrl si se sube archivo
+      this.oProveedorForm?.get('imagenUrl')?.setValue('');
+  
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagen = reader.result as string;
+        this.imagenPreview = reader.result as string;
       };
       reader.readAsDataURL(this.nuevaImagen);
     }
   }
+  
+  
 
   showModal(strMessage: string) {
     this.strMessage = strMessage;
@@ -128,35 +148,62 @@ export class ProveedorAdminEditRoutedComponent implements OnInit {
   };
 
   onSubmit() {
+    if (this.oProveedorForm?.invalid) {
+      this.showModal('Formulario inválido');
+      console.log('Form values:', this.oProveedorForm.value);
+      return;
+    }
+  
     const formData = new FormData();
     formData.append('Empresa', this.oProveedorForm?.get('empresa')?.value);
     formData.append('Email', this.oProveedorForm?.get('email')?.value);
-
+  
     const passwordFormValue = this.oProveedorForm?.get('password')?.value;
     const isSamePassword = passwordFormValue === this.originalPassword;
-
-    // 🔐 Si ha cambiado la password, se hashea
+  
+    // 🔐 Hashear solo si cambió
     const passwordToSend = isSamePassword
       ? this.originalPassword
       : this.oCryptoService.getHashSHA256(passwordFormValue);
-
     formData.append('Password', passwordToSend);
+  
     formData.append('TipoProveedor', this.oProveedorForm?.get('tipoproveedor')?.value.id);
-
+  
+    const imagenUrl = this.oProveedorForm?.get('imagenUrl')?.value;
+  
+    // ❌ No permitir ambas formas de imagen
+    if (this.nuevaImagen && imagenUrl) {
+      this.showModal('No puedes subir una imagen y usar una URL al mismo tiempo');
+      return;
+    }
+  
     if (this.nuevaImagen) {
       formData.append('Imagen', this.nuevaImagen);
     }
-
+  
+    if (imagenUrl) {
+      formData.append('ImagenUrl', imagenUrl);
+    }
+  
     this.oProveedorService.update(this.id, formData).subscribe({
       next: (oProveedor: IProveedor) => {
         this.showModal('Proveedor actualizado correctamente');
       },
       error: (error) => {
-        this.showModal('Error al actualizar el Proveedor');
+        let mensaje = 'Error al actualizar el proveedor';
+        if (error.status === 400 || error.status === 500) {
+          if (error.error?.message) {
+            mensaje = error.error.message;
+          } else if (typeof error.error === 'string') {
+            mensaje = error.error;
+          }
+        }
+        this.showModal(mensaje);
         console.error(error);
       }
     });
   }
+  
 
   showTipoProveedorSelectorModal() {
     const dialogRef = this.dialog.open(TipoProveedorSelectorComponent, {

@@ -3,6 +3,6 @@ import { ITipoProducto } from "./tipoproducto.interface";
 export interface IProducto {
     codigo:number,
     nombre:string,
-    imagen:string | null,
-    tipoproducto: ITipoProducto
+    tipoproducto: ITipoProducto,
+    imagenUrl:string | null,
 }

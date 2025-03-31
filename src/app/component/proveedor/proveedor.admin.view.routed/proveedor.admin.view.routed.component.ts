@@ -42,16 +42,24 @@ export class ProveedorAdminViewRoutedComponent implements OnInit {
         },
       });
     }
-  
+    
     getOne() {
       this.oProveedorService.getOne(this.id).subscribe({
         next: (oProveedor: IProveedor) => {
           this.oProveedor = oProveedor;
+    
+          if (this.oProveedor.imagenUrl && this.oProveedor.imagenUrl.trim() !== '') {
+            this.imagen = 'http://localhost:8086/' + this.oProveedor.imagenUrl;
+          } else {
+            this.verImagen(this.oProveedor.id);
+          }
         },
         error: (err) => {
-          console.log('Error al obtener los datos del Proveedor',err);
-        },
+          console.log('Error al obtener los datos del Proveedor', err);
+        }
       });
     }
+    
+    
 
 }

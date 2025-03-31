@@ -26,6 +26,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   oProducto: IProducto | null = null;
   imagen: string | null = null;
   nuevaImagen: File | null = null;
+  imagenPreview: string | null = null;
   strMessage: string = '';
   myModal: any;
 
@@ -45,11 +46,12 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       codigo: ['', [Validators.required]],
       nombre: ['', [Validators.required]],
       tipoproducto: new FormGroup({
-        id: new FormControl('', Validators.required), // ID de tipocuenta
-        descripcion: new FormControl(''), // Descripción de tipocuenta
+        id: new FormControl('', Validators.required),
+        descripcion: new FormControl(''),
       }),
+      imagenUrl: new FormControl('', [Validators.pattern('^(https?:\\/\\/|\/).+')])
     });
-    
+
     this.cargarProducto();
   }
 
@@ -58,13 +60,25 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       next: (data: IProducto) => {
         this.oProducto = data;
         this.oProductoForm?.patchValue({
+          codigo: data.codigo,
           nombre: data.nombre,
-          tipoproducto: {
-            id: data.tipoproducto.id,
-            descripcion: data.tipoproducto.descripcion,
-          },
+          tipoproducto: data.tipoproducto
+            ? {
+              id: data.tipoproducto.id,
+              descripcion: data.tipoproducto.descripcion,
+            }
+            : {
+              id: null,
+              descripcion: '',
+            },
+          imagenUrl: data.imagenUrl ?? ''
         });
-        this.cargarImagen();
+
+        if (data.imagenUrl && data.imagenUrl.trim() !== '') {
+          this.imagen = 'http://localhost:8086' + data.imagenUrl;
+        } else {
+          this.cargarImagen();
+        }
       },
       error: (error) => {
         console.error(error);
@@ -91,16 +105,16 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       this.nuevaImagen = input.files[0];
+      this.oProductoForm?.get('imagenUrl')?.setValue('');
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagen = reader.result as string;
+        this.imagenPreview = reader.result as string;
       };
       reader.readAsDataURL(this.nuevaImagen);
     }
   }
 
-  
   showModal(strMessage: string) {
     this.strMessage = strMessage;
     this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), {
@@ -114,14 +128,29 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.oRouter.navigate(['admin/producto/plist/']);
   };
 
-
   onSubmit(): void {
+    if (this.oProductoForm?.invalid) {
+      this.showModal('Formulario inválido');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('Nombre', this.oProductoForm?.get('nombre')?.value);
     formData.append('TipoProducto', this.oProductoForm?.get('tipoproducto')?.value.id);
 
+    const imagenUrl = this.oProductoForm?.get('imagenUrl')?.value;
+
+    if (this.nuevaImagen && imagenUrl) {
+      this.showModal('No puedes subir una imagen y usar una URL al mismo tiempo');
+      return;
+    }
+
     if (this.nuevaImagen) {
       formData.append('Imagen', this.nuevaImagen);
+    }
+
+    if (imagenUrl) {
+      formData.append('ImagenUrl', imagenUrl);
     }
 
     this.oProductoService.update(this.codigo, formData).subscribe({
@@ -135,28 +164,24 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   }
 
   showTipoProductoSelectorModal() {
-      const dialogRef = this.dialog.open(TipoProductoSelectorComponent, {
-        height: '800px',
-        maxHeight: '1200px',
-        width: '80%',
-        maxWidth: '90%',
-        data: { origen: '', idProducto: '' },
-    
-    
-      });
-    
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
-        if (result !== undefined) {
-          console.log(result);
-          this.oProductoForm?.controls['tipoproducto'].setValue({
-            id: result.id,
-            descripcion: result.descripcion,
-          });
-        }
-      });
-      return false;
-    }
+    const dialogRef = this.dialog.open(TipoProductoSelectorComponent, {
+      height: '800px',
+      maxHeight: '1200px',
+      width: '80%',
+      maxWidth: '90%',
+      data: { origen: '', idProducto: '' },
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result !== undefined) {
+        console.log(result);
+        this.oProductoForm?.controls['tipoproducto'].setValue({
+          id: result.id,
+          descripcion: result.descripcion,
+        });
+      }
+    });
+    return false;
+  }
 }
-

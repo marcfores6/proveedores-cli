@@ -6,6 +6,7 @@ export interface IProveedor {
     email:string,
     password:string,
     imagen:string | null,
+    imagenUrl:string | null,
     tipoproveedor: ITipoProveedor
 
 }
