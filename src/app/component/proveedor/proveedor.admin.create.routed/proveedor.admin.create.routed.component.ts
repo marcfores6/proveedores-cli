@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ITipoProveedor } from '../../../model/tipoproveedor.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { TipoProveedorSelectorComponent } from '../../tipoproveedor/tipoproveedorselector/tipoproveedorselector.component';
-import { CryptoService } from '../../../service/crypto.service'; // 👈 Importa el servicio de hash
+import { CryptoService } from '../../../service/crypto.service';
 
 declare let bootstrap: any;
 
@@ -34,19 +34,20 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
   oProveedorForm: FormGroup | undefined = undefined;
   oProveedor: IProveedor | null = null;
   strMessage: string = '';
-  imagen: File | null = null;
+  imagenesArchivo: File[] = [];
+  imagenPreviews: string[] = [];
+  imagenesUrl: string[] = [];
+  imagenUrlControl = new FormControl('', [Validators.pattern('https?://.+')]);
 
   readonly dialog = inject(MatDialog);
   oTipoProveedor: ITipoProveedor = {} as ITipoProveedor;
   myModal: any;
 
-  form: FormGroup = new FormGroup({});
-
   constructor(
     private fb: FormBuilder,
     private oProveedorService: ProveedorService,
     private oRouter: Router,
-    private oCryptoService: CryptoService // 👈 Inyectamos CryptoService
+    private oCryptoService: CryptoService
   ) {
     this.oProveedorForm = this.fb.group({
       empresa: new FormControl('', [
@@ -66,9 +67,7 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
       tipoproveedor: new FormGroup({
         id: new FormControl('', Validators.required),
         descripcion: new FormControl(''),
-      }),
-      imagenUrl: new FormControl('', [Validators.pattern('https?://.+')]), // URL válida (opcional)
-      imagen: [null],
+      })
     });
   }
 
@@ -76,21 +75,35 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
     this.oProveedorForm?.markAllAsTouched();
   }
 
-  onFileSelect(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.imagen = file;
+  onFileSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      Array.from(input.files).forEach(file => {
+        this.imagenesArchivo.push(file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imagenPreviews.push(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  }
+
+  agregarImagenUrl(): void {
+    const url = this.imagenUrlControl.value;
+    if (url && !this.imagenesUrl.includes(url)) {
+      this.imagenesUrl.push(url);
+      this.imagenUrlControl.setValue('');
     }
   }
 
   updateForm() {
-    this.oProveedorForm?.controls['empresa'].setValue('');
-    this.oProveedorForm?.controls['email'].setValue('');
-    this.oProveedorForm?.controls['password'].setValue('');
-    this.oProveedorForm?.controls['tipoproveedor'].setValue({
-      id: null,
-      descripcion: null,
-    });
+    this.oProveedorForm?.reset();
+    this.imagenesArchivo = [];
+    this.imagenesUrl = [];
+    this.imagenPreviews = [];
+    this.imagenUrlControl.setValue('');
   }
 
   showModal(mensaje: string) {
@@ -113,37 +126,28 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
 
   onSubmit() {
     if (this.oProveedorForm?.invalid) {
-      this.showModal('Formulario inválido');
+      this.showModal('Formulario inválido');
       return;
     }
-  
-    const imagenUrl = this.oProveedorForm?.get('imagenUrl')?.value;
-    if (this.imagen && imagenUrl) {
-      this.showModal('No puedes subir imagen y URL al mismo tiempo');
-      return;
-    }
-  
+
     const formData = new FormData();
     formData.append('Empresa', this.oProveedorForm?.get('empresa')?.value);
     formData.append('Email', this.oProveedorForm?.get('email')?.value);
-  
-    // 🔐 Hashear la contraseña
+
     const plainPassword = this.oProveedorForm?.get('password')?.value;
     const hashedPassword = this.oCryptoService.getHashSHA256(plainPassword);
     formData.append('Password', hashedPassword);
-  
+
     formData.append('TipoProveedor', this.oProveedorForm?.get('tipoproveedor')?.value.id);
-  
-    // 📤 Enviar imagen si se subió archivo
-    if (this.imagen) {
-      formData.append('Imagen', this.imagen);
-    }
-  
-    // 🌐 Enviar URL si existe
-    if (imagenUrl) {
-      formData.append('ImagenUrl', imagenUrl);
-    }
-  
+
+    this.imagenesArchivo.forEach(file => {
+      formData.append('Imagen', file);
+    });
+
+    this.imagenesUrl.forEach(url => {
+      formData.append('ImagenUrl', url);
+    });
+
     this.oProveedorService.create(formData).subscribe({
       next: (oProveedor: IProveedor) => {
         this.oProveedor = oProveedor;
@@ -163,93 +167,6 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
       }
     });
   }
-  
-
- /*onSubmit() {
-    if (this.oProveedorForm?.invalid) {
-      this.showModal('Formulario inválido');
-      return;
-    } else {
-      const formData = new FormData();
-      formData.append('Empresa', this.oProveedorForm?.get('empresa')?.value);
-      formData.append('Email', this.oProveedorForm?.get('email')?.value);
-
-      // 🔐 Hashear la contraseña antes de enviarla
-      const plainPassword = this.oProveedorForm?.get('password')?.value;
-      const hashedPassword = this.oCryptoService.getHashSHA256(plainPassword);
-      formData.append('Password', hashedPassword);
-
-      formData.append('TipoProveedor', this.oProveedorForm?.get('tipoproveedor')?.value.id);
-      if (this.imagen) {
-        formData.append('Imagen', this.imagen);
-      }
-
-      this.oProveedorService.create(formData).subscribe({
-        next: (oProveedor: IProveedor) => {
-          this.oProveedor = oProveedor;
-          this.showModal('Proveedor creado con el código: ' + this.oProveedor.id);
-        },
-        error: (err) => {
-          let mensaje = 'Error al crear el Proveedor';
-          if (err.status === 400 || err.status === 500) {
-            if (err.error?.message) {
-              mensaje = err.error.message;
-            } else if (typeof err.error === 'string') {
-              mensaje = err.error;
-            }
-          }
-          this.showModal(mensaje);
-          console.error(err);
-        }
-      });
-    }
-  }*/
-
-  /*  onSubmit() {
-      if (this.oProveedorForm?.invalid) {
-        this.showModal('Formulario inválido');
-        return;
-      } else {
-        const formData = new FormData();
-        formData.append('Empresa', this.oProveedorForm?.get('empresa')?.value);
-        formData.append('Email', this.oProveedorForm?.get('email')?.value);
-    
-        const plainPassword = this.oProveedorForm?.get('password')?.value;
-        const hashedPassword = this.oCryptoService.getHashSHA256(plainPassword);
-        formData.append('Password', hashedPassword);
-    
-        formData.append('TipoProveedor', this.oProveedorForm?.get('tipoproveedor')?.value.id);
-    
-        if (this.imagen) {
-          formData.append('Imagen', this.imagen);
-        }
-    
-        const imagenUrl = this.oProveedorForm?.get('imagenUrl')?.value;
-        if (imagenUrl) {
-          formData.append('ImagenUrl', imagenUrl); // 👈 esto debe estar soportado en el backend
-        }
-    
-        this.oProveedorService.create(formData).subscribe({
-          next: (oProveedor: IProveedor) => {
-            this.oProveedor = oProveedor;
-            this.showModal('Proveedor creado con el código: ' + this.oProveedor.id);
-          },
-          error: (err) => {
-            let mensaje = 'Error al crear el Proveedor';
-            if (err.status === 400 || err.status === 500) {
-              if (err.error?.message) {
-                mensaje = err.error.message;
-              } else if (typeof err.error === 'string') {
-                mensaje = err.error;
-              }
-            }
-            this.showModal(mensaje);
-            console.error(err);
-          }
-        });
-      }
-    }
-    */
 
   showTipoProveedorSelectorModal() {
     const dialogRef = this.dialog.open(TipoProveedorSelectorComponent, {
@@ -261,9 +178,7 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       if (result !== undefined) {
-        console.log(result);
         this.oProveedorForm?.controls['tipoproveedor'].setValue({
           id: result.id,
           descripcion: result.descripcion,
@@ -272,5 +187,4 @@ export class ProveedorAdminCreateRoutedComponent implements OnInit {
     });
     return false;
   }
-
 }

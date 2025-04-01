@@ -13,168 +13,106 @@
           <!-- Empresa -->
           <mat-form-field class="w-100">
             <mat-label>Empresa</mat-label>
-            <input
-              matInput
-              formControlName="empresa"
-              placeholder="Pon aquí tu empresa"
-            />
+            <input matInput formControlName="empresa" placeholder="Pon aquí tu empresa" />
             <mat-hint align="start">De 3 a 50 caracteres</mat-hint>
-            @if (oProveedorForm?.get('empresa')?.hasError('required')) {
-              <mat-error>El campo empresa es obligatorio</mat-error>
-            }
-            @if (oProveedorForm?.get('empresa')?.hasError('minlength')) {
-              <mat-error>La empresa debe tener más de 3 caracteres</mat-error>
-            }
-            @if (oProveedorForm?.get('empresa')?.hasError('maxlength')) {
-              <mat-error>La empresa debe tener menos de 50 caracteres</mat-error>
-            }
+            <mat-error *ngIf="oProveedorForm?.get('empresa')?.hasError('required')">El campo empresa es obligatorio</mat-error>
+            <mat-error *ngIf="oProveedorForm?.get('empresa')?.hasError('minlength')">La empresa debe tener más de 3 caracteres</mat-error>
+            <mat-error *ngIf="oProveedorForm?.get('empresa')?.hasError('maxlength')">La empresa debe tener menos de 50 caracteres</mat-error>
           </mat-form-field>
 
           <!-- Email -->
           <mat-form-field class="w-100">
             <mat-label>Email</mat-label>
-            <input
-              matInput
-              type="email"
-              formControlName="email"
-              placeholder="ejemplo@correo.com"
-              [disabled]="!oProveedorForm?.get('empresa')?.valid"
-            />
+            <input matInput type="email" formControlName="email" placeholder="ejemplo@correo.com"
+              [disabled]="!oProveedorForm?.get('empresa')?.valid" />
             <mat-hint align="start">Introduce un email válido</mat-hint>
-            @if (oProveedorForm?.get('email')?.hasError('required')) {
-              <mat-error>El campo email es obligatorio</mat-error>
-            }
-            @if (oProveedorForm?.get('email')?.hasError('pattern')) {
-              <mat-error>Introduce un email con formato válido</mat-error>
-            }
+            <mat-error *ngIf="oProveedorForm?.get('email')?.hasError('required')">El campo email es obligatorio</mat-error>
+            <mat-error *ngIf="oProveedorForm?.get('email')?.hasError('pattern')">Introduce un email con formato válido</mat-error>
           </mat-form-field>
 
           <!-- Password -->
           <mat-form-field class="w-100">
             <mat-label>Contraseña</mat-label>
-            <input
-              matInput
-              type="password"
-              formControlName="password"
-              placeholder="Pon aquí tu contraseña"
-              [disabled]="!oProveedorForm?.get('email')?.valid"
-            />
+            <input matInput type="password" formControlName="password" placeholder="Pon aquí tu contraseña"
+              [disabled]="!oProveedorForm?.get('email')?.valid" />
             <mat-hint align="start">De 3 a 50 caracteres</mat-hint>
-            @if (oProveedorForm?.get('password')?.hasError('required')) {
-              <mat-error>La contraseña es obligatoria</mat-error>
-            }
-            @if (oProveedorForm?.get('password')?.hasError('minlength')) {
-              <mat-error>La contraseña debe tener más de 3 caracteres</mat-error>
-            }
-            @if (oProveedorForm?.get('password')?.hasError('maxlength')) {
-              <mat-error>La contraseña debe tener menos de 50 caracteres</mat-error>
-            }
+            <mat-error *ngIf="oProveedorForm?.get('password')?.hasError('required')">La contraseña es obligatoria</mat-error>
+            <mat-error *ngIf="oProveedorForm?.get('password')?.hasError('minlength')">La contraseña debe tener más de 3 caracteres</mat-error>
+            <mat-error *ngIf="oProveedorForm?.get('password')?.hasError('maxlength')">La contraseña debe tener menos de 50 caracteres</mat-error>
           </mat-form-field>
 
           <!-- Tipo Proveedor -->
           <div formGroupName="tipoproveedor">
             <div class="row mt-4">
-                <mat-form-field appearance="fill">
+              <mat-form-field appearance="fill">
                 <mat-label>Tipo Proveedor</mat-label>
                 <div class="d-flex justify-content-end">
-                  <button
-                    class="btn btn-primary"
-                    (click)="showTipoProveedorSelectorModal()"
-                    [disabled]="!oProveedorForm?.get('password')?.valid"
-                  >
-                    <i class="bi bi-search"></i>
-                    Buscar
+                  <button class="btn btn-primary" type="button" (click)="showTipoProveedorSelectorModal()" [disabled]="!oProveedorForm?.get('password')?.valid">
+                    <i class="bi bi-search"></i> Buscar
                   </button>
                 </div>
                 <div class="d-flex justify-content-start">
                   {{ oProveedorForm?.get('tipoproveedor.descripcion')?.value || 'No seleccionado' }}
                 </div>
-                <input
-                  matInput
-                  formControlName="id"
-                  placeholder="Tipo Proveedor"
-                />
+                <input matInput formControlName="id" placeholder="Tipo Proveedor" />
               </mat-form-field>
             </div>
           </div>
 
-          <!-- Imagen -->
-          <div class="w-100 mb-3">
-            <label for="imagen" class="form-label">Imagen del Proveedor</label>
+          <!-- Vista previa de imagenes por archivo -->
+          <div class="mb-3 mt-3">
+            <label class="form-label fw-bold">Imágenes por archivo</label>
             <input
+              id="imagenes"
               type="file"
-              id="imagen"
               (change)="onFileSelect($event)"
               accept="image/*"
               class="form-control"
-              formControlName="imagen"
-              [disabled]="!oProveedorForm?.get('tipoproveedor')?.get('id')?.valid"
+              multiple
             />
+            <div class="d-flex flex-wrap mt-3" *ngIf="imagenPreviews.length > 0">
+              <div class="me-2 mb-2" *ngFor="let preview of imagenPreviews">
+                <img
+                  [src]="preview"
+                  width="100"
+                  height="100"
+                  class="rounded shadow border border-info"
+                />
+              </div>
+            </div>
           </div>
 
+          <!-- Botones -->
+          <button class="btn btn-warning mt-4 mx-1" type="button" [routerLink]="['/admin', 'proveedor', 'plist']">
+            <i class="bi bi-list"></i> Ir a listado de Proveedores
+          </button>
 
+          <button class="btn btn-secondary mt-4 mx-1" (click)="onReset()">
+            <i class="bi bi-x-lg"></i> Reset
+          </button>
+
+          <button class="btn btn-primary mt-4 mx-1" type="submit">
+            <i class="bi bi-floppy"></i> Guardar
+          </button>
         </div>
-
-        <!-- Botones -->
-        <button
-          class="btn btn-warning mt-4 mx-1"
-          type="button"
-          [routerLink]="['/admin', 'proveedor', 'plist']"
-        >
-          <i class="bi bi-list"></i>
-          Ir a listado de Proveedores
-        </button>
-
-        <button class="btn btn-secondary mt-4 mx-1" (click)="onReset()">
-          <i class="bi bi-x-lg"></i>
-          Reset
-        </button>
-
-        <button
-          class="btn btn-primary mt-4 mx-1"
-          type="submit"
-          
-        >
-          <i class="bi bi-floppy"></i>
-          Guardar
-        </button>
       </form>
     </div>
   </div>
 </div>
 
 <!-- Modal de confirmación -->
-<div
-  class="modal fade"
-  [id]="'mimodal'"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" [id]="'mimodal'" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Proveedor</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-          (click)="hideModal()"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="hideModal()"></button>
       </div>
       <div class="modal-body">
         <p>{{ strMessage }}</p>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-dismiss="modal"
-          (click)="hideModal()"
-        >
-          Cerrar
-        </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="hideModal()">Cerrar</button>
       </div>
     </div>
   </div>

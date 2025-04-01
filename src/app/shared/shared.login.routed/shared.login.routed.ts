@@ -66,8 +66,8 @@ export class SharedLoginRoutedComponent implements OnInit {
 
   onAdmin() {
     this.loginForm.setValue({
-      email: 'prueba@prueba.es',
-      password: '123456789'
+      email: 'okeeeeeeey@okeeeeeeey.com',
+      password: 'okey'
     });
   }
 

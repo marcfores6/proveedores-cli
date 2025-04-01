@@ -1,3 +1,4 @@
+import { IProductoImagen } from "./productoImagen.interface";
 import { ITipoProveedor } from "./tipoproveedor.interface";
 
 export interface IProveedor {  
@@ -5,7 +6,7 @@ export interface IProveedor {
     empresa:string,
     email:string,
     password:string,
-    imagen:string | null,
+    imagenes: IProductoImagen[],
     imagenUrl:string | null,
     tipoproveedor: ITipoProveedor
 

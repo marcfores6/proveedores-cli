@@ -89,4 +89,8 @@ export class ProveedorService {
     return this.oHttp.get<IProveedor>(URL);
   }
 
+  deleteImagen(id: number): Observable<any>{
+    return this.oHttp.delete('http://localhost:8086/proveedor/imagen/' + id)
+  }
+
 }
