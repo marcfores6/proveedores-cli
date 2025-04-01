@@ -11,7 +11,7 @@ import { IPage } from '../model/model.interface';
 export class ProductoService {
   serverURL: string = serverURL + '/producto';
 
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient) { }
 
   getPage(
     page: number,
@@ -74,11 +74,14 @@ export class ProductoService {
   }
 
   getImagen(codigo: number): Observable<Blob> {
-    return this.oHttp.get('http://localhost:8086/producto/'+ codigo +'/imagen', {
+    return this.oHttp.get('http://localhost:8086/producto/' + codigo + '/imagen', {
       responseType: 'blob',
     });
   }
 
-  
+  deleteImagen(codigo: number): Observable<any> {
+    return this.oHttp.delete('http://localhost:8086/producto/imagen/' + codigo);
+  }
+
 
 }

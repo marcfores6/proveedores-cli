@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 declare let bootstrap: any;
+
 @Component({
   selector: 'app-producto.admin.edit.routed',
   templateUrl: './producto.admin.edit.routed.component.html',
@@ -49,7 +50,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         id: new FormControl('', Validators.required),
         descripcion: new FormControl(''),
       }),
-      imagenUrl: new FormControl('', [Validators.pattern('^(https?:\\/\\/|\/).+')])
+      imagenUrl: new FormControl('', [Validators.pattern('^(https?:\\/\\/|\\/).+')])
     });
 
     this.cargarProducto();
@@ -173,9 +174,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       if (result !== undefined) {
-        console.log(result);
         this.oProductoForm?.controls['tipoproducto'].setValue({
           id: result.id,
           descripcion: result.descripcion,
@@ -183,5 +182,19 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       }
     });
     return false;
+  }
+
+  eliminarImagen(idImagen: number): void {
+    if (confirm('¿Seguro que deseas eliminar esta imagen?')) {
+      this.oProductoService.deleteImagen(idImagen).subscribe({
+        next: () => {
+          this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== idImagen);
+        },
+        error: (err) => {
+          console.error('Error al eliminar la imagen', err);
+          alert('No se pudo eliminar la imagen.');
+        }
+      });
+    }
   }
 }

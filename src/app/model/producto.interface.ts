@@ -1,3 +1,4 @@
+import { IProductoImagen } from "./productoImagen.interface";
 import { ITipoProducto } from "./tipoproducto.interface";
 
 export interface IProducto {
@@ -5,4 +6,5 @@ export interface IProducto {
     nombre:string,
     tipoproducto: ITipoProducto,
     imagenUrl:string | null,
+    imagenes: IProductoImagen[]; 
 }

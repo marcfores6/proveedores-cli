@@ -33,8 +33,13 @@
                 formControlName="nombre"
                 placeholder="Nombre"
               />
-              <div *ngIf="oProductoForm?.get('nombre')?.errors" class="text-danger">
-                <small *ngIf="oProductoForm?.get('nombre')?.hasError('required')">
+              <div
+                *ngIf="oProductoForm?.get('nombre')?.errors"
+                class="text-danger"
+              >
+                <small
+                  *ngIf="oProductoForm?.get('nombre')?.hasError('required')"
+                >
                   Debes introducir un nombre.
                 </small>
               </div>
@@ -46,52 +51,74 @@
                 <mat-form-field>
                   <mat-label>Tipo Producto</mat-label>
                   <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary" (click)="showTipoProductoSelectorModal()">
+                    <button
+                      class="btn btn-primary"
+                      (click)="showTipoProductoSelectorModal()"
+                    >
                       <i class="bi bi-search"></i> Buscar
                     </button>
                   </div>
                   <div class="d-flex justify-content-start">
                     {{ oTipoProducto.descripcion }}
                   </div>
-                  <input matInput formControlName="id" placeholder="Tipo Producto" />
+                  <input
+                    matInput
+                    formControlName="id"
+                    placeholder="Tipo Producto"
+                  />
                 </mat-form-field>
               </div>
             </div>
 
-            <!-- Imagen actual -->
-            <div class="mb-4">
-              <label class="form-label fw-bold">Imagen actual</label>
-              <div class="text-center mt-2">
-                <img
-                  *ngIf="imagen"
-                  [src]="imagen"
-                  alt="Imagen del producto"
-                  style="width: 120px; height: 120px; object-fit: cover"
-                  class="rounded shadow"
-                />
-                <p *ngIf="!imagen" class="text-muted">Imagen no disponible</p>
+            <!-- Imágenes actuales del producto -->
+            <div class="mb-4" *ngIf="oProducto && oProducto.imagenes && oProducto.imagenes.length > 0">
+              <label class="form-label fw-bold">Imágenes actuales</label>
+              <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <div
+                  *ngFor="let img of oProducto?.imagenes"
+                  class="position-relative"
+                >
+                  <img
+                    [src]="'http://localhost:8086' + img.imagenUrl"
+                    alt="Imagen"
+                    style="width: 100px; height: 100px; object-fit: cover"
+                    class="rounded shadow border"
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle"
+                    (click)="eliminarImagen(img.id)"
+                    style="width: 24px; height: 24px; line-height: 0.9"
+                    title="Eliminar imagen"
+                  >
+                    &times;
+                  </button>
+                </div>
               </div>
             </div>
 
             <!-- Cambiar Imagen (archivo) -->
             <div class="mb-4">
-              <label for="imagen" class="form-label fw-bold">Cambiar imagen</label>
+              <label for="imagen" class="form-label fw-bold"
+                >Cambiar imagen</label
+              >
               <input
                 id="imagen"
                 type="file"
                 (change)="onFileChange($event)"
                 accept=".png,.jpg,.jpeg,.webp"
                 class="form-control"
-                
               />
-              <p class="text-muted mt-1">Formatos permitidos: PNG, JPG, JPEG, WEBP</p>
+              <p class="text-muted mt-1">
+                Formatos permitidos: PNG, JPG, JPEG, WEBP
+              </p>
             </div>
-
-           
 
             <!-- Vista previa de nueva imagen -->
             <div class="mb-4" *ngIf="imagenPreview">
-              <label class="form-label fw-bold">Vista previa de nueva imagen</label>
+              <label class="form-label fw-bold"
+                >Vista previa de nueva imagen</label
+              >
               <div class="text-center mt-2">
                 <img
                   [src]="imagenPreview"
@@ -100,7 +127,8 @@
                   class="rounded shadow border border-info"
                 />
                 <p class="text-muted mt-1">
-                  La imagen actual no se reemplazará hasta que guardes los cambios.
+                  La imagen actual no se reemplazará hasta que guardes los
+                  cambios.
                 </p>
               </div>
             </div>
@@ -114,7 +142,11 @@
 
             <!-- Botones -->
             <div class="mt-4 d-flex justify-content-evenly">
-              <button class="btn btn-warning mt-4 mx-1" type="button" [routerLink]="['/admin', 'producto', 'plist']">
+              <button
+                class="btn btn-warning mt-4 mx-1"
+                type="button"
+                [routerLink]="['/admin', 'producto', 'plist']"
+              >
                 <i class="bi bi-list"></i> Ir a listado de Productos
               </button>
               <button class="btn btn-success mt-4 mx-1" type="submit">
