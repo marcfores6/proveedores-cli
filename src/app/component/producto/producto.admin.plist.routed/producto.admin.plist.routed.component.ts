@@ -18,19 +18,13 @@ import { SessionService } from '../../../service/session.service';
   imports: [CommonModule, FormsModule, TrimPipe, RouterModule],
 })
 export class ProductoAdminPlistRoutedComponent implements OnInit {
-
   oPage: IPage<IProducto> | null = null;
-  //
-  nPage: number = 0; // 0-based server count
+  nPage: number = 0;
   nRpp: number = 10;
-  //
   strField: string = '';
   strDir: string = '';
-  //
   strFiltro: string = '';
-  //
   arrBotonera: string[] = [];
-  //
   private debounceSubject = new Subject<string>();
 
   constructor(
@@ -38,8 +32,8 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
     private oBotoneraService: BotoneraService,
     private oRouter: Router,
     private oSessionService: SessionService
-  ) { 
-    this.debounceSubject.pipe(debounceTime(300)).subscribe((value) => {
+  ) {
+    this.debounceSubject.pipe(debounceTime(300)).subscribe(() => {
       this.getPage();
     });
   }
@@ -66,28 +60,25 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   }
 
   edit(oProducto: IProducto) {
-    //navegar a la página de edición
-    this.oRouter.navigate(['admin/producto/edit', oProducto.codigo]);
+    this.oRouter.navigate(['admin/producto/edit', oProducto.id]);
   }
 
   view(oProducto: IProducto) {
-    //navegar a la página de edición
-    this.oRouter.navigate(['admin/producto/view', oProducto.codigo]);
+    this.oRouter.navigate(['admin/producto/view', oProducto.id]);
   }
 
-  remove(oProducto: IProducto) { 
-    this.oRouter.navigate(['admin/producto/delete/', oProducto.codigo]);
+  remove(oProducto: IProducto) {
+    this.oRouter.navigate(['admin/producto/delete/', oProducto.id]);
   }
 
   goToPage(p: any) {
-    const pageNumber = Number(p); // Convertir el valor a número
+    const pageNumber = Number(p);
     if (!isNaN(pageNumber)) {
       this.nPage = pageNumber - 1;
       this.getPage();
     }
     return false;
   }
-  
 
   goToNext() {
     this.nPage++;
@@ -118,4 +109,11 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
     this.debounceSubject.next(this.strFiltro);
   }
 
+  objectKeys(obj: Record<string, unknown>): string[] {
+    return Object.keys(obj);
+  }
+
+  getValue(obj: Record<string, unknown>, key: string): unknown {
+    return obj[key];
+  }
 }

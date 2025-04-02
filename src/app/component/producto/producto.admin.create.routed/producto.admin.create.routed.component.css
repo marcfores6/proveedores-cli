@@ -1,0 +1,19 @@
+.pais-dropdown-panel {
+    background-color: white !important;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+  
+  .pais-dropdown-panel .mat-option {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+  }
+  
+  .pais-dropdown-panel .mat-option:hover {
+    background-color: #f0f0f0;
+  }
+  

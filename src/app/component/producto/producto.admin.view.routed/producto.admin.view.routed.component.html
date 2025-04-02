@@ -3,35 +3,191 @@
     <h1 class="my-5 text-center">
       <i class="bi bi-card-list"></i>
       Detalle de Producto
-      <i class="bi bi-person-circle"></i>
+      <i class="bi bi-box-seam"></i>
     </h1>
-    <br />
+
     <table class="table table-striped table-bordered my-5 text-center">
       <tbody>
-        <tr class="text-center">
-          <th scope="row" class="bg-danger text-white text-end pe-5">Código</th>
-          <td class="text-start ps-5">{{ oProducto.codigo }}</td>
+        <!-- IDENTIFICACIÓN -->
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">ID</th>
+          <td class="text-start ps-5">{{ oProducto.id | noDisponible }}</td>
         </tr>
-        <tr class="text-center">
-          <th scope="row" class="bg-primary text-white text-end pe-5">Nombre</th>
-          <td class="text-start ps-5">{{ oProducto.nombre }}</td>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Código PK</th>
+          <td class="text-start ps-5">{{ oProducto.pk | noDisponible }}</td>
         </tr>
-        <tr class="text-center">
-          <th scope="row" class="bg-primary text-white text-end pe-5">Tipo de Producto</th>
+
+        <!-- INFORMACIÓN GENERAL -->
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Descripción</th>
+          <td class="text-start ps-5">{{ oProducto.descripcion | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Descripción TIC</th>
+          <td class="text-start ps-5">{{ oProducto.descripcionTic | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Departamento</th>
+          <td class="text-start ps-5">{{ oProducto.departamento | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Familia / Subfamilia</th>
           <td class="text-start ps-5">
-            <ng-container *ngIf="oProducto.tipoproducto; else noTipo">
-              {{ oProducto.tipoproducto.descripcion }} (ID: {{ oProducto.tipoproducto.id }})
-            </ng-container>
-            <ng-template #noTipo>
-              <span class="text-muted">Sin tipo de producto asignado</span>
-            </ng-template>
+            {{ oProducto.familia | noDisponible }} / {{ oProducto.subfamilia | noDisponible }}
           </td>
         </tr>
-        
-        <tr class="text-center">
-          <th scope="row" class="bg-primary text-white text-end pe-5">Imágenes</th>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Marca</th>
+          <td class="text-start ps-5">{{ oProducto.marca | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Unidad de Medida</th>
+          <td class="text-start ps-5">{{ oProducto.unidadDeMedida | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Cantidad</th>
+          <td class="text-start ps-5">{{ oProducto.cantidad | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Centralizado</th>
+          <td class="text-start ps-5">{{ oProducto.centralizado | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Apeso</th>
+          <td class="text-start ps-5">{{ oProducto.apeso | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Unidad de Caja / Servicio</th>
           <td class="text-start ps-5">
-            <ng-container *ngIf="oProducto && oProducto.imagenes && oProducto.imagenes.length > 0; else sinImagenes">
+            {{ oProducto.unidadDeCaja | noDisponible }} / {{ oProducto.unidadDeServicio | noDisponible }}
+          </td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Cajas Capa / Palet</th>
+          <td class="text-start ps-5">
+            {{ oProducto.cajasCapa | noDisponible }} / {{ oProducto.cajasPalet | noDisponible }}
+          </td>
+        </tr>
+
+        <!-- CÓDIGOS EAN Y DIMENSIONES -->
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">EAN</th>
+          <td class="text-start ps-5">{{ oProducto.ean | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">EAN C / EAN P</th>
+          <td class="text-start ps-5">
+            {{ oProducto.ean_c | noDisponible }} / {{ oProducto.ean_p | noDisponible }}
+          </td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Largo x Ancho x Alto</th>
+          <td class="text-start ps-5">
+            {{ oProducto.largo | noDisponible }} x {{ oProducto.ancho | noDisponible }} x
+            {{ oProducto.alto | noDisponible }}
+          </td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Peso</th>
+          <td class="text-start ps-5">{{ oProducto.peso | noDisponible }} kg</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Días Caducidad</th>
+          <td class="text-start ps-5">{{ oProducto.diasCaducidad | noDisponible }}</td>
+        </tr>
+
+        <!-- INFORMACIÓN FISCAL -->
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">ARA CEN</th>
+          <td class="text-start ps-5">{{ oProducto.ara_cen | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Partida Arancelaria</th>
+          <td class="text-start ps-5">{{ oProducto.partidaArancelaria | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">País Origen</th>
+          <td class="text-start ps-5">{{ oProducto.paisOrigen | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">IVA</th>
+          <td class="text-start ps-5">{{ oProducto.iva | noDisponible }}</td>
+        </tr>
+
+        <!-- PRECIOS -->
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Precio Venta</th>
+          <td class="text-start ps-5">{{ oProducto.precioVenta | noDisponible }} €</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">PVP HOM / AND / CAT / MEL</th>
+          <td class="text-start ps-5">
+            {{ oProducto.pvp_hom | noDisponible }} / {{ oProducto.pvp_and | noDisponible }} /
+            {{ oProducto.pvp_cat | noDisponible }} / {{ oProducto.pvp_mel | noDisponible }} €
+          </td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Precio Tarifa</th>
+          <td class="text-start ps-5">{{ oProducto.precioTarifa | noDisponible }} €</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Precio Neto</th>
+          <td class="text-start ps-5">{{ oProducto.precioNeto | noDisponible }} €</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">PRO FAC / FFAC / NETON</th>
+          <td class="text-start ps-5">
+            {{ oProducto.pro_fac | noDisponible }} / {{ oProducto.pro_ffac | noDisponible }} /
+            {{ oProducto.pro_neton | noDisponible }}
+          </td>
+        </tr>
+
+        <!-- PROVEEDOR -->
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Proveedor</th>
+          <td class="text-start ps-5">{{ oProducto.proveedor | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Referencia Proveedor</th>
+          <td class="text-start ps-5">{{ oProducto.referenciaProveedor | noDisponible }}</td>
+        </tr>
+
+        <!-- METADATOS Y ESTADO -->
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Artículo Sustituido</th>
+          <td class="text-start ps-5">{{ oProducto.articuloSustituido | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">ART MKD</th>
+          <td class="text-start ps-5">{{ oProducto.art_mkd | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Status</th>
+          <td class="text-start ps-5">{{ oProducto.status | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Observaciones</th>
+          <td class="text-start ps-5">{{ oProducto.observaciones | noDisponible }}</td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Insertado por</th>
+          <td class="text-start ps-5">
+            {{ oProducto.insertedBy | noDisponible }} - {{ oProducto.insertedAt | noDisponible }}
+          </td>
+        </tr>
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Actualizado por</th>
+          <td class="text-start ps-5">
+            {{ oProducto.updateBy | noDisponible }} - {{ oProducto.updateAt | noDisponible }}
+          </td>
+        </tr>
+
+        <!-- IMÁGENES -->
+        <tr>
+          <th class="bg-primary text-white text-end pe-5">Imágenes</th>
+          <td class="text-start ps-5">
+            <ng-container *ngIf="oProducto.imagenes && oProducto.imagenes.length > 0; else sinImagenes">
               <div
                 #carouselProductoImagenes
                 id="carouselProductoImagenes"
@@ -45,33 +201,21 @@
                     [class.active]="i === 0"
                   >
                     <img
-                      [src]="'http://localhost:8086' + img.imagenUrl"
+                      [src]="img.imagenUrl!.startsWith('http') ? img.imagenUrl : 'http://localhost:8086' + img.imagenUrl"
                       class="d-block w-100"
                       alt="Imagen del producto"
                       style="max-height: 300px; object-fit: contain; border-radius: 8px"
                     />
                   </div>
                 </div>
-
                 <div class="text-center mt-2" *ngIf="totalImagenes > 1">
                   Total de Imágenes: {{ totalImagenes }}
                 </div>
-
-                <button
-                  class="carousel-control-prev"
-                  type="button"
-                  data-bs-target="#carouselProductoImagenes"
-                  data-bs-slide="prev"
-                >
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductoImagenes" data-bs-slide="prev">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                   <span class="visually-hidden">Anterior</span>
                 </button>
-                <button
-                  class="carousel-control-next"
-                  type="button"
-                  data-bs-target="#carouselProductoImagenes"
-                  data-bs-slide="next"
-                >
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselProductoImagenes" data-bs-slide="next">
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   <span class="visually-hidden">Siguiente</span>
                 </button>
@@ -84,17 +228,17 @@
         </tr>
       </tbody>
     </table>
-  </div>
 
-  <div class="d-flex justify-content-center mt-4">
-    <a class="btn btn-warning mt-4 mx-1" href="/admin/producto/plist">
-      <i class="bi bi-list"></i> Ir a listado de Productos
-    </a>
-    <a class="btn btn-primary mt-4 mx-1" [routerLink]="['/admin/producto/edit', oProducto.codigo]">
-      <i class="bi bi-pencil"></i> Editar
-    </a>
-    <a class="btn btn-danger mt-4 mx-1" [routerLink]="['/admin/producto/delete', oProducto.codigo]">
-      <i class="bi bi-trash"></i> Borrar
-    </a>
+    <div class="d-flex justify-content-center mt-4">
+      <a class="btn btn-warning mt-4 mx-1" href="/admin/producto/plist">
+        <i class="bi bi-list"></i> Ir a listado de Productos
+      </a>
+      <a class="btn btn-primary mt-4 mx-1" [routerLink]="['/admin/producto/edit', oProducto.id]">
+        <i class="bi bi-pencil"></i> Editar
+      </a>
+      <a class="btn btn-danger mt-4 mx-1" [routerLink]="['/admin/producto/delete', oProducto.id]">
+        <i class="bi bi-trash"></i> Borrar
+      </a>
+    </div>
   </div>
 </div>

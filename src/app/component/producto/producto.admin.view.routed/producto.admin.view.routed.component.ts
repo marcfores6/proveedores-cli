@@ -3,19 +3,18 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IProducto } from '../../../model/producto.interface';
 import { ProductoService } from '../../../service/producto.service';
 import { CommonModule } from '@angular/common';
+import { NoDisponiblePipe } from '../../../pipe/no-disponible.pipe';
 
 @Component({
   selector: 'app-producto.admin.view.routed',
   templateUrl: './producto.admin.view.routed.component.html',
   styleUrls: ['./producto.admin.view.routed.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule, RouterModule, NoDisponiblePipe]
 })
 export class ProductoAdminViewRoutedComponent implements OnInit {
-  codigo: number = 0;
+  id: number = 0;
   oProducto: IProducto = {} as IProducto;
-  imagen: string | null = null;
-  modalImage: string = '';
   activeIndex: number = 0;
   totalImagenes: number = 0;
   imagenesUrl: string[] = [];
@@ -28,22 +27,19 @@ export class ProductoAdminViewRoutedComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.codigo = this.oActivatedRoute.snapshot.params['codigo'];
+    this.id = this.oActivatedRoute.snapshot.params['id'];
     this.getOne();
   }
 
   getOne() {
-    this.oProductoService.getOne(this.codigo).subscribe({
+    this.oProductoService.getOne(this.id).subscribe({
       next: (oProducto: IProducto) => {
         this.oProducto = oProducto;
 
-        if (this.oProducto.imagenUrl && this.oProducto.imagenUrl.trim() !== '') {
-          this.imagen = 'http://localhost:8086' + this.oProducto.imagenUrl;
-        }
-
+        // Cargar imágenes si existen
         if (this.oProducto.imagenes && this.oProducto.imagenes.length > 0) {
           this.imagenesUrl = this.oProducto.imagenes
-            .filter(img => img.imagenUrl)
+            .filter(img => !!img.imagenUrl)
             .map(img =>
               img.imagenUrl!.startsWith('http')
                 ? img.imagenUrl!
@@ -52,11 +48,12 @@ export class ProductoAdminViewRoutedComponent implements OnInit {
           this.totalImagenes = this.oProducto.imagenes.length;
           this.activeIndex = 0;
 
+          // Esperar a que el carrusel esté en el DOM para registrar el listener
           setTimeout(() => this.registrarEventoCarrusel(), 0);
         }
       },
       error: (err) => {
-        console.log('Error al obtener los datos del Producto', err);
+        console.error('Error al obtener los datos del Producto:', err);
       }
     });
   }

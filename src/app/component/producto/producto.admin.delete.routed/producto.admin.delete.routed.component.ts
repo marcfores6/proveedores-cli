@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IProducto } from '../../../model/producto.interface';
 import { ProductoService } from '../../../service/producto.service';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 declare let bootstrap: any;
 @Component({
@@ -9,7 +12,12 @@ declare let bootstrap: any;
   templateUrl: './producto.admin.delete.routed.component.html',
   styleUrls: ['./producto.admin.delete.routed.component.css'],
   standalone: true,
-  imports: [RouterModule]
+  imports: [
+    RouterModule,
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ]
 })
 export class ProductoAdminDeleteRoutedComponent implements OnInit {
   oProducto: IProducto | null = null;
@@ -23,8 +31,8 @@ export class ProductoAdminDeleteRoutedComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let codigo = this.oActivatedRoute.snapshot.params['codigo'];
-    this.oProductoService.get(codigo).subscribe({
+    let id = this.oActivatedRoute.snapshot.params['id'];
+    this.oProductoService.get(id).subscribe({
       next: (oProducto: IProducto) => {
         this.oProducto = oProducto;
       },
@@ -43,10 +51,10 @@ export class ProductoAdminDeleteRoutedComponent implements OnInit {
   }
 
   deleteProducto(): void {
-    this.oProductoService.delete(this.oProducto!.codigo).subscribe({
+    this.oProductoService.delete(this.oProducto!.id).subscribe({
       next: (data) => {
         this.showModal(
-          'Producto con codigo ' + this.oProducto!.codigo + ' ha sido borrado'
+          'Producto con id ' + this.oProducto!.id + ' ha sido borrado'
         );
       },
       error: (error) => {
@@ -59,5 +67,10 @@ export class ProductoAdminDeleteRoutedComponent implements OnInit {
     this.myModal.hide();
     this.oRouter.navigate(['/admin/producto/plist']);
   }
+
+  getProductoKeys(): (keyof IProducto)[] {
+    return this.oProducto ? Object.keys(this.oProducto) as (keyof IProducto)[] : [];
+  }
+  
 
 }
