@@ -1,21 +1,31 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 import { SessionService } from '../../service/session.service';
 import { CryptoService } from '../../service/crypto.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-login',
   templateUrl: './shared.login.routed.html',
   styleUrls: ['./shared.login.routed.css'],
   standalone: true,
+  encapsulation: ViewEncapsulation.None,
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule
+    
   ]
 })
 export class SharedLoginRoutedComponent implements OnInit {

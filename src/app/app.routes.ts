@@ -17,7 +17,6 @@ export const routes: Routes = [
     { path: 'login', component: SharedLoginRoutedComponent },
     { path: 'logout', component: SharedLogoutRoutedComponent },
 
-    { path: 'admin/producto/create', component: ProductoAdminCreateRoutedComponent},
     { path: 'admin/producto/delete/:id', component: ProductoAdminDeleteRoutedComponent},
     { path: 'admin/producto/view/:id', component: ProductoAdminViewRoutedComponent},
     { path: 'admin/producto/edit/:id', component: ProductoAdminEditRoutedComponent},

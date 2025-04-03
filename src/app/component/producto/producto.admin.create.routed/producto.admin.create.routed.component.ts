@@ -15,7 +15,6 @@ declare let bootstrap: any;
   selector: 'app-producto-admin-create-routed',
   templateUrl: './producto.admin.create.routed.component.html',
   styleUrls: ['./producto.admin.create.routed.component.css'],
-  encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
     CommonModule,
@@ -29,20 +28,16 @@ declare let bootstrap: any;
 export class ProductoAdminCreateRoutedComponent implements OnInit {
 
   oProductoForm!: FormGroup;
+  oProducto: IProducto | null = null;
   imagenPreviews: string[] = [];
   imagenUrls: string[] = [];
   strMessage: string = '';
   paisesList: { id: number; nombre: string; codigo: string }[] = [];
-  imagenPreview: string | null = null;
-  imagenesParaSubir: File[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private oProductoService: ProductoService,
     private oRouter: Router,
-    private oActivatedRoute: ActivatedRoute,
-    private oLocation: Location,
-    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -394,7 +389,7 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
       },
       {
         "id": 70,
-        "nombre": "Spain",
+        "nombre": "España",
         "codigo": "ESP"
       },
       {
@@ -1350,27 +1345,27 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
   onSubmit(): void {
     if (this.oProductoForm.valid) {
       const formData = new FormData();
-
-      // Agregar todos los campos del formulario como texto
+  
+      // Añadir todos los campos excepto id
       Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           formData.append(key, value.toString());
         }
       });
-
-      // Agregar URLs de imágenes (si tienes)
+  
+      // Añadir URLs de imagen
       this.imagenUrls.forEach((url, index) => {
         formData.append(`imagenUrls[${index}]`, url);
       });
-
-      // Agregar imágenes por archivo
+  
+      // Añadir imágenes por archivo desde input
       const input = document.getElementById('imagenes') as HTMLInputElement;
       if (input?.files) {
         Array.from(input.files).forEach(file => {
-          formData.append('imagenes', file);
+          formData.append('imagenes', file); // ← backend espera este nombre
         });
       }
-
+  
       this.oProductoService.create(formData).subscribe({
         next: (data: IProducto) => {
           this.strMessage = `Producto ${data.id} creado correctamente.`;
@@ -1384,19 +1379,25 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
       });
     }
   }
+  
 
 
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
+      const files = Array.from(input.files);
       this.imagenPreviews = [];
-      Array.from(input.files).forEach(file => {
+  
+      files.forEach(file => {
         const reader = new FileReader();
-        reader.onload = (e: any) => this.imagenPreviews.push(e.target.result);
+        reader.onload = (e: any) => {
+          this.imagenPreviews.push(e.target.result);
+        };
         reader.readAsDataURL(file);
       });
     }
   }
+  
 
   addImageUrl(url: string): void {
     if (url && !this.imagenUrls.includes(url)) {
@@ -1423,18 +1424,26 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
     this.oRouter.navigate(['/admin/producto/plist']);
   }
 
+ removeImage(index: number): void {
+  const input = document.getElementById('imagenes') as HTMLInputElement;
 
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.imagenesParaSubir = [file];
-  
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagenPreview = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
+  // Eliminar la preview
+  this.imagenPreviews.splice(index, 1);
+
+  // Para eliminar del input `type="file"` (no es trivial):
+  if (input?.files) {
+    const dt = new DataTransfer();
+    const files = Array.from(input.files);
+    files.splice(index, 1);
+    files.forEach(f => dt.items.add(f));
+    input.files = dt.files;
   }
+}
+
+  eliminarImagen(id: number): void {
+    if (!this.oProducto || !this.oProducto.imagenes) return;
+    this.oProducto.imagenes = this.oProducto.imagenes.filter(img => img.id !== id);
+  }
+  
+
 }

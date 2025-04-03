@@ -15,7 +15,7 @@ import { SessionService } from '../../../service/session.service';
   templateUrl: './producto.admin.plist.routed.component.html',
   styleUrls: ['./producto.admin.plist.routed.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, TrimPipe, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class ProductoAdminPlistRoutedComponent implements OnInit {
   oPage: IPage<IProducto> | null = null;
@@ -116,4 +116,9 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   getValue(obj: Record<string, unknown>, key: string): unknown {
     return obj[key];
   }
+
+  isVacio(valor: any): boolean {
+    return valor === null || valor === undefined || valor === '';
+  }
+  
 }

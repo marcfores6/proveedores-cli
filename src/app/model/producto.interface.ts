@@ -1,3 +1,4 @@
+import { Timestamp } from "rxjs";
 import { IProductoImagen } from "./productoImagen.interface";
 
 export interface IProducto {
@@ -48,9 +49,9 @@ export interface IProducto {
   articuloSustituido?: string;
 
   insertedBy?: string;
-  insertedAt?: string;  // ISO string (Timestamp)
+  insertedAt?: Timestamp<Date>;  // ISO string (Timestamp)
   updateBy?: string;
-  updateAt?: string;
+  updateAt?: Timestamp<Date>;
 
   status?: number;
   observaciones?: string;

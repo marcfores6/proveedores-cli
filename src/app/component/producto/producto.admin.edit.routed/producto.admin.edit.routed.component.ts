@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IProducto } from '../../../model/producto.interface';
@@ -28,6 +28,8 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   strMessage: string = '';
   myModal: any;
   camposProducto: string[] = [];
+  imagenPreviews: string[] = [];
+  imagenUrls: string[] = [];
 
   paisesList: { id: number; nombre: string; codigo: string }[] = [];
 
@@ -37,13 +39,65 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     private oActivatedRoute: ActivatedRoute,
     private oProductoService: ProductoService,
     private oRouter: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
-    this.oProductoForm = this.fb.group({});
+    this.oProductoForm = this.fb.group({
+      id: [''],
+      descripcion: [''],
+      descripcionTic: [''],
+      departamento: [''],
+      familia: [''],
+      subfamilia: [''],
+      marca: [''],
+      unidadDeMedida: [''],
+      cantidad: [''],
+      centralizado: [''],
+      apeso: [''],
+      unidadDeCaja: [''],
+      unidadDeServicio: [''],
+      pk: [''],
+      cajasCapa: [''],
+      cajasPalet: [''],
+      proveedor: [''],
+      referenciaProveedor: [''],
+      ean: [''],
+      ean_c: [''],
+      ean_p: [''],
+      largo: [''],
+      ancho: [''],
+      alto: [''],
+      peso: [''],
+      diasCaducidad: [''],
+      ara_cen: [''],
+      iva: [''],
+      precioVenta: [''],
+      pvp_hom: [''],
+      pvp_and: [''],
+      pvp_cat: [''],
+      precioTarifa: [''],
+      pro_fac: [''],
+      precioNeto: [''],
+      pro_ffac: [''],
+      pro_neton: [''],
+      art_mkd: [''],
+      articuloSustituido: [''],
+      insertedBy: [''],
+      insertedAt: [''],
+      updateBy: [''],
+      updateAt: [''],
+      status: [''],
+      observaciones: [''],
+      partidaArancelaria: [''],
+      pvp_mel: [''],
+      paisOrigen: [''],
+      imagenUrl: [''] // <-- este aunque sea solo para controlarlo
+    });
+    
   }
 
   ngOnInit() {
-    this.paisesList= [
+    this.paisesList=[
       {
         "id": 1,
         "nombre": "Aruba",
@@ -391,7 +445,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       },
       {
         "id": 70,
-        "nombre": "Spain",
+        "nombre": "España",
         "codigo": "ESP"
       },
       {
@@ -1298,26 +1352,28 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.oProductoService.get(this.id).subscribe({
       next: (data: IProducto) => {
         this.oProducto = data;
-        this.oProductoForm = this.fb.group({});
-
+  
+        // Rellenar los campos que ya existen en el formulario
+        this.oProductoForm.patchValue(data);
+  
+        // Si hay campos adicionales que no están en el form, los añadimos
         Object.entries(data).forEach(([key, value]) => {
           if (key === 'imagenes') return;
-          this.oProductoForm.addControl(key, new FormControl(value ?? ''));
+          if (!this.oProductoForm.contains(key)) {
+            this.oProductoForm.addControl(key, new FormControl(value ?? ''));
+          }
         });
-
+  
         this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes');
-
-        if ('imagenUrl' in data && typeof data['imagenUrl'] === 'string' && data['imagenUrl'].trim()) {
-          this.imagen = 'http://localhost:8086' + data['imagenUrl'];
-        } else {
-          this.cargarImagen();
-        }
       },
       error: (error) => {
-        console.error(error);
+        console.error('Error al cargar el producto:', error);
+        this.showModal('No se pudo cargar el producto.');
       },
     });
   }
+  
+  
 
   cargarImagen(): void {
     this.oProductoService.getImagen(this.id).subscribe({
@@ -1329,10 +1385,11 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         reader.readAsDataURL(blob);
       },
       error: () => {
-        this.imagen = null;
+        this.imagen = null; // No pasa nada si no tiene imagen
       },
     });
   }
+  
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -1366,39 +1423,46 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       this.showModal('Formulario inválido');
       return;
     }
-
+  
     const formData = new FormData();
-
+  
     Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
       if (key !== 'imagenUrl' && value !== null && value !== undefined) {
         formData.append(key, value as string);
       }
     });
-
+  
     const imagenUrl = this.oProductoForm?.get('imagenUrl')?.value;
-
+  
     if (this.nuevaImagen && imagenUrl) {
       this.showModal('No puedes subir una imagen y usar una URL al mismo tiempo');
       return;
     }
-
-    if (this.nuevaImagen) {
-      formData.append('Imagen', this.nuevaImagen);
+  
+    // Adjuntar múltiples archivos
+    const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
+    if (inputImagenes && inputImagenes.files) {
+      Array.from(inputImagenes.files).forEach((file) => {
+        formData.append('imagenes', file);
+      });
     }
-
-    if (imagenUrl) {
-      formData.append('ImagenUrl', imagenUrl);
-    }
-
+  
+    // Adjuntar URLs de imágenes
+    this.imagenUrls.forEach((url) => {
+      formData.append('imagenUrls', url);
+    });
+  
     this.oProductoService.update(this.id, formData).subscribe({
       next: () => {
         this.showModal('Producto actualizado correctamente!');
+        this.cargarProducto();
       },
       error: (error) => {
         console.error(error);
       },
     });
   }
+  
 
   eliminarImagen(idImagen: number): void {
     if (confirm('¿Seguro que deseas eliminar esta imagen?')) {
@@ -1413,4 +1477,54 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       });
     }
   }
+
+  onFileSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const files = Array.from(input.files);
+      this.imagenPreviews = [];
+  
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imagenPreviews.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  }
+  
+
+  addImageUrl(url: string): void {
+    if (url && !this.imagenUrls.includes(url)) {
+      this.imagenUrls.push(url);
+    }
+  }
+
+  removeImageUrl(url: string): void {
+    this.imagenUrls = this.imagenUrls.filter(u => u !== url);
+  }
+
+  onReset(): void {
+    this.oProductoForm.reset();
+    this.imagenPreviews = [];
+    this.imagenUrls = [];
+  }
+
+
+ removeImage(index: number): void {
+  const input = document.getElementById('imagenes') as HTMLInputElement;
+
+  // Eliminar la preview
+  this.imagenPreviews.splice(index, 1);
+
+  // Para eliminar del input `type="file"` (no es trivial):
+  if (input?.files) {
+    const dt = new DataTransfer();
+    const files = Array.from(input.files);
+    files.splice(index, 1);
+    files.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+  }
+}
 }
