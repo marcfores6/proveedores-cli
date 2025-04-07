@@ -41,7 +41,7 @@ export class SharedLoginRoutedComponent implements OnInit {
     private oCryptoService: CryptoService
   ) {
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      nif: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     });
 
@@ -52,14 +52,14 @@ export class SharedLoginRoutedComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      const hashedPassword = this.oCryptoService.getHashSHA256(this.loginForm.value.password);
-      this.oLoginService.login(this.loginForm.value.email, hashedPassword).subscribe({
+      //const hashedPassword = this.oCryptoService.getHashSHA256(this.loginForm.value.password);
+      this.oLoginService.login(this.loginForm.value.nif, this.loginForm.value.password).subscribe({
         next: (token: string) => {
           console.log('Token recibido:', token);
           alert('Inicio de sesión exitoso');
 
           this.oSessionService.login(token);
-          this.oRouter.navigate(['/']);
+          this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
 
           //let parsedToken: IJwt;
           //parsedToken = this.oSessionService.parseJwt(token);
@@ -76,14 +76,14 @@ export class SharedLoginRoutedComponent implements OnInit {
 
   onAdmin() {
     this.loginForm.setValue({
-      email: 'okeeeeeeey@okeeeeeeey.com',
-      password: 'okey'
+      nif: '00001',
+      password: 'holacaracola'
     });
   }
 
   onContable() {
     this.loginForm.setValue({
-      email: 'emailRafa2149@gmail.com',
+      nif: 'emailRafa2149@gmail.com',
       password: 'ausias'
     });
   }

@@ -1,0 +1,38 @@
+<div class="row justify-content-center m-3">
+  <div class="col-lg-7 col-md-10 col-sm-12">
+    <h1 class="my-5 text-center">
+      <i class="bi bi-card-list"></i>
+      Detalles de {{ oProveedor.nif }}
+      <i class="bi bi-person-circle"></i>
+    </h1>
+    <br />
+    <table class="table table-striped table-bordered my-5 text-center proveedor-table">
+      <tbody>
+        <tr>
+          <th scope="row">Id</th>
+          <td>{{ oProveedor.id }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Descripción</th>
+          <td>{{ oProveedor.descripcion }}</td>
+        </tr>
+        <tr>
+          <th scope="row">NIF</th>
+          <td>{{ oProveedor.nif }}</td>
+        </tr>
+        <tr>
+          <th scope="row">ID_COMPRADOR</th>
+          <td>{{ oProveedor.id_comprador }}</td>
+        </tr>
+        <tr>
+          <th scope="row">ID_GESTOR</th>
+          <td>{{ oProveedor.id_gestor }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Contraseña</th>
+          <td>{{ oProveedor.password }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -561,12 +561,12 @@
               </div>
 
               <div class="text-center mt-4">
-                <a routerLink="/admin/producto/plist" class="btn btn-secondary">
+                <a routerLink="/admin/producto/plist" class="btn btn-secondary me-4">
                   <i class="bi bi-arrow-left"></i> Volver
                 </a>
-                <button type="submit" class="btn btn-success me-2">
+                <button type="submit" class="btn btn-success" [disabled]="oProductoForm.invalid">
                   <i class="bi bi-save"></i> Guardar
-                </button>M
+                </button>
               </div>
             </div>
           </form>

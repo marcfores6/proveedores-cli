@@ -1,0 +1,76 @@
+/* Fondo general */
+body {
+    background-color: #f0f4f1;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Contenedor principal */
+  .row {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título */
+  h1 {
+    color: #3a7734; /* Verde Family Cash */
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  
+  /* Iconos en título */
+  h1 i {
+    color: #3a7734;
+    margin: 0 0.5rem;
+  }
+  
+  /* Tabla */
+  .proveedor-table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .proveedor-table th {
+    background-color: #3a7734; /* Verde corporativo */
+    color: white;
+    text-align: right;
+    padding: 1rem;
+    width: 40%;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+  
+  .proveedor-table td {
+    background-color: #f8f9f8;
+    color: #333;
+    text-align: left;
+    padding: 1rem;
+    width: 60%;
+    vertical-align: middle;
+  }
+  
+  /* Alternancia de filas */
+  .proveedor-table tbody tr:nth-child(odd) td {
+    background-color: #e7f5ec;
+  }
+  
+  .proveedor-table tbody tr:nth-child(even) td {
+    background-color: #f8f9f8;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .proveedor-table th,
+    .proveedor-table td {
+      padding: 0.75rem;
+      font-size: 0.9rem;
+    }
+  
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+  

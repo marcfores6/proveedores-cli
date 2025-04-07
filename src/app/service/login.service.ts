@@ -13,8 +13,8 @@ export class LoginService {
 
   constructor(private oHttp: HttpClient) { }
 
-  login(email: string, password: string): Observable<string> {
-    const loginData = { email: email, password: password };
+  login(nif: string, password: string): Observable<string> {
+    const loginData = { nif: nif, password: password };
     return this.oHttp.post<string>(this.serverURL + '/login', loginData);
   }
 }

@@ -1,0 +1,56 @@
+/* Campos con datos faltantes */
+.text-danger.fw-bold {
+    background-color: #ffe5e5 !important; /* rojo claro */
+    color: #c30000 !important;           /* rojo intenso */
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  /* Tabla mejorada visualmente */
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .table th,
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+    white-space: nowrap;
+  }
+  
+  .table th {
+    background-color: #005507; /* Verde FamilyCash */
+    color: white;
+    font-weight: bold;
+  }
+  
+  .table td {
+    background-color: #f9f9f9;
+  }
+  
+  /* Hover sobre filas */
+  .table tbody tr:hover {
+    background-color: #e0f0e0;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.75rem 0.5rem !important;
+    vertical-align: middle;
+  }
+  
+  .bg-light-danger {
+    background-color: #ffe0e0 !important;
+  }
+  
+  /* Para hacer la fila clicable visualmente */
+  table.table .clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  /* Efecto hover bien aplicado */
+  table.table .clickable-row:hover {
+    background-color: #d9f0d9 !important;
+  }
+  

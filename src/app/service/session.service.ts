@@ -38,13 +38,13 @@ export class SessionService {
         }
     }
 
-    getSessionEmail(): string {
+    getSessionNif(): string {
         const token = this.getToken();
         if (token) {
             if (this.isSessionActive()) {
                 let parsedToken: IJwt;
                 parsedToken = this.parseJwt(token);
-                return parsedToken.email;
+                return parsedToken.nif;
             } else {
                 return '';
             }

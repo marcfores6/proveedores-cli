@@ -13,14 +13,14 @@
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         
-        <!-- Email -->
+        <!-- nif -->
         <mat-form-field appearance="outline" class="w-100 mb-3">
-          <mat-label>Correo electrónico</mat-label>
-          <input matInput type="email" placeholder="ejemplo@correo.com" formControlName="email" />
-          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-            El correo es obligatorio.
+          <mat-label>NIF de la empresa</mat-label>
+          <input matInput type="nif" placeholder="Máximo 20 caracteres" formControlName="nif" />
+          <mat-error *ngIf="loginForm.get('nif')?.hasError('required')">
+            El nif es obligatorio.
           </mat-error>
-          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          <mat-error *ngIf="loginForm.get('nif')?.hasError('nif')">
             El formato no es válido.
           </mat-error>
         </mat-form-field>
