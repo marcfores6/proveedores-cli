@@ -13,8 +13,13 @@ export class LoginService {
 
   constructor(private oHttp: HttpClient) { }
 
-  login(nif: string, password: string): Observable<string> {
-    const loginData = { nif: nif, password: password };
-    return this.oHttp.post<string>(this.serverURL + '/login', loginData);
+  login(nif: string, password: string, proveedorId: number) {
+    const loginData = { nif, password, proveedorId };
+    return this.oHttp.post<string>('http://localhost:8086/auth/login', loginData, { responseType: 'text' as 'json' });
   }
+  
+  getProveedoresPorNif(nif: string) {
+    return this.oHttp.get<any[]>(`http://localhost:8086/auth/proveedores-por-nif?nif=${nif}`);
+  }
+  
 }

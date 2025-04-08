@@ -86,8 +86,10 @@ export class SessionService {
     }
 
     private setToken(strToken: string): void {
-        localStorage.setItem('token', strToken);
+        const cleanToken = strToken.replace(/^"|"$/g, ''); // Esto quita las comillas al principio y al final
+        localStorage.setItem('token', cleanToken);
     }
+    
 
     login(strToken: string): void {
         this.setToken(strToken);

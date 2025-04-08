@@ -16,6 +16,9 @@
           <a class="nav-link" [class.active]="strRuta == '/'"
             href="admin/producto/plist">Productos</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="strRuta == '/admin/producto/xproveedor/plist'" [routerLink]="'/admin/producto/xproveedor/plist'">ProductosByProveedor</a>
+        </li>
       </ul>
       
     @if(!activeSession){

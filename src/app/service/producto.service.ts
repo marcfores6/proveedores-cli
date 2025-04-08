@@ -44,32 +44,12 @@ export class ProductoService {
     return this.oHttp.get<IPage<IProducto>>(URL, httpOptions);
   }
 
-  getPageByProveedor(
-    page: number,
-    size: number,
-    field: string,
-    dir: string,
-    filtro: string
-  ): Observable<IPage<IProducto>> {
-    let URL = `${this.serverURL}/pagebyproveedor`;
-    if (!page) { page = 0; }
-    URL += `?page=${page}`;
-    if (!size) { size = 10; }
-    URL += `&size=${size}`;
-    if (field) {
-      URL += `&sort=${field}`;
-      if (dir === 'asc') {
-        URL += `,asc`;
-      } else {
-        URL += `,desc`;
-      }
-    }
-    if (filtro) {
-      URL += `&filter=${filtro}`;
-    }
-  
-    return this.oHttp.get<IPage<IProducto>>(URL, httpOptions);
+  getPageByProveedor(page: number, size: number): Observable<IPage<IProducto>> {
+    return this.oHttp.get<IPage<IProducto>>(`${this.serverURL}/pagebyproveedor`, {
+      params: { page: page.toString(), size: size.toString() }
+    });
   }
+  
   
 
   get(codigo: number): Observable<IProducto> {

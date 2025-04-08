@@ -150,16 +150,16 @@
           <li class="page-item" [class.disabled]="nPage <= 0">
             <a class="page-link" (click)="goToPrev()">Anterior</a>
           </li>
-          <li class="page-item" *ngFor="let p of arrBotonera">
+          <li class="page-item" *ngFor="let p of arrBotonera" [class.active]="nPage === (+p - 1)">
             <ng-container *ngIf="p === '...'; else numPage">
               <span class="page-link disabled">…</span>
             </ng-container>
             <ng-template #numPage>
-              <a class="page-link" href="#" (click)="goToPage(p)" [class.active]="nPage === (+p - 1)">
+              <a class="page-link" href="#" (click)="goToPage(p)">
                 {{ p }}
               </a>
             </ng-template>
-          </li>
+          </li>          
           <li class="page-item" [class.disabled]="oPage && nPage >= oPage.totalPages - 1">
             <a class="page-link" (click)="goToNext()">Siguiente</a>
           </li>

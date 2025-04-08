@@ -38,15 +38,19 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     this.getPage();
   }
 
-  getPage(): void {
-    this.oProductoService.getPageByProveedor(this.nPage, this.nRpp, this.strField, this.strDir, this.strFiltro)
+  getPage() {
+    this.oProductoService
+      .getPageByProveedor(this.nPage, this.nRpp)
       .subscribe({
         next: (oPageFromServer: IPage<IProducto>) => {
           this.oPage = oPageFromServer;
-          this.arrBotonera = this.oBotoneraService.getBotonera(this.nPage, oPageFromServer.totalPages);
+          this.arrBotonera = this.oBotoneraService.getBotonera(
+            this.nPage,
+            oPageFromServer.totalPages
+          );
         },
         error: (err) => {
-          console.error(err);
+          console.log(err);
         }
       });
   }

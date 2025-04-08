@@ -12,16 +12,29 @@
       <h2 class="text-family-green mb-4 text-center">Acceso a la plataforma</h2>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        
-        <!-- nif -->
+
+        <!-- NIF -->
         <mat-form-field appearance="outline" class="w-100 mb-3">
           <mat-label>NIF de la empresa</mat-label>
-          <input matInput type="nif" placeholder="Máximo 20 caracteres" formControlName="nif" />
+          <input matInput type="text" placeholder="Máximo 20 caracteres" formControlName="nif" />
           <mat-error *ngIf="loginForm.get('nif')?.hasError('required')">
-            El nif es obligatorio.
+            El NIF es obligatorio.
           </mat-error>
           <mat-error *ngIf="loginForm.get('nif')?.hasError('nif')">
             El formato no es válido.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Selector de empresa (proveedor) -->
+        <mat-form-field appearance="outline" class="w-100 mb-3" *ngIf="proveedores.length > 0">
+          <mat-label>Empresa</mat-label>
+          <mat-select formControlName="proveedorId">
+            <mat-option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
+              {{ proveedor.descripcion }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="loginForm.get('proveedorId')?.hasError('required')">
+            Debes seleccionar una empresa.
           </mat-error>
         </mat-form-field>
 
