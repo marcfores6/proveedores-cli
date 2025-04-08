@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IProducto } from '../../../model/producto.interface';
 import { ProductoService } from '../../../service/producto.service';
@@ -22,15 +22,11 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   id: number = 0;
   oProductoForm: FormGroup;
   oProducto: IProducto | null = null;
-  imagen: string | null = null;
-  nuevaImagen: File | null = null;
-  imagenPreview: string | null = null;
+  imagenPreviews: string[] = [];
+  imagenUrls: string[] = [];
   strMessage: string = '';
   myModal: any;
   camposProducto: string[] = [];
-  imagenPreviews: string[] = [];
-  imagenUrls: string[] = [];
-
   paisesList: { id: number; nombre: string; codigo: string }[] = [];
 
   readonly dialog = inject(MatDialog);
@@ -91,13 +87,18 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       partidaArancelaria: [''],
       pvp_mel: [''],
       paisOrigen: [''],
-      imagenUrl: [''] // <-- este aunque sea solo para controlarlo
+      imagenUrl: [''],
     });
-    
   }
 
   ngOnInit() {
-    this.paisesList=[
+    this.id = this.oActivatedRoute.snapshot.params['id'];
+    this.cargarPaises();
+    this.cargarProducto();
+  }
+
+  cargarPaises(): void {
+    this.paisesList = [
       {
         "id": 1,
         "nombre": "Aruba",
@@ -1344,26 +1345,21 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         "codigo": "ZWE"
       }
     ]
-    this.id = this.oActivatedRoute.snapshot.params['id'];
-    this.cargarProducto();
   }
 
   cargarProducto(): void {
     this.oProductoService.get(this.id).subscribe({
       next: (data: IProducto) => {
         this.oProducto = data;
-  
-        // Rellenar los campos que ya existen en el formulario
         this.oProductoForm.patchValue(data);
-  
-        // Si hay campos adicionales que no están en el form, los añadimos
+
         Object.entries(data).forEach(([key, value]) => {
           if (key === 'imagenes') return;
           if (!this.oProductoForm.contains(key)) {
             this.oProductoForm.addControl(key, new FormControl(value ?? ''));
           }
         });
-  
+
         this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes');
       },
       error: (error) => {
@@ -1372,97 +1368,17 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       },
     });
   }
-  
-  
-
-  cargarImagen(): void {
-    this.oProductoService.getImagen(this.id).subscribe({
-      next: (blob: Blob) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.imagen = reader.result as string;
-        };
-        reader.readAsDataURL(blob);
-      },
-      error: () => {
-        this.imagen = null; // No pasa nada si no tiene imagen
-      },
-    });
-  }
-  
-
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      this.nuevaImagen = input.files[0];
-      this.oProductoForm?.get('imagenUrl')?.setValue('');
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagenPreview = reader.result as string;
-      };
-      reader.readAsDataURL(this.nuevaImagen);
-    }
-  }
 
   showModal(strMessage: string) {
     this.strMessage = strMessage;
-    this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), {
-      keyboard: false,
-    });
+    this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), { keyboard: false });
     this.myModal.show();
   }
 
   hideModal = () => {
     this.myModal.hide();
-    this.oRouter.navigate(['admin/producto/plist/']);
+    this.oRouter.navigate(['/admin/producto/plist']);
   };
-
-  onSubmit(): void {
-    if (this.oProductoForm?.invalid) {
-      this.showModal('Formulario inválido');
-      return;
-    }
-  
-    const formData = new FormData();
-  
-    Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
-      if (key !== 'imagenUrl' && value !== null && value !== undefined) {
-        formData.append(key, value as string);
-      }
-    });
-  
-    const imagenUrl = this.oProductoForm?.get('imagenUrl')?.value;
-  
-    if (this.nuevaImagen && imagenUrl) {
-      this.showModal('No puedes subir una imagen y usar una URL al mismo tiempo');
-      return;
-    }
-  
-    // Adjuntar múltiples archivos
-    const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
-    if (inputImagenes && inputImagenes.files) {
-      Array.from(inputImagenes.files).forEach((file) => {
-        formData.append('imagenes', file);
-      });
-    }
-  
-    // Adjuntar URLs de imágenes
-    this.imagenUrls.forEach((url) => {
-      formData.append('imagenUrls', url);
-    });
-  
-    this.oProductoService.update(this.id, formData).subscribe({
-      next: () => {
-        this.showModal('Producto actualizado correctamente!');
-        this.cargarProducto();
-      },
-      error: (error) => {
-        console.error(error);
-      },
-    });
-  }
-  
 
   eliminarImagen(idImagen: number): void {
     if (confirm('¿Seguro que deseas eliminar esta imagen?')) {
@@ -1483,7 +1399,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     if (input.files) {
       const files = Array.from(input.files);
       this.imagenPreviews = [];
-  
+
       files.forEach(file => {
         const reader = new FileReader();
         reader.onload = (e: any) => {
@@ -1493,7 +1409,53 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       });
     }
   }
-  
+
+  removeImage(index: number): void {
+    const input = document.getElementById('imagenes') as HTMLInputElement;
+    this.imagenPreviews.splice(index, 1);
+
+    if (input?.files) {
+      const dt = new DataTransfer();
+      const files = Array.from(input.files);
+      files.splice(index, 1);
+      files.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    }
+  }
+
+  onSubmit(): void {
+    if (this.oProductoForm?.invalid) {
+      this.showModal('Formulario inválido');
+      return;
+    }
+
+    const formData = new FormData();
+    Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
+      if (key !== 'imagenUrl' && value !== null && value !== undefined) {
+        formData.append(key, value as string);
+      }
+    });
+
+    this.imagenUrls.forEach(url => formData.append('imagenUrls', url));
+
+    const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
+    if (inputImagenes && inputImagenes.files) {
+      Array.from(inputImagenes.files).forEach(file => {
+        formData.append('imagenes', file);
+      });
+    }
+
+    this.oProductoService.update(this.id, formData).subscribe({
+      next: () => {
+        this.showModal('Producto actualizado correctamente!');
+        this.cargarProducto();
+      },
+      error: (error) => {
+        console.error(error);
+        this.showModal('Error al actualizar el producto.');
+      },
+    });
+  }
 
   addImageUrl(url: string): void {
     if (url && !this.imagenUrls.includes(url)) {
@@ -1510,21 +1472,4 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.imagenPreviews = [];
     this.imagenUrls = [];
   }
-
-
- removeImage(index: number): void {
-  const input = document.getElementById('imagenes') as HTMLInputElement;
-
-  // Eliminar la preview
-  this.imagenPreviews.splice(index, 1);
-
-  // Para eliminar del input `type="file"` (no es trivial):
-  if (input?.files) {
-    const dt = new DataTransfer();
-    const files = Array.from(input.files);
-    files.splice(index, 1);
-    files.forEach(f => dt.items.add(f));
-    input.files = dt.files;
-  }
-}
 }

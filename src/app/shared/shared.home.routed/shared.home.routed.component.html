@@ -1,8 +1,31 @@
-<div class="container d-flex align-items-center flex-column mt-5">
-  <!-- Masthead Avatar Image-->
-  <img class="mb-3" src="assets/img/supermercados-family-cash.png" width="300" alt="logo">
+<div class="container d-flex align-items-center flex-column mt-5 text-center home-container">
+  <!-- Logo -->
+  <img class="mb-3 home-logo" src="assets/img/supermercados-family-cash.png" width="300" alt="Logo Family Cash">
 
-  <h1 class="masthead-heading text-uppercase mb-0">PROVEEDORES</h1>
-  <p class="masthead-subheading font-weight-light mb-0">Alta de productos de proveedores</p>
-  <p class="masthead-subheading font-weight-light mb-0"></p>
+  <!-- Título -->
+  <h1 class="masthead-heading text-uppercase mb-3 text-shadow">Proveedores & Productos</h1>
+
+  <!-- Subtítulo -->
+  <p class="masthead-subheading font-weight-light mb-4 text-shadow">
+    Gestión avanzada de proveedores y productos de Family Cash
+  </p>
+
+  <!-- Descripción pequeña -->
+  <p class="lead mb-4 text-muted">
+    Bienvenido al panel de administración de Family Cash. Desde aquí puedes gestionar los productos,
+    proveedores, exportar datos, cargar imágenes y mucho más.
+  </p>
+
+  <!-- Acciones principales -->
+  <div class="d-flex flex-wrap justify-content-center gap-3">
+    <a routerLink="/admin/producto/plist" class="btn btn-success btn-lg shadow-sm">
+      <i class="bi bi-box-seam"></i> Gestión de Productos
+    </a>
+    <a routerLink="/admin/proveedor/plist" class="btn btn-primary btn-lg shadow-sm">
+      <i class="bi bi-people-fill"></i> Gestión de Proveedores
+    </a>
+    <a routerLink="/admin/conexion/plist" class="btn btn-warning btn-lg shadow-sm">
+      <i class="bi bi-diagram-3-fill"></i> Conexiones & Instalaciones
+    </a>
+  </div>
 </div>

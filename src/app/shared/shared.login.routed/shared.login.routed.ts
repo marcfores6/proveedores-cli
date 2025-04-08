@@ -120,7 +120,8 @@ export class SharedLoginRoutedComponent implements OnInit {
 
   onAdmin() {
     this.loginForm.setValue({
-      nif: '00001',
+      nif: 'B18975599',
+      proveedorId: '',
       password: 'holacaracola'
     });
   }

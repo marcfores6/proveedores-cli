@@ -1,10 +1,13 @@
 <div class="container-fluid mt-5">
   <div class="row">
     <div class="col-12">
+
+      <!-- Título -->
       <h2 class="mb-4 text-center">
         <i class="bi bi-list"></i> Lista de Productos
       </h2>
 
+      <!-- Buscador -->
       <div class="mb-4 d-flex justify-content-center align-items-center">
         <input
           type="text"
@@ -15,21 +18,29 @@
         />
       </div>
 
+      <!-- Info filtro y cantidad -->
       <div class="d-flex justify-content-between">
-        @if (strFiltro.length>0) {
-        <h5 class="text-muted">
-          Filtrado por: <span class="text-danger">{{ strFiltro }}</span>
-        </h5>
-        } @else{
-        <h5 class="text-muted">Sin filtrar</h5>
+        @if (strFiltro.length > 0) {
+          <h5 class="text-muted">
+            Filtrado por: <span class="text-danger">{{ strFiltro }}</span>
+          </h5>
+        } @else {
+          <h5 class="text-muted">Sin filtrar</h5>
         }
         <h5 class="text-muted">
-          Mostrando {{ oPage?.numberOfElements | number : "1.0-0" }} de
-          {{ oPage?.totalElements | number : "1.0-0" }}
+          Mostrando {{ oPage?.numberOfElements | number: '1.0-0' }} de {{ oPage?.totalElements | number: '1.0-0' }}
         </h5>
       </div>
 
-      <div class="table-responsive">
+      <!-- Loader -->
+      <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-responsive" *ngIf="!loading">
         <table class="table table-striped table-bordered align-middle text-center">
           <thead class="table-success text-white bg-success">
             <tr>
@@ -83,59 +94,59 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let producto of oPage?.content" class="clickable-row" (click)="edit(producto)"  style="cursor: pointer;">
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.id }">{{ producto.id || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.descripcion }">{{ producto.descripcion || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.descripcionTic }">{{ producto.descripcionTic || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.departamento }">{{ producto.departamento || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.familia }">{{ producto.familia || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.subfamilia }">{{ producto.subfamilia || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.marca }">{{ producto.marca || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.unidadDeMedida }">{{ producto.unidadDeMedida || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.cantidad }">{{ producto.cantidad || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.centralizado }">{{ producto.centralizado || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.apeso }">{{ producto.apeso || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.unidadDeCaja }">{{ producto.unidadDeCaja || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.unidadDeServicio }">{{ producto.unidadDeServicio || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.pk }">{{ producto.pk || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.cajasCapa }">{{ producto.cajasCapa || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.cajasPalet }">{{ producto.cajasPalet || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.proveedor }">{{ producto.proveedor || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.referenciaProveedor }">{{ producto.referenciaProveedor || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.ean }">{{ producto.ean || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.ean_c }">{{ producto.ean_c || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.ean_p }">{{ producto.ean_p || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.largo }">{{ producto.largo || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.ancho }">{{ producto.ancho || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.alto }">{{ producto.alto || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.peso }">{{ producto.peso || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.diasCaducidad }">{{ producto.diasCaducidad || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.ara_cen }">{{ producto.ara_cen || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.iva }">{{ producto.iva || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.precioVenta }">{{ producto.precioVenta || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.pvp_hom }">{{ producto.pvp_hom || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.pvp_and }">{{ producto.pvp_and || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.pvp_cat }">{{ producto.pvp_cat || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.precioTarifa }">{{ producto.precioTarifa || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.pro_fac }">{{ producto.pro_fac || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.precioNeto }">{{ producto.precioNeto || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.pro_ffac }">{{ producto.pro_ffac || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.pro_neton }">{{ producto.pro_neton || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.art_mkd }">{{ producto.art_mkd || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.articuloSustituido }">{{ producto.articuloSustituido || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.insertedBy }">{{ producto.insertedBy || 'Sin dato' }}</td>
-              <td [ngClass]="{ 'text-danger fw-bold bg-light-danger': !producto.updateBy }">{{ producto.updateBy || 'Sin dato' }}</td>
-              <td>{{ producto.status }}</td>
-              <td>{{ producto.observaciones || 'Sin dato' }}</td>
-              <td>{{ producto.partidaArancelaria || 'Sin dato' }}</td>
-              <td>{{ producto.pvp_mel || 'Sin dato' }}</td>
-              <td>{{ producto.paisOrigen || 'Sin dato' }}</td>
+            <tr *ngFor="let producto of oPage?.content" class="clickable-row" (click)="edit(producto)">
+              <td [ngClass]="getCellClass(producto.id)">{{ producto.id || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.descripcion)">{{ producto.descripcion || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.descripcionTic)">{{ producto.descripcionTic || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.departamento)">{{ producto.departamento || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.familia)">{{ producto.familia || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.subfamilia)">{{ producto.subfamilia || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.marca)">{{ producto.marca || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.unidadDeMedida)">{{ producto.unidadDeMedida || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.cantidad)">{{ producto.cantidad || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.centralizado)">{{ producto.centralizado || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.apeso)">{{ producto.apeso || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.unidadDeCaja)">{{ producto.unidadDeCaja || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.unidadDeServicio)">{{ producto.unidadDeServicio || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.pk)">{{ producto.pk || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.cajasCapa)">{{ producto.cajasCapa || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.cajasPalet)">{{ producto.cajasPalet || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.proveedor)">{{ producto.proveedor || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.referenciaProveedor)">{{ producto.referenciaProveedor || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.ean)">{{ producto.ean || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.ean_c)">{{ producto.ean_c || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.ean_p)">{{ producto.ean_p || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.largo)">{{ producto.largo || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.ancho)">{{ producto.ancho || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.alto)">{{ producto.alto || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.peso)">{{ producto.peso || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.diasCaducidad)">{{ producto.diasCaducidad || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.ara_cen)">{{ producto.ara_cen || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.iva)">{{ producto.iva || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.precioVenta)">{{ producto.precioVenta || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.pvp_hom)">{{ producto.pvp_hom || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.pvp_and)">{{ producto.pvp_and || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.pvp_cat)">{{ producto.pvp_cat || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.precioTarifa)">{{ producto.precioTarifa || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.pro_fac)">{{ producto.pro_fac || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.precioNeto)">{{ producto.precioNeto || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.pro_ffac)">{{ producto.pro_ffac || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.pro_neton)">{{ producto.pro_neton || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.art_mkd)">{{ producto.art_mkd || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.articuloSustituido)">{{ producto.articuloSustituido || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.insertedBy)">{{ producto.insertedBy || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.updateBy)">{{ producto.updateBy || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.status)">{{ producto.status }}</td>
+              <td [ngClass]="getCellClass(producto.observaciones)">{{ producto.observaciones || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.partidaArancelaria)">{{ producto.partidaArancelaria || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.pvp_mel)">{{ producto.pvp_mel || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.paisOrigen)">{{ producto.paisOrigen || 'Sin dato' }}</td>
               <td>
                 <div class="btn-group btn-group-sm">
-                  <button class="btn btn-success" (click)="view(producto)">
+                  <button class="btn btn-success" (click)="view(producto); $event.stopPropagation()">
                     <i class="bi bi-eye"></i>
                   </button>
-                  <button class="btn btn-warning" (click)="edit(producto)">
+                  <button class="btn btn-warning" (click)="edit(producto); $event.stopPropagation()">
                     <i class="bi bi-pencil-square"></i>
                   </button>
                 </div>
@@ -145,6 +156,7 @@
         </table>
       </div>
 
+      <!-- Paginación -->
       <nav class="mt-3">
         <ul class="pagination justify-content-center">
           <li class="page-item" [class.disabled]="nPage <= 0">
@@ -155,16 +167,39 @@
               <span class="page-link disabled">…</span>
             </ng-container>
             <ng-template #numPage>
-              <a class="page-link" href="#" (click)="goToPage(p)">
-                {{ p }}
-              </a>
+              <a class="page-link" href="#" (click)="goToPage(p)">{{ p }}</a>
             </ng-template>
-          </li>          
+          </li>
           <li class="page-item" [class.disabled]="oPage && nPage >= oPage.totalPages - 1">
             <a class="page-link" (click)="goToNext()">Siguiente</a>
           </li>
         </ul>
+
+        <!-- Ir a página -->
+        <div class="pagination-container mt-3">
+          <div class="go-to-page-container">
+            <label for="goToPage">Ir a la página:</label>
+            <input
+              id="goToPage"
+              type="number"
+              min="1"
+              [max]="oPage?.totalPages || 1"
+              [(ngModel)]="customPage"
+              class="go-to-page-input"
+              [class.invalid]="isInvalidCustomPage()"
+              (keyup.enter)="goToCustomPage()"
+            />
+            <button
+              (click)="goToCustomPage()"
+              class="go-to-page-button"
+              [disabled]="isInvalidCustomPage()"
+            >
+              Ir
+            </button>
+          </div>
+        </div>
       </nav>
+
     </div>
   </div>
 </div>

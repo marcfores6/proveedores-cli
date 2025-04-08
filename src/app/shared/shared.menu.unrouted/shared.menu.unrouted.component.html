@@ -1,38 +1,52 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg custom-navbar shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Proveedorees</a>
+    <!-- Logo / Marca -->
+    <a class="navbar-brand text-white fw-bold" href="#">FamilyCash Admin</a>
+
+    <!-- Botón responsive hamburguesa -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- Contenido colapsable -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Menú izquierda -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" [class.active]="
-              strRuta == '/home' || strRuta == '/' || strRuta == ''
-            " aria-current="page" href="/home">Inicio</a>
+          <a class="nav-link" [class.active]="strRuta == '/home' || strRuta == '/' || strRuta == ''" href="/home">
+            <i class="bi bi-house-door-fill"></i> Inicio
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [class.active]="strRuta == '/'"
-            href="admin/producto/plist">Productos</a>
+          <a class="nav-link" [class.active]="strRuta == '/admin/producto/plist'" href="/admin/producto/plist">
+            <i class="bi bi-box-seam"></i> Productos
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [class.active]="strRuta == '/admin/producto/xproveedor/plist'" [routerLink]="'/admin/producto/xproveedor/plist'">ProductosByProveedor</a>
+          <a class="nav-link" [class.active]="strRuta == '/admin/producto/xproveedor/plist'" [routerLink]="'/admin/producto/xproveedor/plist'">
+            <i class="bi bi-people-fill"></i> Productos by Proveedor
+          </a>
         </li>
       </ul>
-      
-    @if(!activeSession){
-    <span class="navbar-text">
-      <a href="/login" class="btn btn-outline-primary">Iniciar Sesión</a>
-    </span>
-    } @else {
-    <span class="navbar-text" style="margin-right: 10px;">
-      <a href="/bynif/{{userNif}}">{{userNif}}</a>
-    </span>
-    <span class="navbar-text">
-      <a href="/logout" class="btn btn-outline-primary">Logout</a>
-    </span>
-    }
+
+      <!-- Sesión (derecha) -->
+      @if (!activeSession) {
+        <span class="navbar-text">
+          <a href="/login" class="btn btn-outline-light me-2">
+            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+          </a>
+        </span>
+      } @else {
+        <span class="navbar-text text-white me-3">
+          <i class="bi bi-person-circle"></i> <a href="/bynif/{{ userNif }}" class="text-white text-decoration-underline">{{ userNif }}</a>
+        </span>
+        <span class="navbar-text">
+          <a href="/logout" class="btn btn-outline-light">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </a>
+        </span>
+      }
     </div>
   </div>
 </nav>

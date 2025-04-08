@@ -4,484 +4,50 @@
       <div class="card shadow border-0">
         <div class="card-header bg-primary text-white text-center">
           <h2 class="fw-bold">
-            <i class="bi bi-plus-square"></i> Edición del producto
+            <i class="bi bi-pencil-square"></i> Edición del Producto
           </h2>
         </div>
+
         <div class="card-body">
           <form [formGroup]="oProductoForm" (ngSubmit)="onSubmit()">
             <div class="row g-3">
-              <!-- CAMPO ID -->
-              <div class="col-md-4">
-                <label class="form-label fw-bold">ID</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="id"
-                />
-              </div>
+              <!-- Bucle dinámico para todos los campos -->
+              <div class="col-md-4" *ngFor="let campo of camposProducto">
+                <label class="form-label fw-bold text-capitalize">{{
+                  campo
+                }}</label>
 
-              <!-- Descripción -->
-              <div class="col-md-8">
-                <label class="form-label fw-bold">Descripción</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="descripcion"
-                />
-              </div>
+                <ng-container [ngSwitch]="campo">
+                  <select
+                    *ngSwitchCase="'status'"
+                    class="form-select"
+                    formControlName="status"
+                  >
+                    <option [value]="1">1</option>
+                    <option [value]="2">2</option>
+                    <option [value]="3">3</option>
+                  </select>
 
-              <!-- Descripción Tic -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Descripción TIC</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="descripcionTic"
-                />
-              </div>
+                  <select
+                    *ngSwitchCase="'paisOrigen'"
+                    class="form-select"
+                    formControlName="paisOrigen"
+                  >
+                    <option
+                      *ngFor="let pais of paisesList"
+                      [value]="pais.codigo"
+                    >
+                      {{ pais.nombre }}
+                    </option>
+                  </select>
 
-              <!-- Departamento -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Departamento</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="departamento"
-                />
-              </div>
-
-              <!-- Familia -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Familia</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="familia"
-                />
-              </div>
-
-              <!-- SubFamilia -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">SubFamilia</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="subfamilia"
-                />
-              </div>
-
-              <!-- Marca -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Marca</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="marca"
-                />
-              </div>
-
-              <!-- Unidad de medida -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Unidad de Medida</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="unidadDeMedida"
-                />
-              </div>
-
-              <!-- Cantidad -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Cantidad</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="cantidad"
-                />
-              </div>
-
-              <!-- Centralizado -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Centralizado</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="centralizado"
-                />
-              </div>
-
-              <!-- APeso -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">APeso</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="apeso"
-                />
-              </div>
-
-              <!-- Unidad de Caja -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Unidad de Caja</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="unidadDeCaja"
-                />
-              </div>
-
-              <!-- Unidad de Servicio -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Unidad de Servicio</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="unidadDeServicio"
-                />
-              </div>
-
-              <!-- PK -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">PK</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pk"
-                />
-              </div>
-
-              <!-- CajasCapa -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">CajasCapa</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="cajasCapa"
-                />
-              </div>
-
-              <!-- CajasPalet -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">CajasPalet</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="cajasPalet"
-                />
-              </div>
-
-              <!-- Proveedor -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Proveedor</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="proveedor"
-                />
-              </div>
-
-              <!-- ReferenciaProveedor -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Referencia Proveedor</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="referenciaProveedor"
-                />
-              </div>
-
-              <!-- Ean -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Ean</label>
-                <input type="text" class="form-control" formControlName="ean" />
-              </div>
-
-              <!-- EanC -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Ean C</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="ean_c"
-                />
-              </div>
-
-              <!-- EanP -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Ean P</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="ean_p"
-                />
-              </div>
-
-              <!-- Dias de Caducidad -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Dias de Caducidad</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="diasCaducidad"
-                />
-              </div>
-
-              <!-- Largo -->
-              <div class="col-md-3">
-                <label class="form-label fw-bold">Largo</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="largo"
-                />
-              </div>
-
-              <!-- Ancho -->
-              <div class="col-md-3">
-                <label class="form-label fw-bold">Ancho</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="ancho"
-                />
-              </div>
-
-              <!-- Alto -->
-              <div class="col-md-3">
-                <label class="form-label fw-bold">Alto</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="alto"
-                />
-              </div>
-
-              <!-- Alto -->
-              <div class="col-md-3">
-                <label class="form-label fw-bold">Peso</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="peso"
-                />
-              </div>
-
-              <!-- Ara_cen -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Ara_cen</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="ara_cen"
-                />
-              </div>
-
-              <!-- IVA -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">IVA</label>
-                <input type="text" class="form-control" formControlName="iva" />
-              </div>
-
-              <!-- Precio de Venta -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio de Venta</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="precioVenta"
-                />
-              </div>
-
-              <!-- Pvp_Hom -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Pvp_hom</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pvp_hom"
-                />
-              </div>
-
-              <!-- Pvp_And -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Pvp_and</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pvp_and"
-                />
-              </div>
-
-              <!-- Pvp_cat -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Pvp_cat</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pvp_cat"
-                />
-              </div>
-
-              <!-- PrecioTarifa -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio de Tarifa</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="precioTarifa"
-                />
-              </div>
-
-              <!-- PrecioFac -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio Fac</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="pro_fac"
-                />
-              </div>
-
-              <!-- PrecioNeto -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio Neto</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="precioNeto"
-                />
-              </div>
-
-              <!-- Pro_ffac -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio Ffac</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="pro_ffac"
-                />
-              </div>
-
-              <!-- Pro_neton -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio neton</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pro_neton"
-                />
-              </div>
-
-              <!-- art_mkd -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">art_mkd</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="art_mkd"
-                />
-              </div>
-
-              <!-- Articulo de Sustitución -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold"
-                  >Articulo de Sustitución</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="articuloSustituido"
-                />
-              </div>
-
-              <!-- InsertedBy -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">InsertedBy</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="insertedBy"
-                />
-              </div>
-
-              <!-- InsertedAt -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">InsertedAt</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="insertedAt"
-                />
-              </div>
-
-              <!-- UpdateBy -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">UpdateBy</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="updateBy"
-                />
-              </div>
-
-              <!-- UpdateAt -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">UpdateAt</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="updateAt"
-                />
-              </div>
-
-              <!-- Status -->
-              <div class="col-md-2">
-                <label class="form-label fw-bold">Status</label>
-                <select class="form-select" formControlName="status">
-                  <option [value]="1">1</option>
-                  <option [value]="2">2</option>
-                  <option [value]="3">3</option>
-                </select>
-              </div>
-
-              <!-- Observaciones -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Observaciones</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="observaciones"
-                />
-              </div>
-
-              <!-- Partida Arandelaria -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Partida Arandelaria</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="partidaArancelaria"
-                />
-              </div>
-
-              <!-- pvp_mel -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">pvp_mel</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pvp_mel"
-                />
-              </div>
-
-              <!-- País de Origen -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">País de Origen</label>
-                <select class="form-select" formControlName="paisOrigen">
-                  <option *ngFor="let pais of paisesList" [value]="pais.codigo">
-                    {{ pais.nombre }}
-                  </option>
-                </select>
+                  <input
+                    *ngSwitchDefault
+                    type="text"
+                    class="form-control"
+                    [formControlName]="campo"
+                  />
+                </ng-container>
               </div>
 
               <!-- Imágenes actuales -->
@@ -520,7 +86,7 @@
               </div>
 
               <!-- Subida de nuevas imágenes -->
-              <div class="mb-3">
+              <div class="col-12">
                 <label class="form-label fw-bold">Añadir nuevas imágenes</label>
                 <input
                   type="file"
@@ -533,7 +99,7 @@
               </div>
 
               <!-- Vista previa -->
-              <div *ngIf="imagenPreviews.length > 0" class="mb-4 text-center">
+              <div *ngIf="imagenPreviews.length > 0" class="col-12 text-center">
                 <label class="form-label fw-bold"
                   >Vista previa de imágenes nuevas</label
                 >
@@ -561,10 +127,17 @@
               </div>
 
               <div class="text-center mt-4">
-                <a routerLink="/admin/producto/plist" class="btn btn-secondary me-4">
+                <a
+                  routerLink="/admin/producto/plist"
+                  class="btn btn-secondary me-4"
+                >
                   <i class="bi bi-arrow-left"></i> Volver
                 </a>
-                <button type="submit" class="btn btn-success" [disabled]="oProductoForm.invalid">
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  [disabled]="oProductoForm.invalid"
+                >
                   <i class="bi bi-save"></i> Guardar
                 </button>
               </div>
@@ -572,23 +145,40 @@
           </form>
         </div>
 
-        <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="mimodal"
+          tabindex="-1"
+          aria-labelledby="modalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Aviso</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Cerrar"
+                ></button>
               </div>
               <div class="modal-body">
                 {{ strMessage }}
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click)="hideModal()">Aceptar</button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="hideModal()"
+                >
+                  Aceptar
+                </button>
               </div>
             </div>
           </div>
         </div>
-        
       </div>
     </div>
   </div>

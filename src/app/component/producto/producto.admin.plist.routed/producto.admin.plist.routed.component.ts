@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TrimPipe } from '../../../pipe/trim.pipe';
 import { Subject, debounceTime } from 'rxjs';
 import { IPage } from '../../../model/model.interface';
 import { IProducto } from '../../../model/producto.interface';
@@ -25,8 +24,10 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   strDir: string = '';
   strFiltro: string = '';
   arrBotonera: string[] = [];
-  private debounceSubject = new Subject<string>();
   customPage: number = 1;
+  loading: boolean = false;
+
+  private debounceSubject = new Subject<string>();
 
   constructor(
     private oProductoService: ProductoService,
@@ -44,6 +45,7 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   }
 
   getPage() {
+    this.loading = true;
     this.oProductoService
       .getPage(this.nPage, this.nRpp, this.strField, this.strDir, this.strFiltro)
       .subscribe({
@@ -53,9 +55,11 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
             this.nPage,
             oPageFromServer.totalPages
           );
+          this.loading = false;
         },
         error: (err) => {
-          console.log(err);
+          console.error(err);
+          this.loading = false;
         },
       });
   }
@@ -69,7 +73,7 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   }
 
   remove(oProducto: IProducto) {
-    this.oRouter.navigate(['admin/producto/delete/', oProducto.id]);
+    this.oRouter.navigate(['admin/producto/delete', oProducto.id]);
   }
 
   goToPage(p: any) {
@@ -82,14 +86,18 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   }
 
   goToNext() {
-    this.nPage++;
-    this.getPage();
+    if (this.oPage && this.nPage < this.oPage.totalPages - 1) {
+      this.nPage++;
+      this.getPage();
+    }
     return false;
   }
 
   goToPrev() {
-    this.nPage--;
-    this.getPage();
+    if (this.nPage > 0) {
+      this.nPage--;
+      this.getPage();
+    }
     return false;
   }
 
@@ -124,7 +132,6 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
       this.customPage > totalPages
     );
   }
-  
 
   filter(event: KeyboardEvent) {
     this.debounceSubject.next(this.strFiltro);
@@ -141,5 +148,9 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   isVacio(valor: any): boolean {
     return valor === null || valor === undefined || valor === '';
   }
-  
+
+  // ⭐️ Nueva función limpia para celda con valor faltante
+  getCellClass(value: any): string {
+    return this.isVacio(value) ? 'text-danger fw-bold bg-light-danger' : '';
+  }
 }

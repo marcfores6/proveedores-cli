@@ -1,100 +1,93 @@
-/* Campos con datos faltantes */
-.text-danger.fw-bold {
-  background-color: #ffe5e5 !important; /* rojo claro */
-  color: #c30000 !important;           /* rojo intenso */
-  font-weight: 600;
-  text-align: center;
-}
+/* === Tabla Mejorada FamilyCash Futurista === */
 
-/* Tabla mejorada visualmente */
-.table-container {
+/* Contenedor tabla con scroll para móviles */
+.table-responsive {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 15px rgba(0, 85, 7, 0.2);
+  background-color: white;
 }
 
-.table th,
-.table td {
-  vertical-align: middle;
-  text-align: center;
-  white-space: nowrap;
-}
-
+/* Cabecera de tabla */
 .table th {
-  background-color: #005507; /* Verde FamilyCash */
+  background-color: #005507;
   color: white;
   font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
+/* Celdas */
 .table td {
   background-color: #f9f9f9;
-}
-
-/* Hover sobre filas */
-.table tbody tr:hover {
-  background-color: #e0f0e0;
-}
-
-.table th,
-.table td {
-  padding: 0.75rem 0.5rem !important;
+  white-space: nowrap;
+  text-align: center;
   vertical-align: middle;
+  padding: 0.75rem 0.5rem !important;
+}
+
+/* Hover elegante (suave sin transformaciones) */
+.table tbody tr:hover {
+  background-color: #e6f5e6;
+  box-shadow: inset 0 0 8px rgba(0, 85, 7, 0.15);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Fila clicable */
+.clickable-row {
+  cursor: pointer;
+}
+
+/* Resaltar campos vacíos */
+.text-danger.fw-bold {
+  background-color: #ffe5e5 !important;
+  color: #c30000 !important;
+  font-weight: 600;
+  text-align: center;
 }
 
 .bg-light-danger {
   background-color: #ffe0e0 !important;
 }
 
-/* Para hacer la fila clicable visualmente */
-table.table .clickable-row {
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
+/* === Paginación Elegante FamilyCash === */
 
-/* Efecto hover bien aplicado */
-table.table .clickable-row:hover {
-  background-color: #d9f0d9 !important;
-}
-
-
-
-
-
-/* Paginación elegante verde FamilyCash + gris */
-
-/* Estilo base de los botones */
 .pagination .page-link {
-  background-color: #f8f9fa; /* Gris clarito */
-  color: #005507; /* Verde FamilyCash */
+  background-color: #f8f9fa;
+  color: #005507;
   border: 1px solid #dddddd;
-  border-radius: 0.4rem; /* Bordes redondeados */
+  border-radius: 0.4rem;
   margin: 0 2px;
   padding: 6px 12px;
   transition: all 0.3s ease;
 }
 
-/* Hover para todos los botones */
 .pagination .page-link:hover {
-  background-color: #e6f5e6; /* Verde muy suave */
+  background-color: #e6f5e6;
   color: #003300;
   border-color: #005507;
   text-decoration: none;
 }
 
-/* Activo */
 .pagination .page-item.active .page-link {
-  background-color: #005507; /* Verde intenso */
+  background-color: #004404;
   color: white;
-  border-color: #005507;
+  border-color: #003300;
+  font-weight: bold;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
-/* Desactivado */
 .pagination .page-item.disabled .page-link {
-  background-color: #e9ecef; /* Gris desactivado */
+  background-color: #e9ecef;
   color: #6c757d;
   border-color: #dee2e6;
   cursor: not-allowed;
 }
 
-/* Opcional: los puntos suspensivos "…" */
 .pagination .page-link.disabled {
   background-color: #f8f9fa;
   color: #999999;
@@ -102,7 +95,6 @@ table.table .clickable-row:hover {
   cursor: default;
 }
 
-/* Quitar las esquinas rectas del primer y último botón */
 .pagination .page-item:first-child .page-link {
   border-top-left-radius: 0.6rem;
   border-bottom-left-radius: 0.6rem;
@@ -113,11 +105,82 @@ table.table .clickable-row:hover {
   border-bottom-right-radius: 0.6rem;
 }
 
-/* Página activa con verde más oscuro */
-.pagination .page-item.active .page-link {
-  background-color: #004404; /* Verde más oscuro Family Cash */
-  color: white;
-  border-color: #003300;
+/* === Bloque "Ir a página" personalizado dentro de la tabla === */
+.go-to-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.go-to-page-container label {
+  margin-bottom: 0;
   font-weight: bold;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); /* Opcional: profundidad */
+  color: #005507;
+}
+
+.go-to-page-input {
+  width: 80px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  padding: 4px 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.go-to-page-input:focus {
+  border-color: #005507;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 85, 7, 0.5);
+}
+
+.go-to-page-input.invalid {
+  border-color: #c30000;
+  box-shadow: 0 0 5px rgba(195, 0, 0, 0.5);
+}
+
+.go-to-page-button {
+  background-color: #005507;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 4px 12px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.go-to-page-button:hover:not(:disabled) {
+  background-color: #004404;
+  transform: translateY(-1px);
+}
+
+.go-to-page-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* === Loader centralizado y futurista === */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #005507;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
