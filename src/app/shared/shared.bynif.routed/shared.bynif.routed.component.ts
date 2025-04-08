@@ -22,7 +22,7 @@ export class SharedBynifRoutedComponent implements OnInit {
   }
 
   getOne() {
-    this.oProveedorService.getProveedorByNif(this.nif).subscribe({
+    this.oProveedorService.getProveedorFromToken().subscribe({
       next: (oProveedor) => {
         this.oProveedor = oProveedor;
       },
@@ -30,6 +30,6 @@ export class SharedBynifRoutedComponent implements OnInit {
         console.log(err);
       }
     });
-  }
+}
 
 }

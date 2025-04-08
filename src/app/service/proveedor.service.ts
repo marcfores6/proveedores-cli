@@ -68,4 +68,12 @@ export class ProveedorService {
     return this.oHttp.get<IProveedor>(`${this.serverURL}/bynif/${nif}`, { headers });
   }
 
+  getProveedorFromToken(): Observable<IProveedor> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.oHttp.get<IProveedor>(`${this.serverURL}/bytoken`, { headers });
+}
+
+
 }
