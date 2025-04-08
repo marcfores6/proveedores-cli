@@ -140,3 +140,23 @@
     font-size: 0.9rem;
   }
 }
+
+
+.is-invalid {
+  border: 2px solid red !important;
+  box-shadow: 0 0 5px red;
+}
+
+input[type="file"] {
+  border: 1px solid #ccc;
+  padding: 6px;
+}
+
+.btn-close {
+  opacity: 0.8;
+}
+
+.btn-close:hover {
+  opacity: 1;
+}
+
