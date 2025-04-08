@@ -164,6 +164,31 @@
             <a class="page-link" (click)="goToNext()">Siguiente</a>
           </li>
         </ul>
+
+        <div class="pagination-container mt-3">
+          <div class="go-to-page-container">
+            <label for="goToPage">Ir a la página:</label>
+            <input
+              id="goToPage"
+              type="number"
+              min="1"
+              [max]="oPage?.totalPages || 1"
+              [(ngModel)]="customPage"
+              class="go-to-page-input"
+              [class.invalid]="isInvalidCustomPage()"
+              (keyup.enter)="goToCustomPage()"
+            />
+            <button
+              (click)="goToCustomPage()"
+              class="go-to-page-button"
+              [disabled]="isInvalidCustomPage()"
+            >
+              Ir
+            </button>
+          </div>
+        </div>
+        
+        
       </nav>
     </div>
   </div>

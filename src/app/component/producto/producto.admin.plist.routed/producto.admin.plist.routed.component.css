@@ -121,3 +121,62 @@ table.table .clickable-row:hover {
   font-weight: bold;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); /* Opcional: profundidad */
 }
+
+
+/* === Bloque personalizado "Ir a página" === */
+
+.go-to-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.go-to-page-container label {
+  margin-bottom: 0;
+  font-weight: bold;
+  color: #005507;
+}
+
+.go-to-page-input {
+  width: 80px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  padding: 4px 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.go-to-page-input:focus {
+  border-color: #005507;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 85, 7, 0.5);
+}
+
+.go-to-page-input.invalid {
+  border-color: #c30000;
+  box-shadow: 0 0 5px rgba(195, 0, 0, 0.5);
+}
+
+.go-to-page-button {
+  background-color: #005507;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 4px 12px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.go-to-page-button:hover:not(:disabled) {
+  background-color: #004404;
+  transform: translateY(-1px);
+}
+
+.go-to-page-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}

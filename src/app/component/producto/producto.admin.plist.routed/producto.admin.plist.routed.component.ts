@@ -26,6 +26,7 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   strFiltro: string = '';
   arrBotonera: string[] = [];
   private debounceSubject = new Subject<string>();
+  customPage: number = 1;
 
   constructor(
     private oProductoService: ProductoService,
@@ -104,6 +105,26 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
     this.getPage();
     return false;
   }
+
+  goToCustomPage() {
+    const totalPages = this.oPage?.totalPages || 0;
+    if (this.customPage > 0 && this.customPage <= totalPages) {
+      this.nPage = this.customPage - 1;
+      this.getPage();
+    } else {
+      alert(`Por favor, introduce un número de página entre 1 y ${totalPages}`);
+    }
+  }
+
+  isInvalidCustomPage(): boolean {
+    const totalPages = this.oPage?.totalPages ?? 1;
+    return (
+      this.customPage == null ||
+      this.customPage < 1 ||
+      this.customPage > totalPages
+    );
+  }
+  
 
   filter(event: KeyboardEvent) {
     this.debounceSubject.next(this.strFiltro);
