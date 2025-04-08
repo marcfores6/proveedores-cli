@@ -1,25 +1,22 @@
-<div class="row justify-content-center m-3">
-  <div class="col-lg-7 col-md-10 col-sm-12">
-    <h1 class="my-5 text-center">
-      Cerrar la sesión
-    </h1>
+<div class="logout-wrapper animate-fade-in">
+  <div class="logout-card shadow-lg">
+    <h2 class="logout-title">
+      <i class="bi bi-person-circle me-2"></i> Cerrar sesión
+    </h2>
 
-    <h1 class="my-5 text-center">
-      <i class="bi bi-person-circle"></i>
-    </h1>
+    <p class="logout-subtitle">¿Seguro que deseas cerrar tu sesión?</p>
 
-    <div class="login-container">
-      <h2>LOGOUT</h2>      
-      <p class="fs-2 color-white text-center"> ¿Seguro que desea cerrar sesión?</p>
-      <div class="d-flex justify-content-center">
-        <button type="submit" class="btn bg-success mx-1" (click)="onLogout()">Cerrar sesión</button>
-        <button type="submit" class="btn bg-danger mx-1" (click)="onCancel()">Cancelar</button>
-      </div>
-      <!-- Mensaje de error -->
-      <div class="error-message" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
+    <div class="logout-buttons d-flex justify-content-center gap-3 flex-wrap">
+      <button type="button" class="btn btn-logout-confirm" (click)="onLogout()">
+        <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
+      </button>
+      <button type="button" class="btn btn-logout-cancel" (click)="onCancel()">
+        <i class="bi bi-x-circle me-1"></i> Cancelar
+      </button>
     </div>
 
+    <div class="error-message mt-4" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
   </div>
 </div>

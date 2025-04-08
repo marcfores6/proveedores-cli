@@ -16,6 +16,23 @@
           (keyup)="filter($event)"
           [(ngModel)]="strFiltro"
         />
+
+        <div class="d-inline-flex mx-2">
+          <nav class="my-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.active]="nRpp === 10">
+                <a class="page-link" (click)="goToRpp(10)" href="#">10</a>
+              </li>
+              <li class="page-item" [class.active]="nRpp === 50">
+                <a class="page-link" (click)="goToRpp(50)" href="#">50</a>
+              </li>
+              <li class="page-item" [class.active]="nRpp === 100">
+                <a class="page-link" (click)="goToRpp(100)" href="#">100</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
       </div>
 
       <!-- Info filtro y cantidad -->

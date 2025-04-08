@@ -13,6 +13,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
+declare var bootstrap: any; // Declaración para evitar errores de TypeScript
+
 @Component({
   selector: 'app-login',
   templateUrl: './shared.login.routed.html',
@@ -53,10 +55,6 @@ export class SharedLoginRoutedComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm.get('nif')?.valueChanges
-      .pipe(
-        debounceTime(300), // Espera 300 ms después de que el usuario deje de escribir
-        distinctUntilChanged() // Solo si el valor cambia
-      )
       .subscribe(nif => {
         if (nif && nif.trim() !== '') {
           this.buscarProveedores();
@@ -96,27 +94,37 @@ export class SharedLoginRoutedComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      //const hashedPassword = this.oCryptoService.getHashSHA256(this.loginForm.value.password);
       this.oLoginService.login(this.loginForm.value.nif, this.loginForm.value.password, this.loginForm.value.proveedorId).subscribe({
         next: (token: string) => {
           console.log('Token recibido:', token);
-          alert('Inicio de sesión exitoso');
-
+          this.errorMessage = null; // Limpia el mensaje de error
+  
+          // Mostrar el modal de éxito
+          const successModal = document.getElementById('successModal');
+          if (successModal) {
+            const modal = new bootstrap.Modal(successModal);
+            modal.show();
+          }
+  
+          // Guardar sesión
           this.oSessionService.login(token);
           this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
-
-          //let parsedToken: IJwt;
-          //parsedToken = this.oSessionService.parseJwt(token);
-          //console.log('Token parseado:', parsedToken);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error al realizar la solicitud', error);
-          alert('NIF, proveedor o contraseña incorrectos');
           this.errorMessage = 'NIF, proveedor o contraseña incorrectos';
+  
+          // Mostrar el modal de error
+          const errorModal = document.getElementById('errorModal');
+          if (errorModal) {
+            const modal = new bootstrap.Modal(errorModal);
+            modal.show();
+          }
         }
       });
     }
   }
+  
 
   onAdmin() {
     this.loginForm.setValue({

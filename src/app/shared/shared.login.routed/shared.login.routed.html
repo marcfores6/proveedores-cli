@@ -1,71 +1,61 @@
-<div class="row justify-content-center m-3">
-  <div class="col-lg-7 col-md-10 col-sm-12">
-    <h1 class="my-4 text-center text-family-green fw-bold">
-      Iniciar sesión
+<div class="login-wrapper animate-fade-in">
+  <div class="login-card shadow-lg">
+    <h1 class="login-title mb-3">
+      <i class="bi bi-person-circle me-2"></i> Iniciar sesión
     </h1>
 
-    <div class="text-center mb-4">
-      <i class="bi bi-person-circle text-family-yellow fs-1"></i>
-    </div>
+    <h2 class="login-subtitle mb-4">Acceso a la plataforma</h2>
 
-    <div class="login-container mat-elevation-z4 p-4 rounded">
-      <h2 class="text-family-green mb-4 text-center">Acceso a la plataforma</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- NIF -->
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>NIF de la empresa</mat-label>
+        <input matInput type="text" placeholder="Máximo 20 caracteres" formControlName="nif" />
+        <mat-error *ngIf="loginForm.get('nif')?.hasError('required')">
+          El NIF es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('nif')?.hasError('nif')">
+          El formato no es válido.
+        </mat-error>
+      </mat-form-field>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Empresa (Proveedor) -->
+      <mat-form-field appearance="outline" class="w-100 mb-3" *ngIf="proveedores.length > 0">
+        <mat-label>Empresa</mat-label>
+        <mat-select formControlName="proveedorId">
+          <mat-option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
+            {{ proveedor.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="loginForm.get('proveedorId')?.hasError('required')">
+          Debes seleccionar una empresa.
+        </mat-error>
+      </mat-form-field>
 
-        <!-- NIF -->
-        <mat-form-field appearance="outline" class="w-100 mb-3">
-          <mat-label>NIF de la empresa</mat-label>
-          <input matInput type="text" placeholder="Máximo 20 caracteres" formControlName="nif" />
-          <mat-error *ngIf="loginForm.get('nif')?.hasError('required')">
-            El NIF es obligatorio.
-          </mat-error>
-          <mat-error *ngIf="loginForm.get('nif')?.hasError('nif')">
-            El formato no es válido.
-          </mat-error>
-        </mat-form-field>
+      <!-- Contraseña -->
+      <mat-form-field appearance="outline" class="w-100 mb-4">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" placeholder="********" formControlName="password" />
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          La contraseña es obligatoria.
+        </mat-error>
+      </mat-form-field>
 
-        <!-- Selector de empresa (proveedor) -->
-        <mat-form-field appearance="outline" class="w-100 mb-3" *ngIf="proveedores.length > 0">
-          <mat-label>Empresa</mat-label>
-          <mat-select formControlName="proveedorId">
-            <mat-option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
-              {{ proveedor.descripcion }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="loginForm.get('proveedorId')?.hasError('required')">
-            Debes seleccionar una empresa.
-          </mat-error>
-        </mat-form-field>
+      <!-- Botón login -->
+      <button mat-flat-button color="primary" type="submit" class="w-100 login-btn-animated">
+        <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar sesión
+      </button>
 
-        <!-- Contraseña -->
-        <mat-form-field appearance="outline" class="w-100 mb-4">
-          <mat-label>Contraseña</mat-label>
-          <input matInput type="password" placeholder="********" formControlName="password" />
-          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-            La contraseña es obligatoria.
-          </mat-error>
-        </mat-form-field>
+      <!-- Botones rápidos -->
+      <div class="d-flex justify-content-center mt-4 gap-3 flex-wrap">
+        <button mat-stroked-button color="primary" class="quick-btn" (click)="onAdmin()">Admin</button>
+        <button mat-stroked-button color="accent" class="quick-btn" (click)="onContable()">Contable</button>
+      </div>
+    </form>
 
-        <!-- Botón de login -->
-        <button mat-flat-button color="primary" type="submit" class="w-100">
-          Iniciar sesión
-        </button>
-
-        <!-- Botones rápidos -->
-        <div class="d-flex justify-content-center mt-4 gap-3">
-          <button mat-stroked-button color="primary" (click)="onAdmin()">Admin</button>
-          <button mat-stroked-button color="accent" (click)="onContable()">Contable</button>
-        </div>
-
-      </form>
-
-      <!-- Mensaje de error -->
-      <mat-card class="mt-4" *ngIf="errorMessage" color="warn">
-        <mat-card-content class="text-danger text-center">
-          {{ errorMessage }}
-        </mat-card-content>
-      </mat-card>
+    <!-- Mensaje de error -->
+    <div class="error-message mt-4" *ngIf="errorMessage">
+      {{ errorMessage }}
     </div>
   </div>
 </div>

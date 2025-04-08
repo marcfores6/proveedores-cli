@@ -17,9 +17,9 @@ export class AdminGuard implements CanActivate {
 
     canActivate(): Observable<boolean> {
         if (this.oSessionService.isSessionActive()) {
-            let email: string = this.oSessionService.getSessionEmail();
+            let nif: string = this.oSessionService.getSessionNif();
             // llamar al servidor para obtener el rol del proveedor
-            return this.oProveedorService.getProveedorByEmail(email).pipe(
+            return this.oProveedorService.getSessionNif(nif).pipe(
                 map((data: IProveedor) => {
                     if (data.tipoproveedor.descripcion === 'Cliente') {
                         return true;

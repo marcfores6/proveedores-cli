@@ -68,6 +68,16 @@ export class SessionService {
         }
     }
 
+    getSessionProveedorId(): string {
+        const token = this.getToken();
+        if (token && this.isSessionActive()) {
+          const parsedToken = this.parseJwt(token);
+          return parsedToken.proveedorId; // Devuelve el proveedorId o una cadena vacía si no existe
+        }
+        return '';
+      }
+      
+
     private parseJwt(token: string): IJwt {
         var base64Url = token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');

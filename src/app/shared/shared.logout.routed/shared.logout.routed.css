@@ -1,84 +1,123 @@
-
-
-/* Contenedor del formulario */
-.login-container {
-    background-color: #bebebe;
+/* === Wrapper general === */
+.logout-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 20px;
+  }
+  
+  /* === Animación de entrada === */
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  /* === Tarjeta principal === */
+  .logout-card {
+    background: white;
+    border-radius: 1.5rem;
     padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(70, 70, 70, 0.4);
-    width: 100%;
-    max-width: 400px; /* Limita el ancho máximo a 400px */
+    box-shadow: 0 10px 30px rgba(0, 85, 7, 0.3);
     text-align: center;
-    box-sizing: border-box;  /* Asegura que el padding no afecte el tamaño total */
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Título del formulario */
-h2 {
-    font-size: 28px;    
-    margin-bottom: 30px;
-    font-weight: 600;
-}
-
-/* Estilos para los campos de entrada */
-.input-group {
-    margin-bottom: 25px;
-}
-
-/* Etiquetas de los campos */
-.input-group label {
-    font-size: 14px;
-    color: #bbb;
-    margin-bottom: 5px;
-    display: block;
-}
-
-/* Inputs */
-.input-group input {
     width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #555;
-    
-    background-color: #ffffff;
+    max-width: 500px;
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  
+  .logout-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 85, 7, 0.5);
+  }
+  
+  /* === Título === */
+  .logout-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #005507;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 85, 7, 0.2);
+  }
+  
+  /* === Subtítulo === */
+  .logout-subtitle {
+    font-size: 1.2rem;
     color: #333;
-    margin-top: 5px;
-    outline: none;
-    transition: border-color 0.3s, background-color 0.3s;
-}
-
-
-/* Estilo para el botón de submit */
-.login-btn {
-    margin-top: 25px;
-    width: 100%;
-    padding: 14px;
+    margin-bottom: 30px;
+  }
+  
+  /* === Botones === */
+  .logout-buttons .btn {
+    border-radius: 0.8rem;
+    padding: 12px 24px;
+    font-weight: 600;
+    font-size: 1rem;
+    min-width: 180px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Confirmar logout */
+  .btn-logout-confirm {
     background-color: #005507;
     color: white;
-    font-size: 16px;
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-weight: 600;
-}
-
-.login-btn:hover {
-    background-color: #005c8a;
-}
-
-/* Estilo para el mensaje de error */
-.error-message {
-    color: #ff6666;
-    font-size: 14px;
-    margin-top: 20px;
+  }
+  
+  .btn-logout-confirm:hover {
+    background-color: #007d0d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 85, 7, 0.7);
+  }
+  
+  /* Cancelar */
+  .btn-logout-cancel {
+    background-color: #c82333;
+    color: white;
+    border: none;
+  }
+  
+  .btn-logout-cancel:hover {
+    background-color: #e55353;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(200, 35, 51, 0.7);
+  }
+  
+  /* === Mensaje de error === */
+  .error-message {
+    color: #c82333;
+    font-size: 0.95rem;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
     padding: 12px;
-    background-color: #422424;
     border-radius: 8px;
-    border: 1px solid #ff6666;
-}
-
-.error-message p {
-    margin: 0;
-}
+    box-shadow: 0 2px 10px rgba(200, 35, 51, 0.3);
+  }
+  
+  /* === Responsive === */
+  @media (max-width: 576px) {
+    .logout-card {
+      padding: 20px;
+    }
+  
+    .logout-title {
+      font-size: 1.5rem;
+    }
+  
+    .logout-buttons .btn {
+      min-width: 100%;
+    }
+  }
+  

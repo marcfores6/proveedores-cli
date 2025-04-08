@@ -26,6 +26,19 @@ body {
     margin: 0 0.5rem;
   }
   
+  h2 {
+    color: #4da146; /* Verde Family Cash */
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  
+  /* Iconos en título */
+  h2 i {
+    color: #4da146;
+    margin: 0 0.5rem;
+  }
+
   /* Tabla */
   .proveedor-table {
     border-radius: 8px;
