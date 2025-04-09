@@ -11,66 +11,51 @@
         <div class="card-body">
           <form [formGroup]="oProductoForm" (ngSubmit)="onSubmit()">
             <div class="row g-3">
+
               <!-- Bucle dinámico para todos los campos -->
               <div class="col-md-4" *ngFor="let campo of camposProducto">
                 <label class="form-label fw-bold text-capitalize">{{ campo }}</label>
                 <ng-container [ngSwitch]="campo">
-                  <select
-                    *ngSwitchCase="'status'"
-                    class="form-select"
-                    [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }"
-                    formControlName="status">
+
+                  <!-- Campo Status -->
+                  <select *ngSwitchCase="'status'" class="form-select" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" formControlName="status">
                     <option [value]="1">1</option>
                     <option [value]="2">2</option>
                     <option [value]="3">3</option>
                   </select>
 
-                  <select
-                    *ngSwitchCase="'paisOrigen'"
-                    class="form-select"
-                    [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }"
-                    formControlName="paisOrigen">
-                    <option *ngFor="let pais of paisesList" [value]="pais.codigo">
-                      {{ pais.nombre }}
-                    </option>
+                  <!-- Campo País de Origen -->
+                  <select *ngSwitchCase="'paisOrigen'" class="form-select" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" formControlName="paisOrigen">
+                    <option *ngFor="let pais of paisesList" [value]="pais.codigo">{{ pais.nombre }}</option>
                   </select>
 
-                  <input
-                    *ngSwitchDefault
-                    type="text"
-                    class="form-control"
-                    [formControlName]="campo"
-                    [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }"
-                  />
+                  <!-- Fecha Insertado -->
+                  <mat-form-field *ngSwitchCase="'insertedAt'" appearance="fill" class="w-100">
+                    <input matInput [matDatepicker]="pickerInsertedAt" [formControlName]="campo" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" placeholder="Selecciona fecha" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerInsertedAt"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerInsertedAt></mat-datepicker>
+                  </mat-form-field>
+
+                  <!-- Fecha Actualizado -->
+                  <mat-form-field *ngSwitchCase="'updateAt'" appearance="fill" class="w-100">
+                    <input matInput [matDatepicker]="pickerUpdateAt" [formControlName]="campo" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" placeholder="Selecciona fecha" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerUpdateAt"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerUpdateAt></mat-datepicker>
+                  </mat-form-field>
+
+                  <!-- Campo por defecto -->
+                  <input *ngSwitchDefault type="text" class="form-control" [formControlName]="campo" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" />
+
                 </ng-container>
               </div>
 
               <!-- Imágenes actuales -->
-              <div
-                class="mb-4"
-                *ngIf="
-                  oProducto &&
-                  oProducto.imagenes &&
-                  oProducto.imagenes.length > 0
-                "
-              > 
+              <div class="mb-4" *ngIf="oProducto && oProducto.imagenes && oProducto.imagenes.length > 0">
                 <label class="form-label fw-bold">Imágenes actuales</label>
                 <div class="d-flex flex-wrap gap-3 justify-content-center">
                   <div *ngFor="let img of oProducto.imagenes" class="position-relative">
-                    <img
-                      [src]="'http://localhost:8086' + img.imagenUrl"
-                      alt="Imagen"
-                      width="145"
-                      height="135"
-                      class="rounded shadow border"
-                    />
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle"
-                      (click)="eliminarImagen(img.id)"
-                      style="width: 24px; height: 24px; line-height: 0.9"
-                      title="Eliminar imagen"
-                    >
+                    <img [src]="'http://localhost:8086' + img.imagenUrl" alt="Imagen" width="145" height="135" class="rounded shadow border" />
+                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle" (click)="eliminarImagen(img.id)" style="width: 24px; height: 24px; line-height: 0.9" title="Eliminar imagen">
                       &times;
                     </button>
                   </div>
@@ -80,39 +65,51 @@
               <!-- Subida de nuevas imágenes -->
               <div class="col-12">
                 <label class="form-label fw-bold">Añadir nuevas imágenes</label>
-                <input
-                  type="file"
-                  id="imagenes"
-                  (change)="onFileSelect($event)"
-                  accept=".png,.jpg,.jpeg,.webp"
-                  class="form-control"
-                  multiple
-                />
+                <input type="file" id="imagenes" (change)="onFileSelect($event)" accept=".png,.jpg,.jpeg,.webp" class="form-control" multiple />
               </div>
 
-              <!-- Vista previa -->
+              <!-- Vista previa de imágenes nuevas -->
               <div *ngIf="imagenPreviews.length > 0" class="col-12 text-center">
                 <label class="form-label fw-bold">Vista previa de imágenes nuevas</label>
                 <div class="d-flex flex-wrap gap-2 justify-content-center">
                   <div *ngFor="let preview of imagenPreviews; let i = index" class="position-relative">
-                    <img
-                      [src]="preview"
-                      alt="Vista previa"
-                      width="120"
-                      height="120"
-                      class="rounded shadow border border-info"
-                      style="object-fit: cover"
-                    />
-                    <button
-                      type="button"
-                      class="btn-close position-absolute top-0 end-0 bg-white p-1"
-                      aria-label="Cerrar"
-                      (click)="removeImage(i)"
-                    ></button>
+                    <img [src]="preview" alt="Vista previa" width="120" height="120" class="rounded shadow border border-info" style="object-fit: cover" />
+                    <button type="button" class="btn-close position-absolute top-0 end-0 bg-white p-1" aria-label="Cerrar" (click)="removeImage(i)"></button>
                   </div>
                 </div>
               </div>
+              
+                            <!-- Documentos actuales -->
+              <div class="mb-4" *ngIf="oProducto && oProducto.documentos && oProducto.documentos.length > 0">
+                <label class="form-label fw-bold">Documentos actuales</label>
+                <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of oProducto.documentos">
+                    <a [href]="'http://localhost:8086' + doc.documentoUrl" target="_blank">{{ doc.nombreOriginal }}</a>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="eliminarDocumento(doc.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </li>
+                </ul>
+              </div>
 
+              <!-- Subida de nuevos documentos -->
+              <div class="col-12">
+                <label class="form-label fw-bold">Añadir nuevos documentos (PDF)</label>
+                <input type="file" id="documentos" (change)="onFileSelectDocumentos($event)" accept=".pdf" class="form-control" multiple />
+              </div>
+
+              <!-- Vista previa de documentos nuevos -->
+              <div *ngIf="documentoPreviews.length > 0" class="col-12 text-center">
+                <label class="form-label fw-bold">Vista previa de documentos nuevos</label>
+                <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of documentoPreviews; let i = index">
+                    {{ doc }}
+                    <button type="button" class="btn btn-close" (click)="removeDocumento(i)"></button>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Botones -->
               <div class="text-center mt-4">
                 <a routerLink="/admin/producto/xproveedor/plist" class="btn btn-secondary me-4">
                   <i class="bi bi-arrow-left"></i> Volver
@@ -121,11 +118,12 @@
                   <i class="bi bi-save"></i> Guardar
                 </button>
               </div>
+
             </div>
           </form>
         </div>
 
-        <!-- Modal -->
+        <!-- Modal de aviso -->
         <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

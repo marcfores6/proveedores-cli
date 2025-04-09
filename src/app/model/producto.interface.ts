@@ -1,5 +1,6 @@
 import { Timestamp } from "rxjs";
 import { IProductoImagen } from "./productoImagen.interface";
+import { IProductoDocumento } from "./productoDocumento.interface";
 
 export interface IProducto {
   id: number;
@@ -62,4 +63,7 @@ export interface IProducto {
   paisOrigen?: string;
 
   imagenes?: IProductoImagen[]; // por si usás imágenes relacionadas
+
+  documentos?: IProductoDocumento[];
+
 }
