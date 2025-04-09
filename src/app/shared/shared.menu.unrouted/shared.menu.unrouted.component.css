@@ -4,6 +4,10 @@
     background: linear-gradient(90deg, #005507 0%, #007509 100%);
     padding: 0.8rem 1rem;
   }
+
+  i.bi.bi-collection::before {
+    margin-right: 8px;
+  }
   
   .custom-navbar .navbar-brand {
     font-size: 1.5rem;

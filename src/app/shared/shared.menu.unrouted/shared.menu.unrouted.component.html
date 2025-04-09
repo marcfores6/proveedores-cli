@@ -17,14 +17,14 @@
         <!-- Siempre -->
         <li class="nav-item">
           <a class="nav-link" [class.active]="strRuta == '/home' || strRuta == '/' || strRuta == ''" href="/home">
-            <i class="bi bi-house-door-fill"></i> Inicio
+            <i class="bi bi-house-door"></i> Inicio
           </a>
         </li>
 
         <!-- Solo Admin -->
         <li class="nav-item" *ngIf="isAdmin">
           <a class="nav-link" [class.active]="strRuta == '/admin/producto/plist'" href="/admin/producto/plist">
-            <i class="bi bi-box-seam"></i> Productos
+            <i class="bi bi-collection"></i>Todos los Productos
           </a>
         </li>
 

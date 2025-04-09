@@ -30,7 +30,7 @@ export class JWTInterceptor implements HttpInterceptor {
                 if (error.status === 401) {
                     console.warn('Token inválido o expirado, cerrando sesión...');
                     this.oSessionService.logout();
-                    this.router.navigate(['/login']); // O la ruta que tengas para el login
+                    this.router.navigate(['/login']);
                 }
                 return throwError(() => error);
             })

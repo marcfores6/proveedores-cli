@@ -7,6 +7,8 @@ import { ProductoAdminPlistRoutedComponent } from './component/producto/producto
 import { ProductoAdminXProveedorPlistRoutedComponent } from './component/producto/producto.admin.xproveedor.plist.routed/producto.admin.xproveedor.plist.routed.component';
 import { AdminGuard } from './guards/admin.guard';
 import { AdminOrProveedorGuard } from './guards/admin-or-proveedor.guard';
+import { SharedBynifRoutedComponent } from './shared/shared.bynif.routed/shared.bynif.routed.component';
+import { ProductoAdminViewRoutedComponent } from './component/producto/producto.admin.view.routed/producto.admin.view.routed.component';
 
 
 export const routes: Routes = [
@@ -16,6 +18,7 @@ export const routes: Routes = [
     // Rutas de administrador
     { path: 'admin/producto/plist', component: ProductoAdminPlistRoutedComponent, canActivate: [AdminGuard] },
     { path: 'admin/producto/edit/:id', component: ProductoAdminEditRoutedComponent, canActivate: [AdminOrProveedorGuard] },
+    { path: 'admin/producto/view/:id', component: ProductoAdminViewRoutedComponent, canActivate: [AdminOrProveedorGuard] },
   
     // Rutas de proveedor
     { path: 'admin/producto/xproveedor/plist', component: ProductoAdminXProveedorPlistRoutedComponent, canActivate: [AdminOrProveedorGuard] },
@@ -23,5 +26,9 @@ export const routes: Routes = [
     // Login / logout
     { path: 'login', component: SharedLoginRoutedComponent },
     { path: 'logout', component: SharedLogoutRoutedComponent },
+
+    { path: 'bynif/:nif', component: SharedBynifRoutedComponent , canActivate: [AdminOrProveedorGuard] },
+
+    { path: '**', redirectTo: 'home', pathMatch: 'full' }
   ];
   

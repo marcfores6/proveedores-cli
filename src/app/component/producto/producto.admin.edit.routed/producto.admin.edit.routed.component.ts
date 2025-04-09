@@ -1345,7 +1345,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
   hideModal = () => {
     this.myModal.hide();
-    this.oRouter.navigate(['/admin/producto/plist']);
+    this.oRouter.navigate(['/admin/producto/proveedores/plist']);
   };
 
   eliminarImagen(idImagen: number): void {
