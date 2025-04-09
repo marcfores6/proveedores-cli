@@ -206,7 +206,7 @@
               id="goToPage"
               type="number"
               min="1"
-              [max]="oPage?.totalPages || 1"
+              [max]="oPage.totalPages || 1"
               [(ngModel)]="customPage"
               class="go-to-page-input"
               [class.invalid]="isInvalidCustomPage()"

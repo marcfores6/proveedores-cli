@@ -1327,7 +1327,8 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           }
         });
 
-        this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes' && key !== 'imagen'); // 🔥 También aquí
+        this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes' && key !== 'imagen' && key !== 'documentos');
+
       },
       error: (error) => {
         console.error('Error al cargar el producto:', error);
