@@ -83,7 +83,7 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     this.oRouter.navigate(['admin/producto/delete', oProducto.id]);
   }
 
-  goToPage(p: any) {
+  goToPage(p: any) {                  
     const pageNumber = Number(p);
     if (!isNaN(pageNumber)) {
       this.nPage = pageNumber - 1;

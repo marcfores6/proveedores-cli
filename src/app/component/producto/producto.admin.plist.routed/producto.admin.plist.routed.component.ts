@@ -146,11 +146,36 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   }
 
   isVacio(valor: any): boolean {
-    return valor === null || valor === undefined || valor === '';
+    // Si es null o undefined
+    if (valor === null || valor === undefined) {
+      return true;
+    }
+  
+    // Si es un string vacío o solo espacios
+    if (typeof valor === 'string' && valor.trim() === '') {
+      return true;
+    }
+  
+    // Si es un array vacío
+    if (Array.isArray(valor) && valor.length === 0) {
+      return true;
+    }
+  
+    // Si es un objeto vacío
+    if (typeof valor === 'object' && !Array.isArray(valor) && Object.keys(valor).length === 0) {
+      return true;
+    }
+  
+    return false;
   }
 
   // ⭐️ Nueva función limpia para celda con valor faltante
   getCellClass(value: any): string {
     return this.isVacio(value) ? 'text-danger fw-bold bg-light-danger' : '';
   }
+
+  getCellDisplay(value: any): string {
+    return this.isVacio(value) ? 'Sin dato' : value;
+  }
+  
 }
