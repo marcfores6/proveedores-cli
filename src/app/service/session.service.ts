@@ -1,6 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { IJwt } from "../model/jwt.interface";
+import { jwtDecode } from "jwt-decode";
 
 
 @Injectable({
@@ -111,5 +112,15 @@ export class SessionService {
         this.subjectLogout.next();
     }
 
+    getSessionRol(): string {
+        const token = this.getToken();
+        if (!token) return '';
+        try {
+          const decoded: any = jwtDecode(token);
+          return decoded.rol || '';
+        } catch {
+          return '';
+        }
+      }
 
 }

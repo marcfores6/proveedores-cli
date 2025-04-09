@@ -2,37 +2,41 @@
   <div class="container-fluid">
     <!-- Logo -->
     <a class="navbar-brand" href="/home">
-      <img src="assets/img/supermercados-family-cash.png" width="150" alt="Logo Family Cash" class="d-inline-block align-text-top">
+      <img src="assets/img/supermercados-family-cash.png" width="150" alt="Logo Family Cash" class="d-inline-block align-text-top bg-white p-1 rounded">
     </a>
 
-    <!-- Botón responsive hamburguesa -->
+    <!-- Botón hamburguesa -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Contenido colapsable -->
+    <!-- Contenido -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <!-- Menú izquierda -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Siempre -->
         <li class="nav-item">
           <a class="nav-link" [class.active]="strRuta == '/home' || strRuta == '/' || strRuta == ''" href="/home">
             <i class="bi bi-house-door-fill"></i> Inicio
           </a>
         </li>
-        <li class="nav-item">
+
+        <!-- Solo Admin -->
+        <li class="nav-item" *ngIf="isAdmin">
           <a class="nav-link" [class.active]="strRuta == '/admin/producto/plist'" href="/admin/producto/plist">
             <i class="bi bi-box-seam"></i> Productos
           </a>
         </li>
-        <li class="nav-item">
+
+        <!-- Admin o Proveedor -->
+        <li class="nav-item" *ngIf="isAdmin || isProveedor">
           <a class="nav-link" [class.active]="strRuta == '/admin/producto/xproveedor/plist'" [routerLink]="'/admin/producto/xproveedor/plist'">
-            <i class="bi bi-people-fill"></i> Productos by Proveedor
+            <i class="bi bi-box-seam"></i> Productos
           </a>
         </li>
       </ul>
 
-      <!-- Sesión (derecha) -->
+      <!-- Sesión -->
       @if (!activeSession) {
         <span class="navbar-text">
           <a href="/login" class="btn btn-outline-light me-2">
@@ -44,7 +48,7 @@
           <i class="bi bi-person-circle"></i>
           <a href="/bynif/{{ userNif }}" class="text-white text-decoration-underline">
             {{ proveedorDescripcion }} ({{ userNif }})
-          </a>                   
+          </a>
         </span>
         <span class="navbar-text">
           <a href="/logout" class="btn btn-outline-light">

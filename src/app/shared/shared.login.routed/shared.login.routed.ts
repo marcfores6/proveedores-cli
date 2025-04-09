@@ -136,8 +136,9 @@ export class SharedLoginRoutedComponent implements OnInit {
 
   onContable() {
     this.loginForm.setValue({
-      nif: 'emailRafa2149@gmail.com',
-      password: 'ausias'
+      nif: 'B82451121',
+      proveedorId: '',
+      password: 'holacaracola'
     });
   }
 

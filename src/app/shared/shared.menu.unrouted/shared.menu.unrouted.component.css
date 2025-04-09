@@ -64,10 +64,12 @@
     }
   }
   
-
   .navbar-brand img {
     max-width: 150px;
     height: auto;
+    background-color: white;
+    border-radius: 4px; 
+    padding: 4px; 
   }
   
   @media (max-width: 768px) {
@@ -75,4 +77,5 @@
       max-width: 120px;
     }
   }
+  
   

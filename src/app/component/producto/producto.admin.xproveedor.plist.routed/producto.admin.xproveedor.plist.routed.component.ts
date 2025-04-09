@@ -8,6 +8,8 @@ import { ProductoService } from '../../../service/producto.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from '../../../service/session.service';
+import { ProveedorService } from '../../../service/proveedor.service';
+
 
 @Component({
   selector: 'app-producto.admin.xproveedor.plist.routed',
@@ -28,6 +30,8 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   customPage: number = 1;
   loading: boolean = false;
   noArticulosMessage: string | null = null;
+  proveedorDescripcion: string = '';
+
 
   private debounceSubject = new Subject<string>();
 
@@ -35,14 +39,16 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     private oProductoService: ProductoService,
     private oBotoneraService: BotoneraService,
     private oRouter: Router,
-    private oSessionService: SessionService
+    private oSessionService: SessionService,
+    private oProveedorService: ProveedorService
   ) {
     this.debounceSubject.pipe(debounceTime(300)).subscribe(() => {
       this.getPage();
     });
   }
 
-  ngOnInit() {
+  ngOnInit() {;
+    this.loadProveedorDescripcion();
     this.getPage();
   }
 
@@ -155,9 +161,24 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   isVacio(valor: any): boolean {
     return valor === null || valor === undefined || valor === '';
   }
-
-  // ⭐️ Nueva función limpia para celda con valor faltante
   getCellClass(value: any): string {
     return this.isVacio(value) ? 'text-danger fw-bold bg-light-danger' : '';
   }
+
+  loadProveedorDescripcion(): void {
+    const proveedorId = this.oSessionService.getSessionProveedorId();
+  
+    if (proveedorId) {
+      this.oProveedorService.get(Number(proveedorId)).subscribe({
+        next: (proveedor) => {
+          this.proveedorDescripcion = proveedor.descripcion || 'Proveedor';
+        },
+        error: (err) => {
+          console.error('Error al cargar la descripción del proveedor', err);
+          this.proveedorDescripcion = 'Proveedor';
+        }
+      });
+    }
+  }
+  
 }

@@ -3,6 +3,7 @@ export interface IJwt {
     id: string,
     nif: string,
     proveedorId: string,
+    rol: string,
     sub: string,
     iss: string,
     iat: number,
