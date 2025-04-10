@@ -107,6 +107,9 @@ export class ProductoService {
     return this.oHttp.delete('http://localhost:8086/producto/documento/' + idDocumento);
   }
 
-
-
+  enviarProducto(id: number): Observable<any> {
+    return this.oHttp.put('http://localhost:8086/producto/' + id + '/enviar', {}, { responseType: 'text' });
+  }
+  
+  
 }

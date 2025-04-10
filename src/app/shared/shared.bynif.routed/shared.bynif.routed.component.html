@@ -37,5 +37,28 @@
         </tr>
       </tbody>
     </table>
+
+    <div class="mt-5">
+      <h2 class="text-center">
+        <i class="bi bi-key"></i> Cambiar contraseña
+      </h2>
+    
+      <div class="mb-3">
+        <label for="newPassword" class="form-label">Nueva contraseña</label>
+        <input type="password" id="newPassword" class="form-control" [(ngModel)]="newPassword">
+      </div>
+    
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirmar nueva contraseña</label>
+        <input type="password" id="confirmPassword" class="form-control" [(ngModel)]="confirmPassword">
+      </div>
+    
+      <button class="btn btn-success w-100" (click)="cambiarPassword()">Actualizar contraseña</button>
+    
+      <div *ngIf="passwordChangeMessage" class="alert alert-info mt-3">
+        {{ passwordChangeMessage }}
+      </div>
+    </div>
+    
   </div>
 </div>

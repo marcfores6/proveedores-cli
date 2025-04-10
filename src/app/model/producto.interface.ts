@@ -66,4 +66,7 @@ export interface IProducto {
 
   documentos?: IProductoDocumento[];
 
+  estado?: string; 
+  showEnviarButton?: boolean;
+
 }

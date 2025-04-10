@@ -11,12 +11,10 @@
         <div class="card-body">
           <form [formGroup]="oProductoForm" (ngSubmit)="onSubmit()">
             <div class="row g-3">
-
               <!-- Bucle dinámico para todos los campos -->
               <div class="col-md-4" *ngFor="let campo of camposProducto">
                 <label class="form-label fw-bold text-capitalize">{{ campo }}</label>
                 <ng-container [ngSwitch]="campo">
-
                   <!-- Campo Status -->
                   <select *ngSwitchCase="'status'" class="form-select" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" formControlName="status">
                     <option [value]="1">1</option>
@@ -45,7 +43,6 @@
 
                   <!-- Campo por defecto -->
                   <input *ngSwitchDefault type="text" class="form-control" [formControlName]="campo" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" />
-
                 </ng-container>
               </div>
 
@@ -78,8 +75,8 @@
                   </div>
                 </div>
               </div>
-              
-                            <!-- Documentos actuales -->
+
+              <!-- Documentos actuales -->
               <div class="mb-4" *ngIf="oProducto && oProducto.documentos && oProducto.documentos.length > 0">
                 <label class="form-label fw-bold">Documentos actuales</label>
                 <ul class="list-group">
@@ -100,11 +97,12 @@
 
               <!-- Vista previa de documentos nuevos -->
               <div *ngIf="documentoPreviews.length > 0" class="col-12 text-center">
-                <label class="form-label fw-bold">Vista previa de documentos nuevos</label>
+                <label class="form-label fw-bold">Vista previa de documentos nuevos</label>h
                 <ul class="list-group">
                   <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of documentoPreviews; let i = index">
                     {{ doc }}
                     <button type="button" class="btn btn-close" (click)="removeDocumento(i)"></button>
+
                   </li>
                 </ul>
               </div>
@@ -118,27 +116,41 @@
                   <i class="bi bi-save"></i> Guardar
                 </button>
               </div>
-
             </div>
           </form>
         </div>
 
-        <!-- Modal de aviso -->
-        <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Aviso</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-              </div>
-              <div class="modal-body">{{ strMessage }}</div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click)="hideModal()">Aceptar</button>
-              </div>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
+
+<div #modalElement class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Family Cash</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="hideModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="hideModal()"
+        >
+          Cerrar
+        </button>
       </div>
     </div>
   </div>

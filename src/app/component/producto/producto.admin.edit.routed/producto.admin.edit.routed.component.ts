@@ -31,7 +31,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   myModal: any;
   camposProducto: string[] = [];
   paisesList: { id: number; nombre: string; codigo: string }[] = [];
-
+  message: string = '';
   documentoPreviews: string[] = [];
   documentoUrls: string[] = [];
 
@@ -54,6 +54,201 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.cargarPaises();
     this.cargarProducto();
   }
+
+  cargarProducto(): void {
+    this.oProductoService.get(this.id).subscribe({
+      next: (data: IProducto) => {
+        this.oProducto = data;
+        this.oProductoForm = this.fb.group({});
+
+        Object.entries(data).forEach(([key, value]) => {
+          if (key === 'imagenes' || key === 'imagen') return; // Aquí excluimos "imagen"
+
+          const control = new FormControl(value ?? '', {
+            nonNullable: true,
+            validators: Validators.required
+          });
+
+          this.oProductoForm.addControl(key, control);
+
+          if (value === null || value === undefined || value === '') {
+            control.markAsTouched();
+            control.markAsDirty();
+          }
+        });
+
+        this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes' && key !== 'imagen' && key !== 'documentos' && key !== 'estado');
+
+      },
+      error: (error) => {
+        console.error('Error al cargar el producto:', error);
+        this.showModal('No se pudo cargar el producto.');
+      },
+    });
+  }
+
+  showModal(mensaje: string) {
+    this.message = mensaje;
+    this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), {
+      keyboard: false,
+    });
+    this.myModal.show();
+  }
+
+  hideModal = () => {
+    this.myModal.hide();
+  };
+
+  eliminarImagen(idImagen: number): void {
+    if (confirm('¿Seguro que deseas eliminar esta imagen?')) {
+      this.oProductoService.deleteImagen(idImagen).subscribe({
+        next: () => {
+          this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== idImagen);
+        },
+        error: (err) => {
+          console.error('Error al eliminar la imagen', err);
+          alert('No se pudo eliminar la imagen.');
+        },
+      });
+    }
+  }
+
+  onFileSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const files = Array.from(input.files);
+      this.imagenPreviews = [];
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imagenPreviews.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  }
+
+  removeImage(index: number): void {
+    const input = document.getElementById('imagenes') as HTMLInputElement;
+    this.imagenPreviews.splice(index, 1);
+
+    if (input?.files) {
+      const dt = new DataTransfer();
+      const files = Array.from(input.files);
+      files.splice(index, 1);
+      files.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    }
+  }
+
+  onSubmit(): void {
+    const formData = new FormData();
+
+    Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        // Si es un Date, lo convertimos a string ISO antes de enviar
+        if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else {
+          formData.append(key, value as string);
+        }
+      }
+    });
+
+    this.imagenUrls.forEach(url => formData.append('imagenUrls', url));
+
+    const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
+    if (inputImagenes && inputImagenes.files) {
+      Array.from(inputImagenes.files).forEach(file => {
+        formData.append('imagenes', file);
+      });
+    }
+
+    const inputDocumentos = document.getElementById('documentos') as HTMLInputElement;
+    if (inputDocumentos && inputDocumentos.files) {
+      Array.from(inputDocumentos.files).forEach(file => {
+        formData.append('documentos', file);
+      });
+    }
+
+
+    this.oProductoService.update(this.id, formData).subscribe({
+      next: () => {
+        this.showModal('Producto actualizado correctamente!');
+        this.cargarProducto();
+        this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+      },
+      error: (error) => {
+        console.error(error);
+        this.showModal('Error al actualizar el producto.');
+      },
+    });
+  }
+
+
+  isFieldInvalid(fieldName: string): boolean {
+    const control = this.oProductoForm.get(fieldName);
+    return control ? control.invalid && control.touched : false;
+  }
+
+  addImageUrl(url: string): void {
+    if (url && !this.imagenUrls.includes(url)) {
+      this.imagenUrls.push(url);
+    }
+  }
+
+  removeImageUrl(url: string): void {
+    this.imagenUrls = this.imagenUrls.filter(u => u !== url);
+  }
+
+  onReset(): void {
+    this.oProductoForm.reset();
+    this.imagenPreviews = [];
+    this.imagenUrls = [];
+  }
+
+  eliminarDocumento(idDocumento: number): void {
+    if (confirm('¿Seguro que deseas eliminar este documento?')) {
+      this.oProductoService.deleteDocumento(idDocumento).subscribe({
+        next: () => {
+          this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== idDocumento);
+        },
+        error: (err) => {
+          console.error('Error al eliminar el documento', err);
+          this.showModal('No se pudo eliminar el documento.');
+        },
+      });
+    }
+  }
+
+  // ✅ Subir nuevos documentos PDF
+  onFileSelectDocumentos(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const files = Array.from(input.files);
+      this.documentoPreviews = [];
+
+      files.forEach(file => {
+        this.documentoPreviews.push(file.name);
+      });
+    }
+  }
+
+  // ✅ Eliminar documento de la previsualización
+  removeDocumento(index: number): void {
+    const input = document.getElementById('documentos') as HTMLInputElement;
+    this.documentoPreviews.splice(index, 1);
+
+    if (input?.files) {
+      const dt = new DataTransfer();
+      const files = Array.from(input.files);
+      files.splice(index, 1);
+      files.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    }
+  }
+
 
   cargarPaises(): void {
     this.paisesList = [{
@@ -1302,198 +1497,4 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       "codigo": "ZWE"
     }]
   }
-
-  cargarProducto(): void {
-    this.oProductoService.get(this.id).subscribe({
-      next: (data: IProducto) => {
-        this.oProducto = data;
-        this.oProductoForm = this.fb.group({});
-
-        Object.entries(data).forEach(([key, value]) => {
-          if (key === 'imagenes' || key === 'imagen') return; // Aquí excluimos "imagen"
-
-          const control = new FormControl(value ?? '', {
-            nonNullable: true,
-            validators: Validators.required
-          });
-
-          this.oProductoForm.addControl(key, control);
-
-          if (value === null || value === undefined || value === '') {
-            control.markAsTouched();
-            control.markAsDirty();
-          }
-        });
-
-        this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes' && key !== 'imagen' && key !== 'documentos');
-
-      },
-      error: (error) => {
-        console.error('Error al cargar el producto:', error);
-        this.showModal('No se pudo cargar el producto.');
-      },
-    });
-  }
-
-  showModal(strMessage: string) {
-    this.strMessage = strMessage;
-    this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), { keyboard: false });
-    this.myModal.show();
-  }
-
-  hideModal = () => {
-    this.oRouter.navigate(['/admin/producto/xproveedores/plist']);
-    this.myModal.hide();
-  };
-
-  eliminarImagen(idImagen: number): void {
-    if (confirm('¿Seguro que deseas eliminar esta imagen?')) {
-      this.oProductoService.deleteImagen(idImagen).subscribe({
-        next: () => {
-          this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== idImagen);
-        },
-        error: (err) => {
-          console.error('Error al eliminar la imagen', err);
-          alert('No se pudo eliminar la imagen.');
-        },
-      });
-    }
-  }
-
-  onFileSelect(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      const files = Array.from(input.files);
-      this.imagenPreviews = [];
-
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.imagenPreviews.push(e.target.result);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-  }
-
-  removeImage(index: number): void {
-    const input = document.getElementById('imagenes') as HTMLInputElement;
-    this.imagenPreviews.splice(index, 1);
-
-    if (input?.files) {
-      const dt = new DataTransfer();
-      const files = Array.from(input.files);
-      files.splice(index, 1);
-      files.forEach(f => dt.items.add(f));
-      input.files = dt.files;
-    }
-  }
-
-  onSubmit(): void {
-    const formData = new FormData();
-
-    Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        // Si es un Date, lo convertimos a string ISO antes de enviar
-        if (value instanceof Date) {
-          formData.append(key, value.toISOString());
-        } else {
-          formData.append(key, value as string);
-        }
-      }
-    });
-
-    this.imagenUrls.forEach(url => formData.append('imagenUrls', url));
-
-    const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
-    if (inputImagenes && inputImagenes.files) {
-      Array.from(inputImagenes.files).forEach(file => {
-        formData.append('imagenes', file);
-      });
-    }
-
-    const inputDocumentos = document.getElementById('documentos') as HTMLInputElement;
-    if (inputDocumentos && inputDocumentos.files) {
-      Array.from(inputDocumentos.files).forEach(file => {
-        formData.append('documentos', file);
-      });
-    }
-
-
-    this.oProductoService.update(this.id, formData).subscribe({
-      next: () => {
-        this.showModal('Producto actualizado correctamente!');
-        this.cargarProducto();
-        this.hideModal();
-      },
-      error: (error) => {
-        console.error(error);
-        this.showModal('Error al actualizar el producto.');
-      },
-    });
-  }
-
-
-  isFieldInvalid(fieldName: string): boolean {
-    const control = this.oProductoForm.get(fieldName);
-    return control ? control.invalid && control.touched : false;
-  }
-
-  addImageUrl(url: string): void {
-    if (url && !this.imagenUrls.includes(url)) {
-      this.imagenUrls.push(url);
-    }
-  }
-
-  removeImageUrl(url: string): void {
-    this.imagenUrls = this.imagenUrls.filter(u => u !== url);
-  }
-
-  onReset(): void {
-    this.oProductoForm.reset();
-    this.imagenPreviews = [];
-    this.imagenUrls = [];
-  }
-
-  eliminarDocumento(idDocumento: number): void {
-    if (confirm('¿Seguro que deseas eliminar este documento?')) {
-      this.oProductoService.deleteDocumento(idDocumento).subscribe({
-        next: () => {
-          this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== idDocumento);
-        },
-        error: (err) => {
-          console.error('Error al eliminar el documento', err);
-          alert('No se pudo eliminar el documento.');
-        },
-      });
-    }
-  }
-
-  // ✅ Subir nuevos documentos PDF
-  onFileSelectDocumentos(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      const files = Array.from(input.files);
-      this.documentoPreviews = [];
-
-      files.forEach(file => {
-        this.documentoPreviews.push(file.name);
-      });
-    }
-  }
-
-  // ✅ Eliminar documento de la previsualización
-  removeDocumento(index: number): void {
-    const input = document.getElementById('documentos') as HTMLInputElement;
-    this.documentoPreviews.splice(index, 1);
-
-    if (input?.files) {
-      const dt = new DataTransfer();
-      const files = Array.from(input.files);
-      files.splice(index, 1);
-      files.forEach(f => dt.items.add(f));
-      input.files = dt.files;
-    }
-  }
-
 }

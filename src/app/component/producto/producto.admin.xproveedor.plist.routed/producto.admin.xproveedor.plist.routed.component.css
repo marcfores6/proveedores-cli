@@ -198,3 +198,17 @@
   margin-top: 20px;
   text-align: center;
 }
+
+/* Estilo para el botón de Enviar */
+.btn-primary {
+  background-color: #005507;
+  color: white;
+  border-radius: 0.3rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+

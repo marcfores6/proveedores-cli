@@ -11,9 +11,8 @@ import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-declare var bootstrap: any; // Declaración para evitar errores de TypeScript
+declare var bootstrap: any; 
 
 @Component({
   selector: 'app-login',

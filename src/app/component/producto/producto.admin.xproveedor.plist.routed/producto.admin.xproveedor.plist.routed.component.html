@@ -7,6 +7,18 @@
         <i class="bi bi-list"></i> Lista de Productos de {{ proveedorDescripcion }}
       </h2>
 
+      
+
+      <!-- Mostrar mensaje de notificación si hay productos listos para enviar -->
+      <div *ngIf="productosParaEnviar > 0" class="alert alert-info text-center">
+        ¡Ya puedes enviar {{ productosParaEnviar }} producto(s)!
+      </div>
+
+      <!-- Botón de Enviar -->
+      <div *ngIf="productosParaEnviar > 0" class="text-center mb-4">
+        <button class="btn btn-primary">Enviar Todos</button>
+      </div>
+
       <!-- Buscador -->
       <div class="mb-4 d-flex justify-content-center align-items-center">
         <input
@@ -16,7 +28,6 @@
           (keyup)="filter($event)"
           [(ngModel)]="strFiltro"
         />
-
         <div class="d-inline-flex mx-2">
           <nav class="my-4">
             <ul class="pagination justify-content-center">
@@ -34,17 +45,11 @@
         </div>
       </div>
 
-      
-
       <!-- Info filtro y cantidad -->
       <div class="d-flex justify-content-between">
-        @if (strFiltro.length > 0) {
-          <h5 class="text-muted">
-            Filtrado por: <span class="text-danger">{{ strFiltro }}</span>
-          </h5>
-        } @else {
-          <h5 class="text-muted">Sin filtrar</h5>
-        }
+        <h5 class="text-muted">
+          Filtrado por: <span class="text-danger">{{ strFiltro }}</span>
+        </h5>
         <h5 class="text-muted">
           Mostrando {{ oPage?.numberOfElements | number: '1.0-0' }} de {{ oPage?.totalElements | number: '1.0-0' }}
         </h5>
@@ -113,6 +118,7 @@
               <th>Partida Arancelaria</th>
               <th>PVP MEL</th>
               <th>País Origen</th>
+              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -164,8 +170,13 @@
               <td [ngClass]="getCellClass(producto.partidaArancelaria)">{{ producto.partidaArancelaria || 'Sin dato' }}</td>
               <td [ngClass]="getCellClass(producto.pvp_mel)">{{ producto.pvp_mel || 'Sin dato' }}</td>
               <td [ngClass]="getCellClass(producto.paisOrigen)">{{ producto.paisOrigen || 'Sin dato' }}</td>
+              <td [ngClass]="getCellClass(producto.estado)">{{ producto.estado || 'Sin dato' }}</td>
               <td>
+                
                 <div class="btn-group btn-group-sm">
+                    <button *ngIf="producto.showEnviarButton" class="btn btn-primary" (click)="enviarProducto(producto)">
+                      <i class="bi bi-send"></i> Enviar
+                    </button>
                   <button class="btn btn-success" (click)="view(producto); $event.stopPropagation()">
                     <i class="bi bi-eye"></i>
                   </button>
@@ -223,6 +234,7 @@
         </div>
       </nav>
 
+      
     </div>
   </div>
 </div>
