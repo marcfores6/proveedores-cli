@@ -1,5 +1,3 @@
-// 🔥 CÓDIGO ACTUALIZADO ✅
-
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -1344,8 +1342,8 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   }
 
   hideModal = () => {
+    this.oRouter.navigate(['/admin/producto/xproveedores/plist']);
     this.myModal.hide();
-    this.oRouter.navigate(['/admin/producto/proveedores/plist']);
   };
 
   eliminarImagen(idImagen: number): void {
@@ -1426,6 +1424,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       next: () => {
         this.showModal('Producto actualizado correctamente!');
         this.cargarProducto();
+        this.hideModal();
       },
       error: (error) => {
         console.error(error);
