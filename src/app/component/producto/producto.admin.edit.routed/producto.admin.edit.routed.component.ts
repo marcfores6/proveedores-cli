@@ -37,8 +37,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
   readonly dialog = inject(MatDialog);
 
-
-
   constructor(
     private oActivatedRoute: ActivatedRoute,
     private oProductoService: ProductoService,
@@ -62,27 +60,67 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         this.oProductoForm = this.fb.group({});
 
         Object.entries(data).forEach(([key, value]) => {
-          if (key === 'imagenes' || key === 'imagen') return; // Aquí excluimos "imagen"
-
+          if (key === 'imagenes' || key === 'imagen' || key === 'documentos' || key === 'estado') return;
+        
+          let validators = [Validators.required];
+        
+          // Validadores personalizados según el nombre de campo de la tabla LU_ARA
+          switch (key) {
+            case 'ARA_EAN':
+            case 'ARA_EAN_P':
+              validators.push(Validators.pattern(/^\d{13}$/)); // 13 dígitos exactos
+              break;
+        
+            case 'ARA_EAN_C':
+              validators.push(Validators.pattern(/^\d{14}$/)); // 14 dígitos exactos
+              break;
+        
+            case 'ARA_UDM_CTD':
+            case 'ARA_PESO_C':
+            case 'ARA_PVP':
+            case 'ARA_PVP_HOM':
+            case 'ARA_PVP_AND':
+            case 'ARA_PVP_CAT':
+            case 'ARA_PRO_TAR':
+            case 'ARA_PRO_NETO':
+            case 'ARA_PRO_NETON':
+            case 'ARA_PVP_MEL':
+              validators.push(Validators.pattern(/^\d+(\.\d{1,4})?$/)); // decimal con hasta 4 decimales
+              break;
+        
+            case 'ARA_CAJAS_CAPA':
+            case 'ARA_CAJAS_PALET':
+            case 'ARA_UC':
+            case 'ARA_US':
+            case 'ARA_PK':
+            case 'ARA_DIAS_CAD':
+            case 'ARA_LARGO_C':
+            case 'ARA_ANCHO_C':
+            case 'ARA_ALTO_C':
+              validators.push(Validators.pattern(/^\d+$/)); // solo números enteros
+              break;
+          }
+        
           const control = new FormControl(value ?? '', {
             nonNullable: true,
-            validators: Validators.required
+            validators,
           });
-
+        
           this.oProductoForm.addControl(key, control);
-
+        
           if (value === null || value === undefined || value === '') {
             control.markAsTouched();
             control.markAsDirty();
           }
         });
+        
 
         this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes' && key !== 'imagen' && key !== 'documentos' && key !== 'estado');
 
       },
       error: (error) => {
         console.error('Error al cargar el producto:', error);
-        this.showModal('No se pudo cargar el producto.');
+        this.showModal('No se pudo cargar el producto');
       },
     });
   }
@@ -97,6 +135,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
   hideModal = () => {
     this.myModal.hide();
+    this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
   };
 
   eliminarImagen(idImagen: number): void {
@@ -147,7 +186,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
     Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
-        // Si es un Date, lo convertimos a string ISO antes de enviar
         if (value instanceof Date) {
           formData.append(key, value.toISOString());
         } else {
@@ -172,20 +210,20 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       });
     }
 
-
     this.oProductoService.update(this.id, formData).subscribe({
       next: () => {
-        this.showModal('Producto actualizado correctamente!');
-        this.cargarProducto();
-        this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+        this.message = 'Producto actualizado correctamente!';
+        this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), {
+          keyboard: false
+        });
+        this.myModal.show();
       },
       error: (error) => {
         console.error(error);
         this.showModal('Error al actualizar el producto.');
-      },
+      }
     });
   }
-
 
   isFieldInvalid(fieldName: string): boolean {
     const control = this.oProductoForm.get(fieldName);
@@ -222,7 +260,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     }
   }
 
-  // ✅ Subir nuevos documentos PDF
   onFileSelectDocumentos(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
@@ -235,7 +272,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     }
   }
 
-  // ✅ Eliminar documento de la previsualización
   removeDocumento(index: number): void {
     const input = document.getElementById('documentos') as HTMLInputElement;
     this.documentoPreviews.splice(index, 1);
@@ -248,7 +284,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       input.files = dt.files;
     }
   }
-
 
   cargarPaises(): void {
     this.paisesList = [{

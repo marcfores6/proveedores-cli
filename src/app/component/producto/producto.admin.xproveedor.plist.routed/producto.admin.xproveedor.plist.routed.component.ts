@@ -11,6 +11,8 @@ import { SessionService } from '../../../service/session.service';
 import { ProveedorService } from '../../../service/proveedor.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
+declare var bootstrap: any; // Para usar Bootstrap en TypeScript
+
 @Component({
   selector: 'app-producto.admin.xproveedor.plist.routed',
   templateUrl: './producto.admin.xproveedor.plist.routed.component.html',
@@ -33,7 +35,18 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   proveedorDescripcion: string = '';
   showEnviarButton: boolean = false;
   productosParaEnviar: number = 0; // Número de productos listos para enviar
+  enviandoProductos: boolean = false;
+
+  confirmMessage: string = '';
+  accionConfirmada: Function = () => { };
+  confirmModal: any;
   form: FormGroup;
+
+  productosFiltrados: IProducto[] = [];
+  productoPendiente: any = null;
+
+  message: string = '';
+  myModal: any;
 
   private debounceSubject = new Subject<string>();
 
@@ -67,22 +80,22 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
             this.nPage,
             oPageFromServer.totalPages
           );
-          
-          // Filtrar los productos que no tienen el estado 'ENVIADO'
-          this.oPage.content = this.oPage.content.filter(producto => producto.estado !== 'ENVIADO');
-          
-          // Comprobar si todos los campos están completos
-          this.oPage.content.forEach(producto => {
-            // Verifica si todos los campos del producto están completos
+
+          this.productosFiltrados = oPageFromServer.content.filter(producto => producto.estado !== 'ENVIADO');
+
+          this.productosFiltrados.forEach(producto => {
             producto.showEnviarButton = this.checkIfAllFieldsAreFilled(producto);
           });
-          
-          if (this.oPage.content.length === 0) {
-            this.noArticulosMessage = 'No tiene artículos'; // Si no hay productos
+
+          this.productosParaEnviar = this.productosFiltrados.filter(p => p.showEnviarButton).length;
+
+
+          if (this.productosFiltrados.length === 0) {
+            this.noArticulosMessage = 'No hay productos pendientes por enviar.';
           } else {
-            this.noArticulosMessage = null; // Resetear el mensaje si hay productos
+            this.noArticulosMessage = null;
           }
-  
+
           this.loading = false; // Detener el cargador
         },
         error: (err) => {
@@ -91,11 +104,6 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
         }
       });
   }
-  
-  
-  
-
-
 
   checkIfAllFieldsAreFilled(product: IProducto): boolean {
     const requiredFields: (keyof IProducto)[] = [
@@ -239,23 +247,121 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     this.oProductoService.enviarProducto(producto.id).subscribe({
       next: (response: string) => {
         console.log('Respuesta del servidor:', response);
-        alert(`Producto ${producto.descripcion} enviado exitosamente`);
-  
+        this.showModal(`Producto ${producto.descripcion} enviado exitosamente`);
+
         // Cambiar el estado del producto a "ENVIADO"
         producto.estado = 'ENVIADO';
-  
+
         // Refrescar la lista de productos
         this.getPage();
       },
       error: (err: any) => {
         console.error('Error al enviar el producto:', err);
-        alert('Hubo un problema al actualizar el producto.');
+        this.showModal('Hubo un problema al actualizar el producto.');
       }
     });
   }
+
+  showModal(mensaje: string) {
+    this.message = mensaje;
+    const modalElement = document.getElementById('mimodal');
+    if (modalElement) {
+      this.myModal = new bootstrap.Modal(modalElement, {
+        keyboard: false,
+      });
+      this.myModal.show();
+    }
+  }
+
+  hideModal = () => {
+    this.myModal?.hide();
+    this.getPage(); // o navega o recarga si quieres
+  };
+
+
+  enviarTodosProductos() {
+    if (!this.productosFiltrados || this.productosFiltrados.length === 0) return;
+
+    const productosAEnviar = this.productosFiltrados.filter(producto => producto.showEnviarButton);
+
+    if (productosAEnviar.length === 0) {
+      this.showModal('No hay productos listos para enviar.');
+      return;
+    }
+
+    this.enviandoProductos = true; // 🚀 Activar el spinner
+
+    let enviados = 0;
+    let errores = 0;
+    const total = productosAEnviar.length;
+
+    productosAEnviar.forEach((producto) => {
+      this.oProductoService.enviarProducto(producto.id).subscribe({
+        next: () => {
+          enviados++;
+          producto.estado = 'ENVIADO';
+          producto.showEnviarButton = false;
+          this.checkIfAllFinished(enviados, errores, total);
+        },
+        error: () => {
+          errores++;
+          this.checkIfAllFinished(enviados, errores, total);
+        }
+      });
+    });
+  }
+
+  checkIfAllFinished(enviados: number, errores: number, total: number) {
+    if (enviados + errores === total) {
+      this.enviandoProductos = false; // ❌ Ocultar spinner
+      this.showModal(
+        `Se han enviado ${enviados} producto(s) correctamente${errores > 0 ? ` y ${errores} con error` : ''}.`
+      );
+      this.getPage();
+    }
+  }
+
+  mostrarConfirmacion(mensaje: string, accion: () => void): void {
+    this.confirmMessage = mensaje;
+    this.accionConfirmada = accion;
+    setTimeout(() => {
+      this.confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
+        keyboard: false,
+      });
+      this.confirmModal.show();
+    }, 0);
+  }
   
   
+  // Ejecutar acción confirmada
+  confirmarAccion(): void {
+    this.confirmModal.hide();
+    if (this.accionConfirmada) {
+      this.accionConfirmada();
+    }
+  }
+
+  confirmarEnviarProducto(producto: any): void {
+    this.productoPendiente = producto;
+    this.mostrarConfirmacion(
+      `¿Estás seguro de que deseas enviar el producto con ID ${producto.id}?`,
+      this.enviarProductoConfirmado.bind(this)
+    );
+  }
   
+  enviarProductoConfirmado(): void {
+    if (this.productoPendiente) {
+      this.enviarProducto(this.productoPendiente);
+      this.productoPendiente = null;
+    }
+  }
+  
+  confirmarEnviarTodos(): void {
+    this.mostrarConfirmacion(
+      '¿Quieres enviar todos los productos listos?',
+      this.enviarTodosProductos.bind(this)
+    );
+  }
 
 
 }

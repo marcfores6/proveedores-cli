@@ -1,22 +1,36 @@
 <div class="container-fluid mt-5">
   <div class="row">
     <div class="col-12">
-
       <!-- Título -->
       <h2 class="mb-4 text-center">
-        <i class="bi bi-list"></i> Lista de Productos de {{ proveedorDescripcion }}
+        <i class="bi bi-list"></i> Lista de Productos de
+        {{ proveedorDescripcion }}
       </h2>
-
-      
 
       <!-- Mostrar mensaje de notificación si hay productos listos para enviar -->
       <div *ngIf="productosParaEnviar > 0" class="alert alert-info text-center">
         ¡Ya puedes enviar {{ productosParaEnviar }} producto(s)!
       </div>
 
-      <!-- Botón de Enviar -->
+      <!-- Botón de Enviar Todos -->
       <div *ngIf="productosParaEnviar > 0" class="text-center mb-4">
-        <button class="btn btn-primary">Enviar Todos</button>
+        <button
+          class="btn btn-primary"
+          (click)="confirmarEnviarTodos()"
+          [disabled]="enviandoProductos"
+        >
+          <span *ngIf="!enviandoProductos">
+            <i class="bi bi-send-fill"></i> Enviar Todos
+          </span>
+          <span *ngIf="enviandoProductos">
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Enviando...
+          </span>
+        </button>
       </div>
 
       <!-- Buscador -->
@@ -51,7 +65,8 @@
           Filtrado por: <span class="text-danger">{{ strFiltro }}</span>
         </h5>
         <h5 class="text-muted">
-          Mostrando {{ oPage?.numberOfElements | number: '1.0-0' }} de {{ oPage?.totalElements | number: '1.0-0' }}
+          Mostrando {{ productosFiltrados.length }} de
+          {{ oPage?.totalElements | number : "1.0-0" }}
         </h5>
       </div>
 
@@ -69,7 +84,9 @@
 
       <!-- Tabla -->
       <div class="table-responsive" *ngIf="!loading && !noArticulosMessage">
-        <table class="table table-striped table-bordered align-middle text-center">
+        <table
+          class="table table-striped table-bordered align-middle text-center"
+        >
           <thead class="table-success text-white bg-success">
             <tr>
               <th>ID</th>
@@ -123,64 +140,171 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let producto of oPage?.content" class="clickable-row" (click)="edit(producto)">
-              <td [ngClass]="getCellClass(producto.id)">{{ producto.id || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.descripcion)">{{ producto.descripcion || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.descripcionTic)">{{ producto.descripcionTic || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.departamento)">{{ producto.departamento || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.familia)">{{ producto.familia || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.subfamilia)">{{ producto.subfamilia || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.marca)">{{ producto.marca || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.unidadDeMedida)">{{ producto.unidadDeMedida || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.cantidad)">{{ producto.cantidad || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.centralizado)">{{ producto.centralizado || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.apeso)">{{ producto.apeso || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.unidadDeCaja)">{{ producto.unidadDeCaja || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.unidadDeServicio)">{{ producto.unidadDeServicio || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.pk)">{{ producto.pk || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.cajasCapa)">{{ producto.cajasCapa || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.cajasPalet)">{{ producto.cajasPalet || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.proveedor)">{{ producto.proveedor || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.referenciaProveedor)">{{ producto.referenciaProveedor || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.ean)">{{ producto.ean || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.ean_c)">{{ producto.ean_c || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.ean_p)">{{ producto.ean_p || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.largo)">{{ producto.largo || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.ancho)">{{ producto.ancho || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.alto)">{{ producto.alto || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.peso)">{{ producto.peso || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.diasCaducidad)">{{ producto.diasCaducidad || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.ara_cen)">{{ producto.ara_cen || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.iva)">{{ producto.iva || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.precioVenta)">{{ producto.precioVenta || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.pvp_hom)">{{ producto.pvp_hom || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.pvp_and)">{{ producto.pvp_and || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.pvp_cat)">{{ producto.pvp_cat || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.precioTarifa)">{{ producto.precioTarifa || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.pro_fac)">{{ producto.pro_fac || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.precioNeto)">{{ producto.precioNeto || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.pro_ffac)">{{ producto.pro_ffac || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.pro_neton)">{{ producto.pro_neton || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.art_mkd)">{{ producto.art_mkd || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.articuloSustituido)">{{ producto.articuloSustituido || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.insertedBy)">{{ producto.insertedBy || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.updateBy)">{{ producto.updateBy || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.status)">{{ producto.status }}</td>
-              <td [ngClass]="getCellClass(producto.observaciones)">{{ producto.observaciones || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.partidaArancelaria)">{{ producto.partidaArancelaria || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.pvp_mel)">{{ producto.pvp_mel || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.paisOrigen)">{{ producto.paisOrigen || 'Sin dato' }}</td>
-              <td [ngClass]="getCellClass(producto.estado)">{{ producto.estado || 'Sin dato' }}</td>
+            <tr
+              *ngFor="let producto of productosFiltrados"
+              class="clickable-row"
+              (click)="edit(producto)"
+            >
+              <td [ngClass]="getCellClass(producto.id)">
+                {{ producto.id || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.descripcion)">
+                {{ producto.descripcion || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.descripcionTic)">
+                {{ producto.descripcionTic || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.departamento)">
+                {{ producto.departamento || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.familia)">
+                {{ producto.familia || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.subfamilia)">
+                {{ producto.subfamilia || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.marca)">
+                {{ producto.marca || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.unidadDeMedida)">
+                {{ producto.unidadDeMedida || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.cantidad)">
+                {{ producto.cantidad || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.centralizado)">
+                {{ producto.centralizado || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.apeso)">
+                {{ producto.apeso || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.unidadDeCaja)">
+                {{ producto.unidadDeCaja || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.unidadDeServicio)">
+                {{ producto.unidadDeServicio || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.pk)">
+                {{ producto.pk || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.cajasCapa)">
+                {{ producto.cajasCapa || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.cajasPalet)">
+                {{ producto.cajasPalet || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.proveedor)">
+                {{ producto.proveedor || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.referenciaProveedor)">
+                {{ producto.referenciaProveedor || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.ean)">
+                {{ producto.ean || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.ean_c)">
+                {{ producto.ean_c || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.ean_p)">
+                {{ producto.ean_p || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.largo)">
+                {{ producto.largo || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.ancho)">
+                {{ producto.ancho || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.alto)">
+                {{ producto.alto || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.peso)">
+                {{ producto.peso || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.diasCaducidad)">
+                {{ producto.diasCaducidad || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.ara_cen)">
+                {{ producto.ara_cen || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.iva)">
+                {{ producto.iva || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.precioVenta)">
+                {{ producto.precioVenta || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.pvp_hom)">
+                {{ producto.pvp_hom || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.pvp_and)">
+                {{ producto.pvp_and || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.pvp_cat)">
+                {{ producto.pvp_cat || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.precioTarifa)">
+                {{ producto.precioTarifa || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.pro_fac)">
+                {{ producto.pro_fac || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.precioNeto)">
+                {{ producto.precioNeto || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.pro_ffac)">
+                {{ producto.pro_ffac || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.pro_neton)">
+                {{ producto.pro_neton || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.art_mkd)">
+                {{ producto.art_mkd || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.articuloSustituido)">
+                {{ producto.articuloSustituido || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.insertedBy)">
+                {{ producto.insertedBy || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.updateBy)">
+                {{ producto.updateBy || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.status)">
+                {{ producto.status }}
+              </td>
+              <td [ngClass]="getCellClass(producto.observaciones)">
+                {{ producto.observaciones || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.partidaArancelaria)">
+                {{ producto.partidaArancelaria || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.pvp_mel)">
+                {{ producto.pvp_mel || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.paisOrigen)">
+                {{ producto.paisOrigen || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.estado)">
+                {{ producto.estado || "Sin dato" }}
+              </td>
               <td>
-                
                 <div class="btn-group btn-group-sm">
-                    <button *ngIf="producto.showEnviarButton" class="btn btn-primary" (click)="enviarProducto(producto)">
-                      <i class="bi bi-send"></i> Enviar
-                    </button>
-                  <button class="btn btn-success" (click)="view(producto); $event.stopPropagation()">
+                  <button
+                    *ngIf="producto.showEnviarButton"
+                    class="btn btn-primary"
+                    (click)="confirmarEnviarProducto(producto); $event.stopPropagation()"
+                  >
+                    <i class="bi bi-send"></i> Enviar
+                  </button>
+                  <button
+                    class="btn btn-success"
+                    (click)="view(producto); $event.stopPropagation()"
+                  >
                     <i class="bi bi-eye"></i>
                   </button>
-                  <button class="btn btn-warning" (click)="edit(producto); $event.stopPropagation()">
+                  <button
+                    class="btn btn-warning"
+                    (click)="edit(producto); $event.stopPropagation()"
+                  >
                     <i class="bi bi-pencil-square"></i>
                   </button>
                 </div>
@@ -196,7 +320,11 @@
           <li class="page-item" [class.disabled]="nPage <= 0">
             <a class="page-link" (click)="goToPrev()">Anterior</a>
           </li>
-          <li class="page-item" *ngFor="let p of arrBotonera" [class.active]="nPage === (+p - 1)">
+          <li
+            class="page-item"
+            *ngFor="let p of arrBotonera"
+            [class.active]="nPage === +p - 1"
+          >
             <ng-container *ngIf="p === '...'; else numPage">
               <span class="page-link disabled">…</span>
             </ng-container>
@@ -204,7 +332,10 @@
               <a class="page-link" href="#" (click)="goToPage(p)">{{ p }}</a>
             </ng-template>
           </li>
-          <li class="page-item" [class.disabled]="oPage && nPage >= oPage.totalPages - 1">
+          <li
+            class="page-item"
+            [class.disabled]="oPage && nPage >= oPage.totalPages - 1"
+          >
             <a class="page-link" (click)="goToNext()">Siguiente</a>
           </li>
         </ul>
@@ -233,8 +364,89 @@
           </div>
         </div>
       </nav>
-
-      
     </div>
   </div>
 </div>
+
+<div
+  class="modal fade"
+  id="mimodal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content border-success">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+          (click)="hideModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          data-bs-dismiss="modal"
+          (click)="hideModal()"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal de confirmación -->
+<div
+  class="modal fade"
+  id="confirmModal"
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success shadow">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title d-flex align-items-center" id="confirmModalLabel">
+          <i class="bi bi-question-circle-fill me-2 fs-4"></i> Confirmación
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body text-center">
+        <i class="bi bi-exclamation-triangle-fill text-success fs-1 mb-3 d-block"></i>
+        <p class="fs-5">{{ confirmMessage }}</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          data-bs-dismiss="modal"
+        >
+          No
+        </button>
+        <button
+          type="button"
+          class="btn btn-success px-4"
+          (click)="confirmarAccion()"
+        >
+          Sí
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

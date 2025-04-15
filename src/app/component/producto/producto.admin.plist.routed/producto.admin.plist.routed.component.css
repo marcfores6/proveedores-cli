@@ -184,3 +184,37 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+.modal-content {
+  background: #f8f9fa;
+  border-radius: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: none;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+.modal-body p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.btn-close-white {
+  filter: brightness(0) invert(1);
+}
