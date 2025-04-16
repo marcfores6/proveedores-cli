@@ -27,10 +27,12 @@ import { HttpErrorResponse } from '@angular/common/http';
   ]
 })
 export class SharedRecuperarContrasenaUnroutedComponent implements OnInit {
-
   recuperarForm!: FormGroup;
   mensaje: string | null = null;
+  error: string | null = null;
   proveedores: IProveedor[] = [];
+  isLoading: boolean = false;
+  emailRequired: boolean = false; // Para controlar si mostramos el campo de email
 
   constructor(
     private fb: FormBuilder,
@@ -42,9 +44,9 @@ export class SharedRecuperarContrasenaUnroutedComponent implements OnInit {
     this.recuperarForm = this.fb.group({
       nif: ['', Validators.required],
       proveedorId: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]], // Campo email
     });
 
-    // 🔁 Escucha cambios en el NIF para filtrar empresas
     this.recuperarForm.get('nif')?.valueChanges.subscribe(nif => {
       if (nif && nif.trim() !== '') {
         this.buscarProveedoresPorNif(nif.trim());
@@ -72,19 +74,45 @@ export class SharedRecuperarContrasenaUnroutedComponent implements OnInit {
       }
     });
   }
-  
-  
 
   onSubmit(): void {
     const nif = this.recuperarForm.value.nif ?? '';
     const proveedorId = this.recuperarForm.value.proveedorId ?? 0;
+    const email = this.recuperarForm.value.email ?? '';
+
+    this.isLoading = true; // Activamos el círculo de carga
 
     this.authService.recuperarPassword({ nif, proveedorId }).subscribe({
       next: (res) => {
-        this.mensaje = res.mensaje;
+        // Si no tiene email, mostramos el campo para agregar uno
+        if (res.mensaje && res.mensaje.includes('no tiene email registrado')) {
+          this.emailRequired = true;
+        } else {
+          this.mensaje = res.mensaje;
+        }
+        this.isLoading = false;
       },
       error: () => {
         this.mensaje = 'Error al intentar enviar el correo de recuperación.';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  // Método para guardar el email nuevo
+  onSubmitEmail(): void {
+    const nif = this.recuperarForm.value.nif ?? '';
+    const proveedorId = this.recuperarForm.value.proveedorId ?? 0;
+    const email = this.recuperarForm.value.email ?? '';
+
+    this.authService.addEmailToProveedor(proveedorId, email).subscribe({
+      next: (res) => {
+        this.mensaje = 'Email registrado correctamente. Ahora puedes recuperar la contraseña.';
+        this.isLoading = false;
+      },
+      error: () => {
+        this.mensaje = 'Error al registrar el email. Intenta de nuevo.';
+        this.isLoading = false;
       },
     });
   }

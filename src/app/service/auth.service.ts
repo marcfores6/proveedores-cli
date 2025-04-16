@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {jwtDecode} from 'jwt-decode';
 import { IJwt } from '../model/jwt.interface';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +70,9 @@ export class AuthService {
     );
   }
   
+  addEmailToProveedor(proveedorId: number, email: string): Observable<any> {
+    return this.oHttp.post(`http://localhost:8086/proveedor/}/add-email`, { proveedorId, email });
+  }
   
 
 }

@@ -25,11 +25,11 @@ import { ActivatedRoute } from '@angular/router';
   ]
 })
 export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
-
   form!: FormGroup;
   token!: string;
   mensaje: string | null = null;
   error: string | null = null;
+  isLoading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,16 +40,32 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
     this.form = this.fb.group({
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      email: ['']
+    });
+
+    // Verificar si es necesario ingresar un email
+    this.http.get(`http://localhost:8086/proveedor/bytoken/${this.token}`).subscribe((res: any) => {
+      if (res && !res.email) {
+        this.form.controls['email'].setValidators([Validators.required, Validators.email]);
+        this.form.controls['email'].updateValueAndValidity();
+        this.form.value.emailRequired = true; // Activar campo de email
+      }
     });
   }
 
   onSubmit(): void {
     const newPassword = this.form.value.password;
+    const email = this.form.value.email;
 
-    this.http.post('http://localhost:8086/proveedor/restablecer-password', {
-      token: this.token,
-      newPassword: newPassword
+    this.isLoading = true; // Mostrar el círculo de carga cuando se envíe el formulario
+
+    this.http.post('http://localhost:8086/proveedor/restablecer-password', null, {
+      params: {
+        token: this.token,
+        newPassword: newPassword,
+        email: email || '' // Si no se ingresó email, enviar vacío
+      }
     }).subscribe({
       next: () => {
         this.mensaje = 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.';
@@ -58,8 +74,10 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
       error: () => {
         this.error = 'No se pudo actualizar la contraseña. Verifica el enlace.';
         this.mensaje = null;
+      },
+      complete: () => {
+        this.isLoading = false; // Ocultar el círculo de carga cuando termine el proceso
       }
     });
-    
   }
 }

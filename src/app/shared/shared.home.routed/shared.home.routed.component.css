@@ -83,3 +83,41 @@ footer {
     padding: 1rem;
   }
 }
+
+.alert-info {
+  background: #e7f4fd;
+  border: 1px solid #bee1f5;
+  color: #0b5394;
+}
+
+/* Aviso de login al estilo FamilyCash */
+.login-alert {
+  background: linear-gradient(135deg, #eaffea 0%, #c8facc 100%);
+  border: 2px solid #8af18e;
+  color: #256029;
+  border-radius: 1rem;
+  font-size: 1.1rem;
+  animation: fadeIn 0.8s ease-in-out;
+  max-width: 900px;
+}
+
+.login-alert h4 {
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: #2c6e49;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.login-alert p {
+  color: #3c3c3c;
+}
+
+.login-alert a.btn {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-alert a.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
