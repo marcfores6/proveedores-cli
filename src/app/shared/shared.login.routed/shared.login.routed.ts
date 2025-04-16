@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 import { SessionService } from '../../service/session.service';
 import { CryptoService } from '../../service/crypto.service';
@@ -28,7 +28,8 @@ declare var bootstrap: any;
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatSelectModule 
+    MatSelectModule ,
+    RouterLink
   ]
 })
 export class SharedLoginRoutedComponent implements OnInit {

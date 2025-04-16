@@ -9,6 +9,8 @@ import { AdminGuard } from './guards/admin.guard';
 import { AdminOrProveedorGuard } from './guards/admin-or-proveedor.guard';
 import { SharedBynifRoutedComponent } from './shared/shared.bynif.routed/shared.bynif.routed.component';
 import { ProductoAdminViewRoutedComponent } from './component/producto/producto.admin.view.routed/producto.admin.view.routed.component';
+import { SharedRecuperarContrasenaUnroutedComponent } from './shared/shared.recuperarcontrasena.unrouted/shared.recuperarcontrasena.unrouted.component';
+import { SharedRestablecerContrasenaUnroutedComponent } from './shared/shared.restablecercontrasena.unrouted/shared.restablecercontrasena.unrouted.component';
 
 
 export const routes: Routes = [
@@ -28,6 +30,9 @@ export const routes: Routes = [
     { path: 'logout', component: SharedLogoutRoutedComponent },
 
     { path: 'bynif/:nif', component: SharedBynifRoutedComponent , canActivate: [AdminOrProveedorGuard] },
+    { path: 'recuperar-password', component: SharedRecuperarContrasenaUnroutedComponent },
+    { path: 'restablecer-password', component: SharedRestablecerContrasenaUnroutedComponent },
+
 
     { path: '**', redirectTo: 'home', pathMatch: 'full' }
   ];

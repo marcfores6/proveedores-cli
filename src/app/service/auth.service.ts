@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {jwtDecode} from 'jwt-decode';
 import { IJwt } from '../model/jwt.interface';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { IJwt } from '../model/jwt.interface';
 export class AuthService {
   private tokenKey = 'auth-token';
 
-  constructor() {}
+  constructor(private oHttp: HttpClient) {}
 
   // Guarda el token en localStorage
   setToken(token: string): void {
@@ -60,4 +61,14 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
   }
+
+  recuperarPassword(data: { nif: string; proveedorId: number }) {
+    return this.oHttp.post<{ mensaje: string }>(
+      'http://localhost:8086/proveedor/recuperar-password', // 👈 URL CORRECTA
+      data
+    );
+  }
+  
+  
+
 }

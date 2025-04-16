@@ -73,7 +73,15 @@ export class ProveedorService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     return this.oHttp.get<IProveedor>(`${this.serverURL}/bytoken`, { headers });
-}
+  }
 
+  getAll(): Observable<IProveedor[]> {
+    return this.oHttp.get<IProveedor[]>(this.serverURL + '/all');
+  }
+
+  getProveedoresPorNif(nif: string): Observable<IProveedor[]> {
+    return this.oHttp.get<IProveedor[]>(`http://localhost:8086/auth/proveedores-por-nif?nif=${nif}`);
+  }
+  
 
 }

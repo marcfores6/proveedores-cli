@@ -44,7 +44,7 @@
       <!-- Botón login -->
       <button mat-flat-button color="primary" type="submit" class="w-100 login-btn-animated">
         <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar sesión
-      </button>
+      </button>    
 
       <!-- Botones rápidos -->
       <div class="d-flex justify-content-center mt-4 gap-3 flex-wrap">
@@ -52,6 +52,12 @@
         <button mat-stroked-button color="accent" class="quick-btn" (click)="onContable()">Contable</button>
       </div>
     </form>
+
+    <div class="text-center mt-3">
+      <a class="text-primary" routerLink="/recuperar-password">
+        ¿Has olvidado tu contraseña?
+      </a>
+    </div>  
 
     <!-- Mensaje de error -->
     <div class="error-message mt-4" *ngIf="errorMessage">
