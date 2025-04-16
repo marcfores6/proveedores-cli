@@ -1,0 +1,44 @@
+.container {
+    max-width: 400px;
+    margin: auto;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #2d572c; /* Verde corporativo */
+    font-weight: 600;
+  }
+  
+  .mat-form-field {
+    width: 100%;
+  }
+  
+  button[type="submit"] {
+    padding: 0.75rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #1f3d1d !important;
+  }
+  
+  .text-success {
+    color: #2e7d32;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .text-danger {
+    color: #c62828;
+    font-weight: 500;
+    text-align: center;
+  }
+  
