@@ -344,7 +344,7 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   confirmarEnviarProducto(producto: any): void {
     this.productoPendiente = producto;
     this.mostrarConfirmacion(
-      `¿Estás seguro de que deseas enviar el producto con ID ${producto.id}?`,
+      `¿Estás seguro de que deseas enviar el producto '${producto.descripcion}'?`,
       this.enviarProductoConfirmado.bind(this)
     );
   }
