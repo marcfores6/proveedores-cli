@@ -34,6 +34,11 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   message: string = '';
   documentoPreviews: string[] = [];
   documentoUrls: string[] = [];
+  idElementoPendienteEliminar: number | null = null;
+  tipoElementoPendiente: 'imagen' | 'documento' | null = null;
+  esConfirmacionEliminacion: boolean = false;
+
+
 
   readonly dialog = inject(MatDialog);
 
@@ -61,20 +66,20 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
         Object.entries(data).forEach(([key, value]) => {
           if (key === 'imagenes' || key === 'imagen' || key === 'documentos' || key === 'estado') return;
-        
+
           let validators = [Validators.required];
-        
+
           // Validadores personalizados según el nombre de campo de la tabla LU_ARA
           switch (key) {
             case 'ARA_EAN':
             case 'ARA_EAN_P':
               validators.push(Validators.pattern(/^\d{13}$/)); // 13 dígitos exactos
               break;
-        
+
             case 'ARA_EAN_C':
               validators.push(Validators.pattern(/^\d{14}$/)); // 14 dígitos exactos
               break;
-        
+
             case 'ARA_UDM_CTD':
             case 'ARA_PESO_C':
             case 'ARA_PVP':
@@ -87,7 +92,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
             case 'ARA_PVP_MEL':
               validators.push(Validators.pattern(/^\d+(\.\d{1,4})?$/)); // decimal con hasta 4 decimales
               break;
-        
+
             case 'ARA_CAJAS_CAPA':
             case 'ARA_CAJAS_PALET':
             case 'ARA_UC':
@@ -100,20 +105,20 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
               validators.push(Validators.pattern(/^\d+$/)); // solo números enteros
               break;
           }
-        
+
           const control = new FormControl(value ?? '', {
             nonNullable: true,
             validators,
           });
-        
+
           this.oProductoForm.addControl(key, control);
-        
+
           if (value === null || value === undefined || value === '') {
             control.markAsTouched();
             control.markAsDirty();
           }
         });
-        
+
 
         this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes' && key !== 'imagen' && key !== 'documentos' && key !== 'estado');
 
@@ -127,30 +132,31 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
   showModal(mensaje: string) {
     this.message = mensaje;
+    // Solo cambiar a false si no estamos haciendo una confirmación de eliminación
+    if (!this.esConfirmacionEliminacion) {
+      this.esConfirmacionEliminacion = false;
+    }
+  
     this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), {
       keyboard: false,
     });
     this.myModal.show();
   }
+  
+  
 
   hideModal = () => {
     this.myModal.hide();
     this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
   };
 
-  eliminarImagen(idImagen: number): void {
-    if (confirm('¿Seguro que deseas eliminar esta imagen?')) {
-      this.oProductoService.deleteImagen(idImagen).subscribe({
-        next: () => {
-          this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== idImagen);
-        },
-        error: (err) => {
-          console.error('Error al eliminar la imagen', err);
-          alert('No se pudo eliminar la imagen.');
-        },
-      });
+
+    eliminarImagen(idImagen: number): void {
+      this.idElementoPendienteEliminar = idImagen;
+      this.tipoElementoPendiente = 'imagen';
+      this.esConfirmacionEliminacion = true;
+      this.showModal('¿Seguro que deseas eliminar esta imagen?');
     }
-  }
 
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -246,19 +252,12 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.imagenUrls = [];
   }
 
-  eliminarDocumento(idDocumento: number): void {
-    if (confirm('¿Seguro que deseas eliminar este documento?')) {
-      this.oProductoService.deleteDocumento(idDocumento).subscribe({
-        next: () => {
-          this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== idDocumento);
-        },
-        error: (err) => {
-          console.error('Error al eliminar el documento', err);
-          this.showModal('No se pudo eliminar el documento.');
-        },
-      });
+    eliminarDocumento(idDocumento: number): void {
+      this.idElementoPendienteEliminar = idDocumento;
+      this.tipoElementoPendiente = 'documento';
+      this.esConfirmacionEliminacion = true;
+      this.showModal('¿Seguro que deseas eliminar este documento?');
     }
-  }
 
   onFileSelectDocumentos(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -284,6 +283,48 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       input.files = dt.files;
     }
   }
+
+  confirmarEliminacion(): void {
+    const id = this.idElementoPendienteEliminar;
+  
+    if (this.tipoElementoPendiente === 'imagen' && id !== null) {
+      this.oProductoService.deleteImagen(id).subscribe({
+        next: () => {
+          this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== id);
+          this.myModal.hide();
+          this.cargarProducto(); // <-- recarga el producto
+        },
+        error: (err) => {
+          console.error('Error al eliminar imagen:', err);
+          this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== id);
+          this.message = 'La imagen ya no existía o no se pudo eliminar.';
+          this.myModal.hide();
+          this.cargarProducto();
+        }
+      });
+    }
+  
+    if (this.tipoElementoPendiente === 'documento' && id !== null) {
+      this.oProductoService.deleteDocumento(id).subscribe({
+        next: () => {
+          this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== id);
+          this.myModal.hide();
+          this.cargarProducto();
+        },
+        error: (err) => {
+          console.error('Error al eliminar documento:', err);
+          this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== id);
+          this.message = 'El documento ya no existía o no se pudo eliminar.';
+          this.myModal.hide();
+          this.cargarProducto();
+        }
+      });
+    }
+  
+    this.tipoElementoPendiente = null;
+    this.idElementoPendienteEliminar = null;
+  }
+  
 
   cargarPaises(): void {
     this.paisesList = [{
