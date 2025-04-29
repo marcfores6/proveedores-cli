@@ -2,30 +2,73 @@
   <h2>Restablecer contraseña</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- NUEVA CONTRASEÑA -->
     <mat-form-field appearance="outline" class="w-100 mb-3">
       <mat-label>Nueva contraseña</mat-label>
-      <input matInput type="password" formControlName="password" required>
+      <input matInput
+             [type]="hidePassword ? 'password' : 'text'"
+             formControlName="password"
+             required>
+      <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Toggle password visibility'" type="button">
+        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('minlength') && form.get('password')?.touched">
+        La contraseña debe tener al menos 8 caracteres.
+      </mat-error>
     </mat-form-field>
 
+    <!-- REPITE CONTRASEÑA -->
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Repite la contraseña</mat-label>
+      <input matInput
+             [type]="hideConfirmPassword ? 'password' : 'text'"
+             formControlName="confirmPassword"
+             required>
+      <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" [attr.aria-label]="'Toggle confirm password visibility'" type="button">
+        <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.get('confirmPassword')?.hasError('required') && form.get('confirmPassword')?.touched">
+        Este campo es obligatorio.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- ERROR SI NO COINCIDEN -->
+    <div *ngIf="form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched" class="text-danger mb-2">
+      Las contraseñas no coinciden.
+    </div>
+
+    <!-- EMAIL (si se requiere) -->
     <mat-form-field *ngIf="form.value.emailRequired" appearance="outline" class="w-100 mb-3">
       <mat-label>Correo electrónico</mat-label>
       <input matInput type="email" formControlName="email" required>
+      <mat-error *ngIf="form.get('email')?.hasError('required') && form.get('email')?.touched">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched">
+        El correo no es válido.
+      </mat-error>
     </mat-form-field>
 
-    <button mat-flat-button color="primary" type="submit" class="w-100" [disabled]="isLoading">
+    <!-- BOTÓN -->
+    <button mat-flat-button type="submit" class="w-100 boton-verde"
+      [disabled]="isLoading || form.invalid || form.errors?.['passwordMismatch']">
       Cambiar contraseña
     </button>
 
-    <!-- Circular Loader -->
-    <div *ngIf="isLoading" class="loading-spinner"></div>
+    <!-- SPINNER -->
+    <div *ngIf="isLoading" class="loading-spinner mt-3"></div>
   </form>
 
+  <!-- MENSAJES -->
   <div *ngIf="mensaje" class="alert alert-success mt-3">
     {{ mensaje }}
   </div>
-  
+
   <div *ngIf="error" class="alert alert-danger mt-3">
     {{ error }}
   </div>
-  
 </div>

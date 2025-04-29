@@ -19,9 +19,10 @@
         </mat-select>
       </mat-form-field>
 
-      <button mat-flat-button color="primary" type="submit" class="w-100" [disabled]="isLoading">
+      <button mat-flat-button class="w-100 boton-verde" type="submit" [disabled]="isLoading">
         <i class="bi bi-send me-2"></i> Enviar enlace de recuperación
       </button>
+      
 
       <!-- Circular Loader -->
       <div *ngIf="isLoading" class="loading-spinner"></div>

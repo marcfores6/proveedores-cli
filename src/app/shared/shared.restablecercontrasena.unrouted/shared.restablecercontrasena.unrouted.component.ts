@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-shared.restablecercontrasena.unrouted',
@@ -16,12 +17,13 @@ import { ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatButtonModule
+  ReactiveFormsModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule,
+  MatOptionModule,
+  MatButtonModule,
+  MatIconModule
   ]
 })
 export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
@@ -30,6 +32,8 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
   mensaje: string | null = null;
   error: string | null = null;
   isLoading: boolean = false;
+  hidePassword: boolean = true;
+  hideConfirmPassword: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,27 +43,36 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
+
     this.form = this.fb.group({
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
       email: ['']
+    }, {
+      validators: this.passwordsIgualesValidator
     });
 
-    // Verificar si es necesario ingresar un email
     this.http.get(`http://localhost:8086/proveedor/bytoken/${this.token}`).subscribe((res: any) => {
       if (res && !res.email) {
         this.form.controls['email'].setValidators([Validators.required, Validators.email]);
         this.form.controls['email'].updateValueAndValidity();
-        this.form.value.emailRequired = true; // Activar campo de email
+        this.form.value.emailRequired = true;
       }
     });
+  }
+
+  passwordsIgualesValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   onSubmit(): void {
     const newPassword = this.form.value.password;
     const email = this.form.value.email;
-  
-    this.isLoading = true; // Mostrar el círculo de carga
-  
+
+    this.isLoading = true;
+
     this.http.post('http://localhost:8086/proveedor/restablecer-password', null, {
       params: {
         token: this.token,
@@ -68,18 +81,16 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
       }
     }).subscribe({
       next: () => {
-        const passwordMostrada = this.form.value.password;
-        this.mensaje = `Contraseña actualizada correctamente. Tu nueva contraseña es: ${passwordMostrada}`;
-        this.error = null; // Muy importante: limpiar error
+        this.mensaje = `Contraseña actualizada correctamente. Tu nueva contraseña es: ${newPassword}`;
+        this.error = null;
       },
       error: () => {
-        this.mensaje = null; // Muy importante: limpiar mensaje
+        this.mensaje = null;
         this.error = 'No se pudo actualizar la contraseña. Verifica el enlace.';
       },
       complete: () => {
-        this.isLoading = false; // Solo apagar loading aquí
+        this.isLoading = false;
       }
     });
   }
-  
 }
