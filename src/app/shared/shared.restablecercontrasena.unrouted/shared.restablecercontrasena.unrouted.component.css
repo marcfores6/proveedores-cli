@@ -57,4 +57,19 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+  .alert {
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
   

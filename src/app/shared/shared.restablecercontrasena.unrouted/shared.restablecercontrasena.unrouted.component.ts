@@ -35,7 +35,7 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
@@ -57,27 +57,29 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
   onSubmit(): void {
     const newPassword = this.form.value.password;
     const email = this.form.value.email;
-
-    this.isLoading = true; // Mostrar el círculo de carga cuando se envíe el formulario
-
+  
+    this.isLoading = true; // Mostrar el círculo de carga
+  
     this.http.post('http://localhost:8086/proveedor/restablecer-password', null, {
       params: {
         token: this.token,
         newPassword: newPassword,
-        email: email || '' // Si no se ingresó email, enviar vacío
+        email: email || ''
       }
     }).subscribe({
       next: () => {
-        this.mensaje = 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.';
-        this.error = null;
+        const passwordMostrada = this.form.value.password;
+        this.mensaje = `Contraseña actualizada correctamente. Tu nueva contraseña es: ${passwordMostrada}`;
+        this.error = null; // Muy importante: limpiar error
       },
       error: () => {
+        this.mensaje = null; // Muy importante: limpiar mensaje
         this.error = 'No se pudo actualizar la contraseña. Verifica el enlace.';
-        this.mensaje = null;
       },
       complete: () => {
-        this.isLoading = false; // Ocultar el círculo de carga cuando termine el proceso
+        this.isLoading = false; // Solo apagar loading aquí
       }
     });
   }
+  
 }
