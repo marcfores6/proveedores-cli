@@ -5,7 +5,7 @@
   background: #ffffff;
 }
 
-/* === Cabecera de la tarjeta === */
+/* === Cabecera === */
 .card-header {
   background: linear-gradient(90deg, #005507, #007d0d);
   color: white;
@@ -14,27 +14,72 @@
   padding: 1rem;
   text-align: center;
 }
-
 .card-header h2 {
   margin: 0;
   font-size: 1.8rem;
 }
 
-/* === Formulario === */
+/* === Títulos de secciones === */
+.seccion-titulo {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #005507;
+  border-left: 6px solid #007d0d;
+  padding-left: 10px;
+  margin-top: 2rem;
+}
+
+/* === Tablas de detalle === */
+.tabla-detalle {
+  background-color: #f9f9f9;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+.tabla-detalle th {
+  background-color: #e6f2ec;
+  color: #005507;
+  font-weight: bold;
+  width: 25%;
+}
+.tabla-detalle td {
+  background-color: #ffffff;
+}
+
+/* === Formularios e inputs === */
 .form-label {
   font-weight: bold;
   color: #005507;
 }
-
 .form-control, .form-select {
   border-radius: 0.5rem;
   border: 1px solid #ced4da;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
-
 .form-control:focus, .form-select:focus {
   border-color: #005507;
   box-shadow: 0 0 5px rgba(0, 85, 7, 0.5);
+}
+
+.form-control.ng-invalid.ng-touched {
+  border: 2px solid #dc3545;
+  padding-right: 2.5rem; /* espacio para el icono */
+  position: relative;
+}
+.input-error-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #dc3545;
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+
+
+
+input[type="file"] {
+  border: 1px solid #ccc;
+  padding: 6px;
 }
 
 /* === Botones === */
@@ -44,86 +89,128 @@
   font-weight: bold;
   transition: all 0.3s ease;
 }
-
 .btn-success {
   background-color: #005507;
   border: none;
 }
-
 .btn-success:hover {
   background-color: #007d0d;
   transform: translateY(-2px);
 }
-
 .btn-secondary {
   background-color: #6c757d;
   border: none;
 }
-
 .btn-secondary:hover {
   background-color: #5a6268;
   transform: translateY(-2px);
 }
-
 .btn-danger {
   background-color: #c30000;
   border: none;
 }
-
 .btn-danger:hover {
   background-color: #a00000;
   transform: translateY(-2px);
 }
 
 /* === Imágenes actuales === */
-.position-relative img {
+.galeria-imagenes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.galeria-imagenes img {
+  width: 145px;
+  height: 135px;
   object-fit: cover;
   border-radius: 0.5rem;
-  transition: transform 0.3s;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
-
-.position-relative img:hover {
+.galeria-imagenes img:hover {
   transform: scale(1.05);
 }
+.galeria-imagenes .btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+}
 
-/* === Vista previa de nuevas imágenes === */
-.text-center img {
+/* === Vista previa de imágenes nuevas === */
+.vista-previa {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+.vista-previa img {
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: 0.5rem;
-  transition: transform 0.3s;
+  border: 2px solid #007d0d;
+  box-shadow: 0 2px 6px rgba(0, 85, 7, 0.2);
 }
 
-.text-center img:hover {
-  transform: scale(1.05);
+/* === Documentos === */
+.lista-documentos a {
+  color: #007d0d;
+  font-weight: 500;
 }
-
-/* === Botón cerrar imagen === */
-.btn-close {
-  width: 20px;
-  height: 20px;
-  background-size: 50%;
+.lista-documentos .btn-danger {
+  margin-left: 1rem;
+}
+.vista-previa-docs {
+  margin-top: 1rem;
+}
+.vista-previa-docs li {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
 }
 
 /* === Modal === */
 .modal-content {
+  background: #f8f9fa;
   border-radius: 1rem;
   box-shadow: 0 4px 20px rgba(0, 85, 7, 0.3);
+  transition: all 0.3s ease;
 }
-
 .modal-header {
   background: #005507;
   color: white;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: none;
 }
-
-.modal-footer .btn-primary {
-  background-color: #005507;
+.modal-footer {
+  border-top: none;
+}
+.modal-body p {
+  margin: 0;
+  font-weight: 500;
+}
+.btn-close {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+.btn-close:hover {
+  opacity: 1;
+}
+.btn-primary {
+  background-color: #007bff;
   border: none;
 }
-
-.modal-footer .btn-primary:hover {
-  background-color: #007d0d;
+.btn-primary:hover {
+  background-color: #0069d9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
 }
 
 /* === Responsive === */
@@ -131,66 +218,50 @@
   .card-header h2 {
     font-size: 1.5rem;
   }
-
   .form-control, .form-select {
     font-size: 0.9rem;
   }
-
   .btn {
     font-size: 0.9rem;
   }
 }
-
-
-.is-invalid {
-  border: 2px solid red !important;
-  box-shadow: 0 0 5px red;
+.imagen-item {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0.5rem;
 }
 
-input[type="file"] {
-  border: 1px solid #ccc;
-  padding: 6px;
+.imagen-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 2px solid #007d0d;
+  box-shadow: 0 2px 6px rgba(0, 85, 7, 0.2);
+  transition: transform 0.3s ease;
 }
 
-.btn-close {
-  opacity: 0.8;
+.imagen-item img:hover {
+  transform: scale(1.05);
 }
 
-.btn-close:hover {
-  opacity: 1;
-}
-
-.modal-content {
-  background: #f8f9fa;
-  border-radius: 1.2rem;
-  transition: all 0.3s ease;
-}
-
-.modal-header {
-  padding: 1rem 1.5rem;
-  border-bottom: none;
-}
-
-.modal-footer {
-  border-top: none;
-}
-
-.modal-body p {
-  margin: 0;
-  font-weight: 500;
-}
-
-.btn-primary {
-  background-color: #007bff;
+.imagen-item .btn,
+.imagen-item .btn-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #c30000;
+  color: white;
   border: none;
+  border-radius: 50%;
+  padding: 0.2rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
 }
 
-.btn-primary:hover {
-  background-color: #0069d9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
-
-.btn-close-white {
-  filter: brightness(0) invert(1);
+.imagen-item .btn:hover,
+.imagen-item .btn-close:hover {
+  background-color: #a00000;
 }

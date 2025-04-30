@@ -91,49 +91,27 @@
             <tr>
               <th>ID</th>
               <th>Descripción</th>
-              <th>Descripción TIC</th>
-              <th>Departamento</th>
-              <th>Familia</th>
-              <th>Subfamilia</th>
               <th>Marca</th>
               <th>Unidad de Medida</th>
-              <th>Cantidad</th>
               <th>Centralizado</th>
-              <th>Apeso</th>
               <th>Unidad Caja</th>
               <th>Unidad Servicio</th>
-              <th>PK</th>
+              <th>Unidad Palet</th>
               <th>Cajas Capa</th>
               <th>Cajas Palet</th>
               <th>Proveedor</th>
               <th>Referencia Proveedor</th>
               <th>EAN</th>
-              <th>EAN C</th>
-              <th>EAN P</th>
+              <th>EAN Caja</th>
+              <th>EAN Palet</th>
               <th>Largo</th>
               <th>Ancho</th>
               <th>Alto</th>
               <th>Peso</th>
               <th>Días Caducidad</th>
-              <th>ARA CEN</th>
               <th>IVA</th>
-              <th>Precio Venta</th>
-              <th>PVP HOM</th>
-              <th>PVP AND</th>
-              <th>PVP CAT</th>
-              <th>Precio Tarifa</th>
-              <th>PRO FAC</th>
-              <th>Precio Neto</th>
-              <th>PRO FFAC</th>
-              <th>PRO NETON</th>
-              <th>ART MKD</th>
-              <th>Articulo Sustituido</th>
-              <th>Insertado por</th>
-              <th>Actualizado por</th>
-              <th>Status</th>
               <th>Observaciones</th>
               <th>Partida Arancelaria</th>
-              <th>PVP MEL</th>
               <th>País Origen</th>
               <th>Estado</th>
               <th>Acciones</th>
@@ -151,32 +129,14 @@
               <td [ngClass]="getCellClass(producto.descripcion)">
                 {{ producto.descripcion || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.descripcionTic)">
-                {{ producto.descripcionTic || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.departamento)">
-                {{ producto.departamento || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.familia)">
-                {{ producto.familia || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.subfamilia)">
-                {{ producto.subfamilia || "Sin dato" }}
-              </td>
               <td [ngClass]="getCellClass(producto.marca)">
                 {{ producto.marca || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.unidadDeMedida)">
                 {{ producto.unidadDeMedida || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.cantidad)">
-                {{ producto.cantidad || "Sin dato" }}
-              </td>
               <td [ngClass]="getCellClass(producto.centralizado)">
                 {{ producto.centralizado || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.apeso)">
-                {{ producto.apeso || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.unidadDeCaja)">
                 {{ producto.unidadDeCaja || "Sin dato" }}
@@ -184,8 +144,8 @@
               <td [ngClass]="getCellClass(producto.unidadDeServicio)">
                 {{ producto.unidadDeServicio || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.pk)">
-                {{ producto.pk || "Sin dato" }}
+              <td [ngClass]="getCellClass(producto.unidadDePack)">
+                {{ producto.unidadDePack || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.cajasCapa)">
                 {{ producto.cajasCapa || "Sin dato" }}
@@ -202,83 +162,35 @@
               <td [ngClass]="getCellClass(producto.ean)">
                 {{ producto.ean || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.ean_c)">
-                {{ producto.ean_c || "Sin dato" }}
+              <td [ngClass]="getCellClass(producto.ean_caja)">
+                {{ producto.ean_caja || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.ean_p)">
-                {{ producto.ean_p || "Sin dato" }}
+              <td [ngClass]="getCellClass(producto.ean_pack)">
+                {{ producto.ean_pack || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.largo)">
-                {{ producto.largo || "Sin dato" }}
+              <td [ngClass]="getCellClass(producto.largo_caja)">
+                {{ producto.largo_caja || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.ancho)">
-                {{ producto.ancho || "Sin dato" }}
+              <td [ngClass]="getCellClass(producto.ancho_caja)">
+                {{ producto.ancho_caja || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.alto)">
-                {{ producto.alto || "Sin dato" }}
+              <td [ngClass]="getCellClass(producto.alto_caja)">
+                {{ producto.alto_caja || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.peso)">
-                {{ producto.peso || "Sin dato" }}
+              <td [ngClass]="getCellClass(producto.peso_caja)">
+                {{ producto.peso_caja || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.diasCaducidad)">
                 {{ producto.diasCaducidad || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.ara_cen)">
-                {{ producto.ara_cen || "Sin dato" }}
-              </td>
               <td [ngClass]="getCellClass(producto.iva)">
                 {{ producto.iva || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.precioVenta)">
-                {{ producto.precioVenta || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.pvp_hom)">
-                {{ producto.pvp_hom || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.pvp_and)">
-                {{ producto.pvp_and || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.pvp_cat)">
-                {{ producto.pvp_cat || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.precioTarifa)">
-                {{ producto.precioTarifa || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.pro_fac)">
-                {{ producto.pro_fac || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.precioNeto)">
-                {{ producto.precioNeto || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.pro_ffac)">
-                {{ producto.pro_ffac || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.pro_neton)">
-                {{ producto.pro_neton || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.art_mkd)">
-                {{ producto.art_mkd || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.articuloSustituido)">
-                {{ producto.articuloSustituido || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.insertedBy)">
-                {{ producto.insertedBy || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.updateBy)">
-                {{ producto.updateBy || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.status)">
-                {{ producto.status }}
               </td>
               <td [ngClass]="getCellClass(producto.observaciones)">
                 {{ producto.observaciones || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.partidaArancelaria)">
                 {{ producto.partidaArancelaria || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.pvp_mel)">
-                {{ producto.pvp_mel || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.paisOrigen)">
                 {{ producto.paisOrigen || "Sin dato" }}

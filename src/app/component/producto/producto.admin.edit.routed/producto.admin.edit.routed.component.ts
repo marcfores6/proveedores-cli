@@ -37,7 +37,11 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   idElementoPendienteEliminar: number | null = null;
   tipoElementoPendiente: 'imagen' | 'documento' | null = null;
   esConfirmacionEliminacion: boolean = false;
-
+  ivaOptions = [
+    { id: 1, label: '4%' },
+    { id: 2, label: '10%' },
+    { id: 3, label: '21%' }
+  ];
 
 
   readonly dialog = inject(MatDialog);
@@ -62,65 +66,79 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.oProductoService.get(this.id).subscribe({
       next: (data: IProducto) => {
         this.oProducto = data;
-        this.oProductoForm = this.fb.group({});
 
-        Object.entries(data).forEach(([key, value]) => {
-          if (key === 'imagenes' || key === 'imagen' || key === 'documentos' || key === 'estado') return;
+        this.oProductoForm = this.fb.group({
+          descripcion: new FormControl(data.descripcion ?? '', { nonNullable: true, validators: [Validators.required] }),
+          marca: new FormControl(data.marca ?? '', { nonNullable: true, validators: [Validators.required] }),
+          unidadDeMedida: new FormControl(data.unidadDeMedida ?? '', { nonNullable: true, validators: [Validators.required] }),
+          referenciaProveedor: new FormControl(data.referenciaProveedor ?? '', { nonNullable: true, validators: [Validators.required] }),
+          centralizado: new FormControl(data.centralizado ?? '', { nonNullable: true, validators: [Validators.required] }),
 
-          let validators = [Validators.required];
-
-          // Validadores personalizados según el nombre de campo de la tabla LU_ARA
-          switch (key) {
-            case 'ARA_EAN':
-            case 'ARA_EAN_P':
-              validators.push(Validators.pattern(/^\d{13}$/)); // 13 dígitos exactos
-              break;
-
-            case 'ARA_EAN_C':
-              validators.push(Validators.pattern(/^\d{14}$/)); // 14 dígitos exactos
-              break;
-
-            case 'ARA_UDM_CTD':
-            case 'ARA_PESO_C':
-            case 'ARA_PVP':
-            case 'ARA_PVP_HOM':
-            case 'ARA_PVP_AND':
-            case 'ARA_PVP_CAT':
-            case 'ARA_PRO_TAR':
-            case 'ARA_PRO_NETO':
-            case 'ARA_PRO_NETON':
-            case 'ARA_PVP_MEL':
-              validators.push(Validators.pattern(/^\d+(\.\d{1,4})?$/)); // decimal con hasta 4 decimales
-              break;
-
-            case 'ARA_CAJAS_CAPA':
-            case 'ARA_CAJAS_PALET':
-            case 'ARA_UC':
-            case 'ARA_US':
-            case 'ARA_PK':
-            case 'ARA_DIAS_CAD':
-            case 'ARA_LARGO_C':
-            case 'ARA_ANCHO_C':
-            case 'ARA_ALTO_C':
-              validators.push(Validators.pattern(/^\d+$/)); // solo números enteros
-              break;
-          }
-
-          const control = new FormControl(value ?? '', {
+          ean: new FormControl(data.ean ?? '', {
             nonNullable: true,
-            validators,
-          });
+            validators: [
+              Validators.required,
+              Validators.pattern(/^\d{13}$/),
+              this.eanValidator
+            ]
+          }),
+          ean_caja: new FormControl(data.ean_caja ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d{14}$/), this.ean14Validator]
+          }),          
+          ean_pack: new FormControl(data.ean ?? '', {
+            nonNullable: true,
+            validators: [
+              Validators.required,
+              Validators.pattern(/^\d{13}$/),
+              this.eanValidator
+            ]
+          }),
 
-          this.oProductoForm.addControl(key, control);
 
-          if (value === null || value === undefined || value === '') {
-            control.markAsTouched();
-            control.markAsDirty();
-          }
+          unidadDeCaja: new FormControl(data.unidadDeCaja ?? '', { nonNullable: true, validators: [Validators.required] }),
+          unidadDeServicio: new FormControl(data.unidadDeServicio ?? '', { nonNullable: true, validators: [Validators.required] }),
+          unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true, validators: [Validators.required] }),
+
+          largo_caja: new FormControl(data.largo_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          ancho_caja: new FormControl(data.ancho_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          alto_caja: new FormControl(data.alto_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+
+          peso_caja: new FormControl(data.peso_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
+          cajasCapa: new FormControl(data.cajasCapa ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          cajasPalet: new FormControl(data.cajasPalet ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+
+          diasCaducidad: new FormControl(data.diasCaducidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          iva: new FormControl(data.iva ?? '', { nonNullable: true, validators: [Validators.required] }),
+          partidaArancelaria: new FormControl(data.partidaArancelaria ?? '', { nonNullable: true, validators: [Validators.required] }),
+          observaciones: new FormControl(data.observaciones ?? '', { nonNullable: true, validators: [Validators.required] }),
+          paisOrigen: new FormControl(data.paisOrigen ?? '', { nonNullable: true, validators: [Validators.required] }),
+
         });
 
-
-        this.camposProducto = Object.keys(data).filter(key => key !== 'imagenes' && key !== 'imagen' && key !== 'documentos' && key !== 'estado');
+        // Marcar como tocado si está vacío (sin bucles)
+        const controls = this.oProductoForm.controls as { [key: string]: FormControl<any> };
+        if (controls['descripcion'].value === '') controls['descripcion'].markAsTouched();
+        if (controls['marca'].value === '') controls['marca'].markAsTouched();
+        if (controls['unidadDeMedida'].value === '') controls['unidadDeMedida'].markAsTouched();
+        if (controls['referenciaProveedor'].value === '') controls['referenciaProveedor'].markAsTouched();
+        if (controls['centralizado'].value === '') controls['centralizado'].markAsTouched();
+        if (controls['ean'].value === '') controls['ean'].markAsTouched();
+        if (controls['ean_caja'].value === '') controls['ean_caja'].markAsTouched();
+        if (controls['ean_pack'].value === '') controls['ean_pack'].markAsTouched();
+        if (controls['unidadDeCaja'].value === '') controls['unidadDeCaja'].markAsTouched();
+        if (controls['unidadDeServicio'].value === '') controls['unidadDeServicio'].markAsTouched();
+        if (controls['unidadDePack'].value === '') controls['unidadDePack'].markAsTouched();
+        if (controls['largo_caja'].value === '') controls['largo_caja'].markAsTouched();
+        if (controls['ancho_caja'].value === '') controls['ancho_caja'].markAsTouched();
+        if (controls['alto_caja'].value === '') controls['alto_caja'].markAsTouched();
+        if (controls['peso_caja'].value === '') controls['peso_caja'].markAsTouched();
+        if (controls['cajasCapa'].value === '') controls['cajasCapa'].markAsTouched();
+        if (controls['cajasPalet'].value === '') controls['cajasPalet'].markAsTouched();
+        if (controls['diasCaducidad'].value === '') controls['diasCaducidad'].markAsTouched();
+        if (controls['iva'].value === '') controls['iva'].markAsTouched();
+        if (controls['partidaArancelaria'].value === '') controls['partidaArancelaria'].markAsTouched();
+        if (controls['observaciones'].value === '') controls['observaciones'].markAsTouched();
 
       },
       error: (error) => {
@@ -130,33 +148,48 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     });
   }
 
+
+
+
   showModal(mensaje: string) {
     this.message = mensaje;
-    // Solo cambiar a false si no estamos haciendo una confirmación de eliminación
-    if (!this.esConfirmacionEliminacion) {
-      this.esConfirmacionEliminacion = false;
-    }
-  
-    this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), {
-      keyboard: false,
-    });
-    this.myModal.show();
+
+    // Posponer la inicialización hasta que el DOM esté listo
+    setTimeout(() => {
+      const modalElement = document.getElementById('mimodal');
+      if (modalElement) {
+        this.myModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        this.myModal.show();
+      } else {
+        console.error('No se encontró el modal en el DOM');
+      }
+    }, 0);
   }
-  
-  
+
+
 
   hideModal = () => {
-    this.myModal.hide();
-    this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+    const modalElement = document.getElementById('mimodal');
+    if (modalElement) {
+      const modal = bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+
+    if (!this.esConfirmacionEliminacion) {
+      this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+    }
   };
 
 
-    eliminarImagen(idImagen: number): void {
-      this.idElementoPendienteEliminar = idImagen;
-      this.tipoElementoPendiente = 'imagen';
-      this.esConfirmacionEliminacion = true;
-      this.showModal('¿Seguro que deseas eliminar esta imagen?');
-    }
+
+  eliminarImagen(idImagen: number): void {
+    this.idElementoPendienteEliminar = idImagen;
+    this.tipoElementoPendiente = 'imagen';
+    this.esConfirmacionEliminacion = true;
+    this.showModal('¿Seguro que deseas eliminar esta imagen?');
+  }
 
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -190,27 +223,49 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   onSubmit(): void {
     const formData = new FormData();
 
+    const campoMapeo: { [key: string]: any } = {
+      descripcion: ['', Validators.required],
+      marca: ['', Validators.required],
+      unidadDeMedida: ['', Validators.required],
+      referenciaProveedor: ['', Validators.required],
+      ean: ['', [Validators.required, Validators.pattern(/^\d{13}$/)]],
+      ean_caja: ['', [Validators.required, Validators.pattern(/^\d{14}$/)]],
+      ean_pack: ['', [Validators.required, Validators.pattern(/^\d{13}$/)]],
+      unidadDeCaja: ['', Validators.required],
+      unidadDeServicio: ['', Validators.required],
+      unidadDePack: ['', Validators.required],
+      largo_caja: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      ancho_caja: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      alto_caja: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      peso_caja: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)]],
+      cajasCapa: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      cajasPalet: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      diasCaducidad: ['', Validators.required],
+      iva: ['', Validators.required],
+      partidaArancelaria: ['', Validators.required],
+      paisOrigen: ['', Validators.required],
+      observaciones: ['', Validators.required],
+    };
+
+
     Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
-        if (value instanceof Date) {
-          formData.append(key, value.toISOString());
-        } else {
-          formData.append(key, value as string);
-        }
+        formData.append(key, value.toString());
       }
     });
+
 
     this.imagenUrls.forEach(url => formData.append('imagenUrls', url));
 
     const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
-    if (inputImagenes && inputImagenes.files) {
+    if (inputImagenes?.files) {
       Array.from(inputImagenes.files).forEach(file => {
         formData.append('imagenes', file);
       });
     }
 
     const inputDocumentos = document.getElementById('documentos') as HTMLInputElement;
-    if (inputDocumentos && inputDocumentos.files) {
+    if (inputDocumentos?.files) {
       Array.from(inputDocumentos.files).forEach(file => {
         formData.append('documentos', file);
       });
@@ -219,9 +274,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.oProductoService.update(this.id, formData).subscribe({
       next: () => {
         this.message = 'Producto actualizado correctamente!';
-        this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), {
-          keyboard: false
-        });
+        this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), { keyboard: false });
         this.myModal.show();
       },
       error: (error) => {
@@ -230,6 +283,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       }
     });
   }
+
 
   isFieldInvalid(fieldName: string): boolean {
     const control = this.oProductoForm.get(fieldName);
@@ -252,12 +306,12 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.imagenUrls = [];
   }
 
-    eliminarDocumento(idDocumento: number): void {
-      this.idElementoPendienteEliminar = idDocumento;
-      this.tipoElementoPendiente = 'documento';
-      this.esConfirmacionEliminacion = true;
-      this.showModal('¿Seguro que deseas eliminar este documento?');
-    }
+  eliminarDocumento(idDocumento: number): void {
+    this.idElementoPendienteEliminar = idDocumento;
+    this.tipoElementoPendiente = 'documento';
+    this.esConfirmacionEliminacion = true;
+    this.showModal('¿Seguro que deseas eliminar este documento?');
+  }
 
   onFileSelectDocumentos(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -286,7 +340,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
   confirmarEliminacion(): void {
     const id = this.idElementoPendienteEliminar;
-  
+
     if (this.tipoElementoPendiente === 'imagen' && id !== null) {
       this.oProductoService.deleteImagen(id).subscribe({
         next: () => {
@@ -303,7 +357,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         }
       });
     }
-  
+
     if (this.tipoElementoPendiente === 'documento' && id !== null) {
       this.oProductoService.deleteDocumento(id).subscribe({
         next: () => {
@@ -320,11 +374,52 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         }
       });
     }
-  
+
     this.tipoElementoPendiente = null;
     this.idElementoPendienteEliminar = null;
   }
+
+  eanValidator(control: FormControl): { [key: string]: any } | null {
+    const ean = control.value;
+    if (!ean || !/^\d{13}$/.test(ean)) {
+      return { eanInvalido: true };
+    }
   
+    const digits: number[] = ean.split('').map((d: string) => parseInt(d, 10));
+    const checksum: number = digits.pop()!;
+  
+    const sum = digits
+      .map((digit: number, index: number) => (index % 2 === 0 ? digit : digit * 3))
+      .reduce((acc: number, val: number) => acc + val, 0);
+  
+    const calculated = (10 - (sum % 10)) % 10;
+  
+    return calculated === checksum ? null : { eanInvalido: true };
+  }
+  
+
+  ean14Validator(control: FormControl): { [key: string]: any } | null {
+    const ean = control.value;
+    if (!ean || !/^\d{14}$/.test(ean)) {
+      return { ean14Invalido: true };
+    }
+  
+    const digits: number[] = ean.split('').map((d: string) => parseInt(d, 10));
+    const checksum: number = digits.pop()!;
+  
+    // Desde la derecha (posición 1) alternando 3, 1, 3, 1...
+    const sum = digits
+      .reverse()
+      .map((digit: number, index: number) => (index % 2 === 0 ? digit * 3 : digit))
+      .reduce((acc: number, val: number) => acc + val, 0);
+  
+    const calculated = (10 - (sum % 10)) % 10;
+  
+    return calculated === checksum ? null : { ean14Invalido: true };
+  }
+  
+
+
 
   cargarPaises(): void {
     this.paisesList = [{

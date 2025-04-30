@@ -63,49 +63,27 @@
             <tr>
               <th>ID</th>
               <th>Descripción</th>
-              <th>Descripción TIC</th>
-              <th>Departamento</th>
-              <th>Familia</th>
-              <th>Subfamilia</th>
               <th>Marca</th>
               <th>Unidad de Medida</th>
-              <th>Cantidad</th>
               <th>Centralizado</th>
-              <th>Apeso</th>
               <th>Unidad Caja</th>
               <th>Unidad Servicio</th>
-              <th>PK</th>
+              <th>Unidad Palet</th>
               <th>Cajas Capa</th>
               <th>Cajas Palet</th>
               <th>Proveedor</th>
               <th>Referencia Proveedor</th>
               <th>EAN</th>
-              <th>EAN C</th>
-              <th>EAN P</th>
+              <th>EAN Caja</th>
+              <th>EAN Palet</th>
               <th>Largo</th>
               <th>Ancho</th>
               <th>Alto</th>
               <th>Peso</th>
               <th>Días Caducidad</th>
-              <th>ARA CEN</th>
               <th>IVA</th>
-              <th>Precio Venta</th>
-              <th>PVP HOM</th>
-              <th>PVP AND</th>
-              <th>PVP CAT</th>
-              <th>Precio Tarifa</th>
-              <th>PRO FAC</th>
-              <th>Precio Neto</th>
-              <th>PRO FFAC</th>
-              <th>PRO NETON</th>
-              <th>ART MKD</th>
-              <th>Articulo Sustituido</th>
-              <th>Insertado por</th>
-              <th>Actualizado por</th>
-              <th>Status</th>
               <th>Observaciones</th>
               <th>Partida Arancelaria</th>
-              <th>PVP MEL</th>
               <th>País Origen</th>
               <th>Acciones</th>
             </tr>
@@ -114,49 +92,28 @@
             <tr *ngFor="let producto of oPage?.content" class="clickable-row" (click)="edit(producto)">
               <td [ngClass]="getCellClass(producto.id)">{{ getCellDisplay(producto.id)}}</td>
               <td [ngClass]="getCellClass(producto.descripcion)">{{ getCellDisplay(producto.descripcion)}}</td>
-              <td [ngClass]="getCellClass(producto.descripcionTic)">{{ getCellDisplay(producto.descripcionTic)}}</td>
-              <td [ngClass]="getCellClass(producto.departamento)">{{ getCellDisplay(producto.departamento)}}</td>
-              <td [ngClass]="getCellClass(producto.familia)">{{ getCellDisplay(producto.familia)}}</td>
-              <td [ngClass]="getCellClass(producto.subfamilia)">{{ getCellDisplay(producto.subfamilia)}}</td>
               <td [ngClass]="getCellClass(producto.marca)">{{ getCellDisplay(producto.marca)}}</td>
               <td [ngClass]="getCellClass(producto.unidadDeMedida)">{{ getCellDisplay(producto.unidadDeMedida)}}</td>
-              <td [ngClass]="getCellClass(producto.cantidad)">{{ getCellDisplay(producto.cantidad)}}</td>
               <td [ngClass]="getCellClass(producto.centralizado)">{{ getCellDisplay(producto.centralizado)}}</td>
               <td [ngClass]="getCellClass(producto.apeso)">{{ getCellDisplay(producto.apeso)}}</td>
               <td [ngClass]="getCellClass(producto.unidadDeCaja)">{{ getCellDisplay(producto.unidadDeCaja)}}</td>
               <td [ngClass]="getCellClass(producto.unidadDeServicio)">{{ getCellDisplay(producto.unidadDeServicio)}}</td>
-              <td [ngClass]="getCellClass(producto.pk)">{{ getCellDisplay(producto.pk)}}</td>
+              <td [ngClass]="getCellClass(producto.unidadDePack)">{{ getCellDisplay(producto.unidadDePack)}}</td>
               <td [ngClass]="getCellClass(producto.cajasCapa)">{{ getCellDisplay(producto.cajasCapa)}}</td>
               <td [ngClass]="getCellClass(producto.cajasPalet)">{{ getCellDisplay(producto.cajasPalet)}}</td>
               <td [ngClass]="getCellClass(producto.proveedor)">{{ getCellDisplay(producto.proveedor)}}</td>
               <td [ngClass]="getCellClass(producto.referenciaProveedor)">{{ getCellDisplay(producto.referenciaProveedor)}}</td>
               <td [ngClass]="getCellClass(producto.ean)">{{ getCellDisplay(producto.ean)}}</td>
-              <td [ngClass]="getCellClass(producto.ean_c)">{{ getCellDisplay(producto.ean_c)}}</td>
-              <td [ngClass]="getCellClass(producto.ean_p)">{{ getCellDisplay(producto.ean_p)}}</td>
-              <td [ngClass]="getCellClass(producto.largo)">{{ getCellDisplay(producto.largo)}}</td>
-              <td [ngClass]="getCellClass(producto.ancho)">{{ getCellDisplay(producto.ancho)}}</td>
-              <td [ngClass]="getCellClass(producto.alto)">{{ getCellDisplay(producto.alto)}}</td>
-              <td [ngClass]="getCellClass(producto.peso)">{{ getCellDisplay(producto.peso)}}</td>
+              <td [ngClass]="getCellClass(producto.ean_caja)">{{ getCellDisplay(producto.ean_caja)}}</td>
+              <td [ngClass]="getCellClass(producto.ean_pack)">{{ getCellDisplay(producto.ean_pack)}}</td>
+              <td [ngClass]="getCellClass(producto.largo_caja)">{{ getCellDisplay(producto.largo_caja)}}</td>
+              <td [ngClass]="getCellClass(producto.ancho_caja)">{{ getCellDisplay(producto.ancho_caja)}}</td>
+              <td [ngClass]="getCellClass(producto.alto_caja)">{{ getCellDisplay(producto.alto_caja)}}</td>
+              <td [ngClass]="getCellClass(producto.peso_caja)">{{ getCellDisplay(producto.peso_caja)}}</td>
               <td [ngClass]="getCellClass(producto.diasCaducidad)">{{ getCellDisplay(producto.diasCaducidad)}}</td>
-              <td [ngClass]="getCellClass(producto.ara_cen)">{{ getCellDisplay(producto.ara_cen)}}</td>
               <td [ngClass]="getCellClass(producto.iva)">{{ getCellDisplay(producto.iva)}}</td>
-              <td [ngClass]="getCellClass(producto.precioVenta)">{{ getCellDisplay(producto.precioVenta)}}</td>
-              <td [ngClass]="getCellClass(producto.pvp_hom)">{{ getCellDisplay(producto.pvp_hom)}}</td>
-              <td [ngClass]="getCellClass(producto.pvp_and)">{{ getCellDisplay(producto.pvp_and)}}</td>
-              <td [ngClass]="getCellClass(producto.pvp_cat)">{{ getCellDisplay(producto.pvp_cat)}}</td>
-              <td [ngClass]="getCellClass(producto.precioTarifa)">{{ getCellDisplay(producto.precioTarifa)}}</td>
-              <td [ngClass]="getCellClass(producto.pro_fac)">{{ getCellDisplay(producto.pro_fac)}}</td>
-              <td [ngClass]="getCellClass(producto.precioNeto)">{{ getCellDisplay(producto.precioNeto)}}</td>
-              <td [ngClass]="getCellClass(producto.pro_ffac)">{{ getCellDisplay(producto.pro_ffac)}}</td>
-              <td [ngClass]="getCellClass(producto.pro_neton)">{{ getCellDisplay(producto.pro_neton)}}</td>
-              <td [ngClass]="getCellClass(producto.art_mkd)">{{ getCellDisplay(producto.art_mkd)}}</td>
-              <td [ngClass]="getCellClass(producto.articuloSustituido)">{{ getCellDisplay(producto.articuloSustituido)}}</td>
-              <td [ngClass]="getCellClass(producto.insertedBy)">{{ getCellDisplay(producto.insertedBy)}}</td>
-              <td [ngClass]="getCellClass(producto.updateBy)">{{ getCellDisplay(producto.updateBy)}}</td>
-              <td [ngClass]="getCellClass(producto.status)">{{ getCellDisplay(producto.status) }}</td>
               <td [ngClass]="getCellClass(producto.observaciones)">{{ getCellDisplay(producto.observaciones)}}</td>
               <td [ngClass]="getCellClass(producto.partidaArancelaria)">{{ getCellDisplay(producto.partidaArancelaria)}}</td>
-              <td [ngClass]="getCellClass(producto.pvp_mel)">{{ getCellDisplay(producto.pvp_mel)}}</td>
               <td [ngClass]="getCellClass(producto.paisOrigen)">{{ getCellDisplay(producto.paisOrigen)}}</td>
               <td>
                 <div class="btn-group btn-group-sm">
@@ -220,3 +177,5 @@
     </div>
   </div>
 </div>
+
+

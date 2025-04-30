@@ -19,7 +19,7 @@
           </tr>
           <tr>
             <th>Código PK</th>
-            <td>{{ oProducto.pk | noDisponible }}</td>
+            <td>{{ oProducto.cajasPalet| noDisponible }}</td>
           </tr>
 
           <!-- INFORMACIÓN GENERAL -->
@@ -28,31 +28,12 @@
             <td>{{ oProducto.descripcion | noDisponible }}</td>
           </tr>
           <tr>
-            <th>Descripción TIC</th>
-            <td>{{ oProducto.descripcionTic | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Departamento</th>
-            <td>{{ oProducto.departamento | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Familia / Subfamilia</th>
-            <td>
-              {{ oProducto.familia | noDisponible }} /
-              {{ oProducto.subfamilia | noDisponible }}
-            </td>
-          </tr>
-          <tr>
             <th>Marca</th>
             <td>{{ oProducto.marca | noDisponible }}</td>
           </tr>
           <tr>
             <th>Unidad de Medida</th>
             <td>{{ oProducto.unidadDeMedida | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Cantidad</th>
-            <td>{{ oProducto.cantidad | noDisponible }}</td>
           </tr>
           <tr>
             <th>Centralizado</th>
@@ -85,21 +66,17 @@
           <tr>
             <th>EAN C / EAN P</th>
             <td>
-              {{ oProducto.ean_c | noDisponible }} /
-              {{ oProducto.ean_p | noDisponible }}
+              {{ oProducto.ean_caja | noDisponible }} /
+              {{ oProducto.ean_pack | noDisponible }}
             </td>
           </tr>
           <tr>
             <th>Largo x Ancho x Alto</th>
             <td>
-              {{ oProducto.largo | noDisponible }} x
-              {{ oProducto.ancho | noDisponible }} x
-              {{ oProducto.alto | noDisponible }}
+              {{ oProducto.largo_caja | noDisponible }} x
+              {{ oProducto.ancho_caja | noDisponible }} x
+              {{ oProducto.alto_caja | noDisponible }}
             </td>
-          </tr>
-          <tr>
-            <th>Peso</th>
-            <td>{{ oProducto.peso | noDisponible }} kg</td>
           </tr>
           <tr>
             <th>Días Caducidad</th>
@@ -107,10 +84,6 @@
           </tr>
 
           <!-- INFORMACIÓN FISCAL -->
-          <tr>
-            <th>ARA CEN</th>
-            <td>{{ oProducto.ara_cen | noDisponible }}</td>
-          </tr>
           <tr>
             <th>Partida Arancelaria</th>
             <td>{{ oProducto.partidaArancelaria | noDisponible }}</td>
@@ -122,37 +95,6 @@
           <tr>
             <th>IVA</th>
             <td>{{ oProducto.iva | noDisponible }}</td>
-          </tr>
-
-          <!-- PRECIOS -->
-          <tr>
-            <th>Precio Venta</th>
-            <td>{{ oProducto.precioVenta | noDisponible }} €</td>
-          </tr>
-          <tr>
-            <th>PVP HOM / AND / CAT / MEL</th>
-            <td>
-              {{ oProducto.pvp_hom | noDisponible }} /
-              {{ oProducto.pvp_and | noDisponible }} /
-              {{ oProducto.pvp_cat | noDisponible }} /
-              {{ oProducto.pvp_mel | noDisponible }} €
-            </td>
-          </tr>
-          <tr>
-            <th>Precio Tarifa</th>
-            <td>{{ oProducto.precioTarifa | noDisponible }} €</td>
-          </tr>
-          <tr>
-            <th>Precio Neto</th>
-            <td>{{ oProducto.precioNeto | noDisponible }} €</td>
-          </tr>
-          <tr>
-            <th>PRO FAC / FFAC / NETON</th>
-            <td>
-              {{ oProducto.pro_fac | noDisponible }} /
-              {{ oProducto.pro_ffac | noDisponible }} /
-              {{ oProducto.pro_neton | noDisponible }}
-            </td>
           </tr>
 
           <!-- PROVEEDOR -->
@@ -167,34 +109,8 @@
 
           <!-- METADATOS Y ESTADO -->
           <tr>
-            <th>Artículo Sustituido</th>
-            <td>{{ oProducto.articuloSustituido | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>ART MKD</th>
-            <td>{{ oProducto.art_mkd | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Status</th>
-            <td>{{ oProducto.status | noDisponible }}</td>
-          </tr>
-          <tr>
             <th>Observaciones</th>
             <td>{{ oProducto.observaciones | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Insertado por</th>
-            <td>
-              {{ oProducto.insertedBy | noDisponible }} -
-              {{ oProducto.insertedAt | noDisponible }}
-            </td>
-          </tr>
-          <tr>
-            <th>Actualizado por</th>
-            <td>
-              {{ oProducto.updateBy | noDisponible }} -
-              {{ oProducto.updateAt | noDisponible }}
-            </td>
           </tr>
         </tbody>
       </table>

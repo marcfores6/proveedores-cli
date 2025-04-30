@@ -9,117 +9,274 @@
         </div>
 
         <div class="card-body">
-          <form [formGroup]="oProductoForm" (ngSubmit)="onSubmit()">
-            <div class="row g-3">
-              <!-- Bucle dinámico para todos los campos -->
-              <div class="col-md-4" *ngFor="let campo of camposProducto">
-                <label class="form-label fw-bold text-capitalize">{{ campo }}</label>
-                <ng-container [ngSwitch]="campo">
-                  <!-- Campo Status -->
-                  <select *ngSwitchCase="'status'" class="form-select" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" formControlName="status">
-                    <option [value]="1">1</option>
-                    <option [value]="2">2</option>
-                    <option [value]="3">3</option>
-                  </select>
-
-                  <!-- Campo País de Origen -->
-                  <select *ngSwitchCase="'paisOrigen'" class="form-select" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" formControlName="paisOrigen">
-                    <option *ngFor="let pais of paisesList" [value]="pais.codigo">{{ pais.nombre }}</option>
-                  </select>
-
-                  <!-- Fecha Insertado -->
-                  <mat-form-field *ngSwitchCase="'insertedAt'" appearance="fill" class="w-100">
-                    <input matInput [matDatepicker]="pickerInsertedAt" [formControlName]="campo" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" placeholder="Selecciona fecha" />
-                    <mat-datepicker-toggle matSuffix [for]="pickerInsertedAt"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerInsertedAt></mat-datepicker>
-                  </mat-form-field>
-
-                  <!-- Fecha Actualizado -->
-                  <mat-form-field *ngSwitchCase="'updateAt'" appearance="fill" class="w-100">
-                    <input matInput [matDatepicker]="pickerUpdateAt" [formControlName]="campo" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" placeholder="Selecciona fecha" />
-                    <mat-datepicker-toggle matSuffix [for]="pickerUpdateAt"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerUpdateAt></mat-datepicker>
-                  </mat-form-field>
-
-                  <!-- Campo por defecto -->
-                  <input *ngSwitchDefault type="text" class="form-control" [formControlName]="campo" [ngClass]="{ 'is-invalid': isFieldInvalid(campo) }" />
-                </ng-container>
-              </div>
-
-              <!-- Imágenes actuales -->
-              <div class="mb-4" *ngIf="oProducto && oProducto.imagenes && oProducto.imagenes.length > 0">
-                <label class="form-label fw-bold">Imágenes actuales</label>
-                <div class="d-flex flex-wrap gap-3 justify-content-center">
-                  <div *ngFor="let img of oProducto.imagenes" class="position-relative">
-                    <img [src]="'http://localhost:8086' + img.imagenUrl" alt="Imagen" width="145" height="135" class="rounded shadow border" />
-                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle" (click)="eliminarImagen(img.id)" style="width: 24px; height: 24px; line-height: 0.9" title="Eliminar imagen">
-                      &times;
-                    </button>
-                  </div>
+          <form *ngIf="oProductoForm.controls['marca']" [formGroup]="oProductoForm" (ngSubmit)="onSubmit()">
+            <!-- DATOS COMERCIALES -->
+            <h5 class="seccion-titulo mt-4">Datos comerciales</h5>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Descripción</label>
+                <input type="text" formControlName="descripcion" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('descripcion')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
-
-              <!-- Subida de nuevas imágenes -->
-              <div class="col-12">
-                <label class="form-label fw-bold">Añadir nuevas imágenes</label>
-                <input type="file" id="imagenes" (change)="onFileSelect($event)" accept=".png,.jpg,.jpeg,.webp" class="form-control" multiple />
-              </div>
-
-              <!-- Vista previa de imágenes nuevas -->
-              <div *ngIf="imagenPreviews.length > 0" class="col-12 text-center">
-                <label class="form-label fw-bold">Vista previa de imágenes nuevas</label>
-                <div class="d-flex flex-wrap gap-2 justify-content-center">
-                  <div *ngFor="let preview of imagenPreviews; let i = index" class="position-relative">
-                    <img [src]="preview" alt="Vista previa" width="120" height="120" class="rounded shadow border border-info" style="object-fit: cover" />
-                    <button type="button" class="btn-close position-absolute top-0 end-0 bg-white p-1" aria-label="Cerrar" (click)="removeImage(i)"></button>
-                  </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Marca</label>
+                <input type="text" formControlName="marca" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('marca')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
-
-              <!-- Documentos actuales -->
-              <div class="mb-4" *ngIf="oProducto && oProducto.documentos && oProducto.documentos.length > 0">
-                <label class="form-label fw-bold">Documentos actuales</label>
-                <ul class="list-group">
-                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of oProducto.documentos">
-                    <a [href]="'http://localhost:8086' + doc.documentoUrl" target="_blank">{{ doc.nombreOriginal }}</a>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="eliminarDocumento(doc.id)">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </li>
-                </ul>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Unidad de Medida</label>
+                <input type="text" formControlName="unidadDeMedida" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeMedida')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- Subida de nuevos documentos -->
-              <div class="col-12">
-                <label class="form-label fw-bold">Añadir nuevos documentos (PDF)</label>
-                <input type="file" id="documentos" (change)="onFileSelectDocumentos($event)" accept=".pdf" class="form-control" multiple />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Referencia Proveedor</label>
+                <input type="text" formControlName="referenciaProveedor" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('referenciaProveedor')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- Vista previa de documentos nuevos -->
-              <div *ngIf="documentoPreviews.length > 0" class="col-12 text-center">
-                <label class="form-label fw-bold">Vista previa de documentos nuevos</label>h
-                <ul class="list-group">
-                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of documentoPreviews; let i = index">
-                    {{ doc }}
-                    <button type="button" class="btn btn-close" (click)="removeDocumento(i)"></button>
-
-                  </li>
-                </ul>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Centralizado</label>
+                <input type="text" formControlName="centralizado" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('centralizado')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
+            </div>
 
-              <!-- Botones -->
-              <div class="text-center mt-4">
-                <a routerLink="/admin/producto/xproveedor/plist" class="btn btn-secondary me-4">
-                  <i class="bi bi-arrow-left"></i> Volver
-                </a>
-                <button type="submit" class="btn btn-success">
-                  <i class="bi bi-save"></i> Guardar
-                </button>
+            <!-- DATOS LOGÍSTICOS -->
+            <h5 class="seccion-titulo mt-4">Datos logísticos</h5>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">EAN Unidad</label>
+                <input type="text" formControlName="ean" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ean')}" />
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean')?.errors?.['eanInvalido']">
+                  <i class="bi bi-exclamation-circle"></i> El EAN no es válido
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean')?.errors?.['pattern']">
+                  <i class="bi bi-exclamation-circle"></i> Debe tener 13 dígitos
+                </div>
               </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">EAN Caja</label>
+                <input
+                  type="text"
+                  formControlName="ean_caja"
+                  class="form-control"
+                  [ngClass]="{ 'is-invalid': isFieldInvalid('ean_caja') }"
+                />
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('required')">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('pattern')">
+                  <i class="bi bi-exclamation-circle"></i> Deben ser 14 dígitos
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('ean14Invalido')">
+                  <i class="bi bi-exclamation-circle"></i> El EAN-14 no es válido (fallo en dígito de control)
+                </div>
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label class="form-label">EAN Pack</label>
+                <input type="text" formControlName="ean_pack" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ean_pack')}" />
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_pack')?.errors?.['eanInvalido']">
+                  <i class="bi bi-exclamation-circle"></i> El EAN no es válido
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_pack')?.errors?.['pattern']">
+                  <i class="bi bi-exclamation-circle"></i> Debe tener 13 dígitos
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ud. Caja</label>
+                <input type="number" formControlName="unidadDeCaja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeCaja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ud. Servicio</label>
+                <input type="number" formControlName="unidadDeServicio" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeServicio')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ud. Pack</label>
+                <input type="number" formControlName="unidadDePack" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDePack')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Largo Caja</label>
+                <input type="number" formControlName="largo_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('largo_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ancho Caja</label>
+                <input type="number" formControlName="ancho_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Alto Caja</label>
+                <input type="number" formControlName="alto_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('alto_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Peso Caja</label>
+                <input type="number" formControlName="peso_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Cajas por Capa</label>
+                <input type="number" formControlName="cajasCapa" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('cajasCapa')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Cajas por Palet</label>
+                <input type="number" formControlName="cajasPalet" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('cajasPalet')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Días de Caducidad</label>
+                <input type="number" formControlName="diasCaducidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('diasCaducidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+            
+              <div class="col-md-4 mb-3">
+                <label class="form-label">IVA</label>
+                <select formControlName="iva" class="form-select" [ngClass]="{'is-invalid': isFieldInvalid('iva')}">
+                  <option value="" disabled selected>Seleccione IVA</option>
+                  <option *ngFor="let option of ivaOptions" [value]="option.id">{{ option.label }}</option>
+                </select>
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+              
+            
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Partida Arancelaria</label>
+                <input type="text" formControlName="partidaArancelaria" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('partidaArancelaria')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+            
+              <div class="col-md-4 mb-3">
+                <label class="form-label">País de Origen</label>
+                <select formControlName="paisOrigen" class="form-select" [ngClass]="{'is-invalid': isFieldInvalid('paisOrigen')}">
+                  <option value="" disabled selected>Seleccione un país</option>
+                  <option *ngFor="let pais of paisesList" [value]="pais.codigo">
+                    {{ pais.nombre }}
+                  </option>
+                </select>
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+            
+              <div class="col-md-8 mb-3">
+                <label class="form-label">Observaciones</label>
+                <textarea formControlName="observaciones" class="form-control" rows="3" [ngClass]="{'is-invalid': isFieldInvalid('observaciones')}"></textarea>
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+            </div>
+
+             <!-- Imágenes actuales -->
+             <div class="mb-4" *ngIf="oProducto && oProducto.imagenes && oProducto.imagenes.length > 0">
+              <label class="form-label fw-bold">Imágenes actuales</label>
+              <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <div *ngFor="let img of oProducto.imagenes" class="position-relative">
+                  <img [src]="'http://localhost:8086' + img.imagenUrl" alt="Imagen" width="145" height="135" class="rounded shadow border" />
+                  <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle" (click)="eliminarImagen(img.id)" style="width: 24px; height: 24px; line-height: 0.9" title="Eliminar imagen">
+                    &times;
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subida de nuevas imágenes -->
+            <div class="col-12">
+              <label class="form-label fw-bold">Añadir nuevas imágenes</label>
+              <input type="file" id="imagenes" (change)="onFileSelect($event)" accept=".png,.jpg,.jpeg,.webp" class="form-control" multiple />
+            </div>
+
+            <!-- Vista previa de imágenes nuevas -->
+            <div *ngIf="imagenPreviews.length > 0" class="col-12 text-center">
+              <label class="form-label fw-bold">Vista previa de imágenes nuevas</label>
+              <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <div *ngFor="let preview of imagenPreviews; let i = index" class="position-relative">
+                  <img [src]="preview" alt="Vista previa" width="120" height="120" class="rounded shadow border border-info" style="object-fit: cover" />
+                  <button type="button" class="btn-close position-absolute top-0 end-0 bg-white p-1" aria-label="Cerrar" (click)="removeImage(i)"></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documentos actuales -->
+            <div class="mb-4" *ngIf="oProducto && oProducto.documentos && oProducto.documentos.length > 0">
+              <label class="form-label fw-bold">Documentos actuales</label>
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of oProducto.documentos">
+                  <a [href]="'http://localhost:8086' + doc.documentoUrl" target="_blank">{{ doc.nombreOriginal }}</a>
+                  <button type="button" class="btn btn-danger btn-sm" (click)="eliminarDocumento(doc.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Subida de nuevos documentos -->
+            <div class="col-12">
+              <label class="form-label fw-bold">Añadir nuevos documentos (PDF)</label>
+              <input type="file" id="documentos" (change)="onFileSelectDocumentos($event)" accept=".pdf" class="form-control" multiple />
+            </div>
+
+            <!-- Vista previa de documentos nuevos -->
+            <div *ngIf="documentoPreviews.length > 0" class="col-12 text-center">
+              <label class="form-label fw-bold">Vista previa de documentos nuevos</label>h
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of documentoPreviews; let i = index">
+                  {{ doc }}
+                  <button type="button" class="btn btn-close" (click)="removeDocumento(i)"></button>
+
+                </li>
+              </ul>
+            </div>
+
+            <!-- Botones -->
+            <div class="text-center mt-4">
+              <a routerLink="/admin/producto/xproveedor/plist" class="btn btn-secondary me-4">
+                <i class="bi bi-arrow-left"></i> Volver
+              </a>
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-save"></i> Guardar
+              </button>
             </div>
           </form>
         </div>
-
       </div>
     </div>
   </div>

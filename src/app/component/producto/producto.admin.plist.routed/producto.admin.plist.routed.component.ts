@@ -177,5 +177,6 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   getCellDisplay(value: any): string {
     return this.isVacio(value) ? 'Sin dato' : value;
   }
+
   
 }

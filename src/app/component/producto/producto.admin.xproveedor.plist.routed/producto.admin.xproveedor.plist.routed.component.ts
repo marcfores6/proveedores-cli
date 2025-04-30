@@ -107,12 +107,10 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
 
   checkIfAllFieldsAreFilled(product: IProducto): boolean {
     const requiredFields: (keyof IProducto)[] = [
-      'descripcion', 'descripcionTic', 'departamento', 'familia', 'subfamilia', 'marca',
-      'unidadDeMedida', 'cantidad', 'centralizado', 'apeso', 'unidadDeCaja', 'unidadDeServicio',
-      'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor', 'ean', 'ean_c', 'ean_p',
-      'largo', 'ancho', 'alto', 'peso', 'diasCaducidad', 'iva', 'precioVenta', 'pvp_hom', 'pvp_and',
-      'pvp_cat', 'precioTarifa', 'pro_fac', 'precioNeto', 'pro_ffac', 'pro_neton', 'art_mkd',
-      'articuloSustituido', 'status', 'observaciones', 'partidaArancelaria', 'pvp_mel', 'paisOrigen'
+      'descripcion', 'marca',
+      'unidadDeMedida', 'centralizado', 'unidadDeCaja', 'unidadDeServicio',
+      'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor', 'ean', 'ean_caja', 'ean_pack',
+      'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja', 'diasCaducidad', 'iva', 'observaciones', 'partidaArancelaria', 'paisOrigen'
     ];
 
     // Comprobamos si algún campo requerido está vacío
