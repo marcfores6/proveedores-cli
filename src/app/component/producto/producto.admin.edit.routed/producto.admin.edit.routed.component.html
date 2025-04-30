@@ -173,6 +173,14 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
+
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Lead Time</label>
+                <input type="number" formControlName="leadtime" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('leadtime')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
               
             
               <div class="col-md-4 mb-3">
@@ -271,7 +279,7 @@
               <a routerLink="/admin/producto/xproveedor/plist" class="btn btn-secondary me-4">
                 <i class="bi bi-arrow-left"></i> Volver
               </a>
-              <button type="submit" class="btn btn-success">
+              <button type="button" class="btn btn-success" (click)="confirmarGuardar()">
                 <i class="bi bi-save"></i> Guardar
               </button>
             </div>
@@ -283,28 +291,72 @@
 </div>
 
 
-<div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content border-success">
-      
+
+<!-- Modal de confirmación -->
+<div
+  class="modal fade"
+  id="confirmModal"
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success shadow">
       <div class="modal-header bg-success text-white">
-        <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" (click)="hideModal()"></button>
+        <h5 class="modal-title d-flex align-items-center" id="confirmModalLabel">
+          <i class="bi bi-question-circle-fill me-2 fs-4"></i> Confirmación
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
       </div>
-
-      <div class="modal-body">
-        <p>{{ message }}</p>
+      <div class="modal-body text-center">
+        <i class="bi bi-exclamation-triangle-fill text-success fs-1 mb-3 d-block"></i>
+        <p class="fs-5">{{ confirmMessage }}</p>
       </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="hideModal()">
-          Cerrar
+      <div class="modal-footer justify-content-center">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          data-bs-dismiss="modal"
+        >
+          No
         </button>
-        <button *ngIf="esConfirmacionEliminacion" type="button" class="btn btn-danger" (click)="confirmarEliminacion()">
-          Eliminar
+        <button
+          type="button"
+          class="btn btn-success px-4"
+          (click)="confirmarAccion()"
+        >
+          Sí
         </button>
       </div>
-
     </div>
   </div>
 </div>
+
+
+
+<!-- Modal de éxito / error -->
+<div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success shadow">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="mimodalLabel">
+          <i class="bi bi-info-circle-fill me-2"></i> Aviso
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="fs-5" [innerHTML]="message"></p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-outline-success px-4" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

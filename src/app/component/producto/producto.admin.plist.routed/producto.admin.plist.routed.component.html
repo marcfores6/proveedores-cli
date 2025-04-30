@@ -84,6 +84,7 @@
               <th>IVA</th>
               <th>Observaciones</th>
               <th>Partida Arancelaria</th>
+              <th>Lead Time</th>
               <th>País Origen</th>
               <th>Acciones</th>
             </tr>
@@ -114,6 +115,7 @@
               <td [ngClass]="getCellClass(producto.iva)">{{ getCellDisplay(producto.iva)}}</td>
               <td [ngClass]="getCellClass(producto.observaciones)">{{ getCellDisplay(producto.observaciones)}}</td>
               <td [ngClass]="getCellClass(producto.partidaArancelaria)">{{ getCellDisplay(producto.partidaArancelaria)}}</td>
+              <td [ngClass]="getCellClass(producto.leadtime)">{{ getCellDisplay(producto.leadtime)}}</td>
               <td [ngClass]="getCellClass(producto.paisOrigen)">{{ getCellDisplay(producto.paisOrigen)}}</td>
               <td>
                 <div class="btn-group btn-group-sm">

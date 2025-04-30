@@ -42,6 +42,9 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     { id: 2, label: '10%' },
     { id: 3, label: '21%' }
   ];
+  confirmMessage: string = '';
+  accionConfirmada: Function = () => { };
+  confirmModal: any;
 
 
   readonly dialog = inject(MatDialog);
@@ -85,7 +88,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           ean_caja: new FormControl(data.ean_caja ?? '', {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d{14}$/), this.ean14Validator]
-          }),          
+          }),
           ean_pack: new FormControl(data.ean ?? '', {
             nonNullable: true,
             validators: [
@@ -110,6 +113,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
           diasCaducidad: new FormControl(data.diasCaducidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
           iva: new FormControl(data.iva ?? '', { nonNullable: true, validators: [Validators.required] }),
+          leadtime: new FormControl(data.leadtime ?? '', { nonNullable: true, validators: [Validators.required] }),
           partidaArancelaria: new FormControl(data.partidaArancelaria ?? '', { nonNullable: true, validators: [Validators.required] }),
           observaciones: new FormControl(data.observaciones ?? '', { nonNullable: true, validators: [Validators.required] }),
           paisOrigen: new FormControl(data.paisOrigen ?? '', { nonNullable: true, validators: [Validators.required] }),
@@ -137,6 +141,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         if (controls['cajasPalet'].value === '') controls['cajasPalet'].markAsTouched();
         if (controls['diasCaducidad'].value === '') controls['diasCaducidad'].markAsTouched();
         if (controls['iva'].value === '') controls['iva'].markAsTouched();
+        if (controls['leadtime'].value === '') controls['leadtime'].markAsTouched();
         if (controls['partidaArancelaria'].value === '') controls['partidaArancelaria'].markAsTouched();
         if (controls['observaciones'].value === '') controls['observaciones'].markAsTouched();
 
@@ -149,38 +154,62 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   }
 
 
+  confirmarAccion(): void {
+    this.confirmModal.hide();
+    if (this.accionConfirmada) {
+      this.accionConfirmada();
+    }
+  }
 
+  mostrarConfirmacion(mensaje: string, accion: () => void): void {
+    this.confirmMessage = mensaje;
+    this.accionConfirmada = accion;
 
-  showModal(mensaje: string) {
-    this.message = mensaje;
-
-    // Posponer la inicialización hasta que el DOM esté listo
     setTimeout(() => {
-      const modalElement = document.getElementById('mimodal');
+      const modalElement = document.getElementById('confirmModal');
       if (modalElement) {
-        this.myModal = bootstrap.Modal.getOrCreateInstance(modalElement);
-        this.myModal.show();
-      } else {
-        console.error('No se encontró el modal en el DOM');
+        this.confirmModal = new bootstrap.Modal(modalElement, {
+          keyboard: false
+        });
+        this.confirmModal.show();
       }
     }, 0);
   }
 
 
-
-  hideModal = () => {
+  showModal(mensaje: string) {
+    this.message = mensaje;
     const modalElement = document.getElementById('mimodal');
     if (modalElement) {
-      const modal = bootstrap.Modal.getInstance(modalElement);
-      if (modal) {
-        modal.hide();
-      }
+      this.myModal = new bootstrap.Modal(modalElement, { keyboard: false });
+      this.myModal.show();
+  
+      // Esperamos a que el modal se cierre completamente
+      modalElement.addEventListener('hidden.bs.modal', () => {
+        this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+      }, { once: true }); // Importante: para que no se dispare más de una vez
+  
+      // Lo cerramos automáticamente tras 2 segundos
+      setTimeout(() => {
+        this.myModal.hide();
+      }, 2000);
     }
+  }
+  
+  
 
-    if (!this.esConfirmacionEliminacion) {
-      this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
-    }
+  hideModal = () => {
+    this.myModal?.hide();
+    this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
   };
+  
+
+  confirmarGuardar(): void {
+    this.mostrarConfirmacion(
+      '¿Estás seguro de que deseas guardar los cambios en este producto?',
+      this.onSubmit.bind(this) // Ejecutar onSubmit solo si se confirma
+    );
+  }
 
 
 
@@ -242,6 +271,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       cajasPalet: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       diasCaducidad: ['', Validators.required],
       iva: ['', Validators.required],
+      leadtime: ['', Validators.required],
       partidaArancelaria: ['', Validators.required],
       paisOrigen: ['', Validators.required],
       observaciones: ['', Validators.required],
@@ -273,9 +303,8 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
     this.oProductoService.update(this.id, formData).subscribe({
       next: () => {
-        this.message = 'Producto actualizado correctamente!';
-        this.myModal = new bootstrap.Modal(document.getElementById('mimodal'), { keyboard: false });
-        this.myModal.show();
+        const descripcion = this.oProductoForm.get('descripcion')?.value || 'el producto';
+        this.showModal(`Se ha actualizado correctamente el producto <strong>${descripcion}</strong>`);
       },
       error: (error) => {
         console.error(error);
@@ -384,40 +413,40 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     if (!ean || !/^\d{13}$/.test(ean)) {
       return { eanInvalido: true };
     }
-  
+
     const digits: number[] = ean.split('').map((d: string) => parseInt(d, 10));
     const checksum: number = digits.pop()!;
-  
+
     const sum = digits
       .map((digit: number, index: number) => (index % 2 === 0 ? digit : digit * 3))
       .reduce((acc: number, val: number) => acc + val, 0);
-  
+
     const calculated = (10 - (sum % 10)) % 10;
-  
+
     return calculated === checksum ? null : { eanInvalido: true };
   }
-  
+
 
   ean14Validator(control: FormControl): { [key: string]: any } | null {
     const ean = control.value;
     if (!ean || !/^\d{14}$/.test(ean)) {
       return { ean14Invalido: true };
     }
-  
+
     const digits: number[] = ean.split('').map((d: string) => parseInt(d, 10));
     const checksum: number = digits.pop()!;
-  
+
     // Desde la derecha (posición 1) alternando 3, 1, 3, 1...
     const sum = digits
       .reverse()
       .map((digit: number, index: number) => (index % 2 === 0 ? digit * 3 : digit))
       .reduce((acc: number, val: number) => acc + val, 0);
-  
+
     const calculated = (10 - (sum % 10)) % 10;
-  
+
     return calculated === checksum ? null : { ean14Invalido: true };
   }
-  
+
 
 
 

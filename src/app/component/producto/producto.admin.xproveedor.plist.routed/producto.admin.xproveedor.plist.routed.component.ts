@@ -110,7 +110,7 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
       'descripcion', 'marca',
       'unidadDeMedida', 'centralizado', 'unidadDeCaja', 'unidadDeServicio',
       'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor', 'ean', 'ean_caja', 'ean_pack',
-      'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja', 'diasCaducidad', 'iva', 'observaciones', 'partidaArancelaria', 'paisOrigen'
+      'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja', 'diasCaducidad', 'iva', 'observaciones', 'partidaArancelaria', 'leadtime', 'paisOrigen'
     ];
 
     // Comprobamos si algún campo requerido está vacío

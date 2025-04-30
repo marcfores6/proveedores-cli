@@ -43,4 +43,6 @@ export interface IProducto {
   estado?: string; 
   showEnviarButton?: boolean;
 
+  leadtime?: number; 
+
 }

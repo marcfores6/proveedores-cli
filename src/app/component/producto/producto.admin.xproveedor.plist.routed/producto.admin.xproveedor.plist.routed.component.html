@@ -112,6 +112,7 @@
               <th>IVA</th>
               <th>Observaciones</th>
               <th>Partida Arancelaria</th>
+              <th>Lead Time</th>
               <th>País Origen</th>
               <th>Estado</th>
               <th>Acciones</th>
@@ -191,6 +192,9 @@
               </td>
               <td [ngClass]="getCellClass(producto.partidaArancelaria)">
                 {{ producto.partidaArancelaria || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.leadtime)">
+                {{ producto.leadtime || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.paisOrigen)">
                 {{ producto.paisOrigen || "Sin dato" }}
