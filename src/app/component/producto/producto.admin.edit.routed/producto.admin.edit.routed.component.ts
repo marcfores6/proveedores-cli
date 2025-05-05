@@ -47,6 +47,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   confirmModal: any;
   documentoNuevos: { file: File; tipo: string }[] = [];
   eliminarModal: any; // para cerrar el modal tras eliminar
+  shouldRedirectAfterModal: boolean = true;
 
 
 
@@ -213,24 +214,30 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   }
 
 
-  showModal(mensaje: string) {
+  showModal(mensaje: string, redirect: boolean = true) {
     this.message = mensaje;
+    this.shouldRedirectAfterModal = redirect;
+  
     const modalElement = document.getElementById('mimodal');
     if (modalElement) {
       this.myModal = new bootstrap.Modal(modalElement, { keyboard: false });
       this.myModal.show();
-
-      // Esperamos a que el modal se cierre completamente
+  
       modalElement.addEventListener('hidden.bs.modal', () => {
-        this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
-      }, { once: true }); // Importante: para que no se dispare más de una vez
-
-      // Lo cerramos automáticamente tras 2 segundos
-      setTimeout(() => {
-        this.myModal.hide();
-      }, 25000);
+        if (this.shouldRedirectAfterModal) {
+          this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+        }
+      }, { once: true });
+  
+      // Cierra automático solo si hay redirección
+      if (redirect) {
+        setTimeout(() => {
+          this.myModal.hide();
+        }, 25000); // lo bajamos a 2.5s para errores
+      }
     }
   }
+  
 
 
 
@@ -310,7 +317,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     // Validar que todos los nuevos documentos tienen tipo seleccionado
     const documentoInvalido = this.documentoNuevos.some(doc => !doc.tipo || doc.tipo.trim() === '');
     if (documentoInvalido) {
-      this.showModal('Debes seleccionar el tipo para todos los documentos nuevos.');
+      this.showModal('Debes seleccionar un tipo para todos los documentos nuevos', false);
       return;
     }
 

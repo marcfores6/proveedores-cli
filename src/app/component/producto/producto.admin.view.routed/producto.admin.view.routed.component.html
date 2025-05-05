@@ -1,117 +1,51 @@
 <div class="row justify-content-center m-3">
   <div class="col-lg-10 col-md-12 col-sm-12 d-flex flex-wrap">
-    <!-- Parte izquierda: Detalles del producto -->
+    <!-- Parte izquierda -->
     <div class="col-lg-6 col-md-12">
       <h1 class="text-center mb-4">
-        <i class="bi bi-card-list"></i>
-        Detalle de Producto
-        <i class="bi bi-box-seam"></i>
+        <i class="bi bi-card-list"></i> Detalle de Producto <i class="bi bi-box-seam"></i>
       </h1>
 
-      <table
-        class="table table-striped table-bordered text-center table-responsive"
-      >
+      <!-- 🟩 DATOS COMERCIALES -->
+      <h4 class="text-success fw-bold mt-4">Datos comerciales</h4>
+      <table class="table table-bordered table-striped text-center">
         <tbody>
-          <!-- IDENTIFICACIÓN -->
-          <tr>
-            <th>ID</th>
-            <td>{{ oProducto.id | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Código PK</th>
-            <td>{{ oProducto.cajasPalet| noDisponible }}</td>
-          </tr>
+          <tr><th>Descripción</th><td>{{ oProducto.descripcion | noDisponible }}</td></tr>
+          <tr><th>Marca</th><td>{{ oProducto.marca | noDisponible }}</td></tr>
+          <tr><th>Unidad de Medida</th><td>{{ oProducto.unidadDeMedida | noDisponible }}</td></tr>
+          <tr><th>Referencia del Proveedor</th><td>{{ oProducto.referenciaProveedor | noDisponible }}</td></tr>
+          <tr><th>Centralizado</th><td>{{ oProducto.centralizado | noDisponible }}</td></tr>
+        </tbody>
+      </table>
 
-          <!-- INFORMACIÓN GENERAL -->
-          <tr>
-            <th>Descripción</th>
-            <td>{{ oProducto.descripcion | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Marca</th>
-            <td>{{ oProducto.marca | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Unidad de Medida</th>
-            <td>{{ oProducto.unidadDeMedida | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Centralizado</th>
-            <td>{{ oProducto.centralizado | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Apeso</th>
-            <td>{{ oProducto.apeso | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Unidad de Caja / Servicio</th>
-            <td>
-              {{ oProducto.unidadDeCaja | noDisponible }} /
-              {{ oProducto.unidadDeServicio | noDisponible }}
-            </td>
-          </tr>
-          <tr>
-            <th>Cajas Capa / Palet</th>
-            <td>
-              {{ oProducto.cajasCapa | noDisponible }} /
-              {{ oProducto.cajasPalet | noDisponible }}
-            </td>
-          </tr>
+      <!-- 🟨 DATOS LOGÍSTICOS -->
+      <h4 class="text-success fw-bold mt-4">Datos logísticos</h4>
+      <table class="table table-bordered table-striped text-center">
+        <tbody>
+          <tr><th>EAN</th><td>{{ oProducto.ean | noDisponible }}</td></tr>
+          <tr><th>EAN Caja / Pack</th><td>{{ oProducto.ean_caja | noDisponible }} / {{ oProducto.ean_pack | noDisponible }}</td></tr>
+          <tr><th>Unidades (Caja / Servicio / Pack)</th><td>{{ oProducto.unidadDeCaja | noDisponible }} / {{ oProducto.unidadDeServicio | noDisponible }} / {{ oProducto.unidadDePack | noDisponible }}</td></tr>
+          <tr><th>Cajas Capa / Palet</th><td>{{ oProducto.cajasCapa | noDisponible }} / {{ oProducto.cajasPalet | noDisponible }}</td></tr>
+          <tr><th>Largo x Ancho x Alto x Peso</th><td>{{ oProducto.largo_caja | noDisponible }} x {{ oProducto.ancho_caja | noDisponible }} x {{ oProducto.alto_caja | noDisponible }} x {{ oProducto.peso_caja | noDisponible }}</td></tr>
+          <tr><th>Días Caducidad</th><td>{{ oProducto.diasCaducidad | noDisponible }}</td></tr>
+        </tbody>
+      </table>
 
-          <!-- CÓDIGOS EAN Y DIMENSIONES -->
-          <tr>
-            <th>EAN</th>
-            <td>{{ oProducto.ean | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>EAN C / EAN P</th>
-            <td>
-              {{ oProducto.ean_caja | noDisponible }} /
-              {{ oProducto.ean_pack | noDisponible }}
-            </td>
-          </tr>
-          <tr>
-            <th>Largo x Ancho x Alto</th>
-            <td>
-              {{ oProducto.largo_caja | noDisponible }} x
-              {{ oProducto.ancho_caja | noDisponible }} x
-              {{ oProducto.alto_caja | noDisponible }}
-            </td>
-          </tr>
-          <tr>
-            <th>Días Caducidad</th>
-            <td>{{ oProducto.diasCaducidad | noDisponible }}</td>
-          </tr>
+      <!-- 🧾 INFORMACIÓN FISCAL -->
+      <h4 class="text-success fw-bold mt-4">Información fiscal</h4>
+      <table class="table table-bordered table-striped text-center">
+        <tbody>
+          <tr><th>Partida Arancelaria</th><td>{{ oProducto.partidaArancelaria | noDisponible }}</td></tr>
+          <tr><th>País Origen</th><td>{{ oProducto.paisOrigen | noDisponible }}</td></tr>
+          <tr><th>IVA</th><td>{{ oProducto.iva | noDisponible }}</td></tr>
+        </tbody>
+      </table>
 
-          <!-- INFORMACIÓN FISCAL -->
-          <tr>
-            <th>Partida Arancelaria</th>
-            <td>{{ oProducto.partidaArancelaria | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>País Origen</th>
-            <td>{{ oProducto.paisOrigen | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>IVA</th>
-            <td>{{ oProducto.iva | noDisponible }}</td>
-          </tr>
-
-          <!-- PROVEEDOR -->
-          <tr>
-            <th>Proveedor</th>
-            <td>{{ oProducto.proveedor | noDisponible }}</td>
-          </tr>
-          <tr>
-            <th>Referencia Proveedor</th>
-            <td>{{ oProducto.referenciaProveedor | noDisponible }}</td>
-          </tr>
-
-          <!-- METADATOS Y ESTADO -->
-          <tr>
-            <th>Observaciones</th>
-            <td>{{ oProducto.observaciones | noDisponible }}</td>
-          </tr>
+      <!-- 📝 OBSERVACIONES -->
+      <h4 class="text-success fw-bold mt-4">Observaciones</h4>
+      <table class="table table-bordered table-striped text-center">
+        <tbody>
+          <tr><td>{{ oProducto.observaciones | noDisponible }}</td></tr>
         </tbody>
       </table>
 
@@ -119,92 +53,57 @@
         <a class="btn btn-warning mx-1" href="/admin/producto/xproveedor/plist">
           <i class="bi bi-list"></i> Listado Productos
         </a>
-        <a
-          class="btn btn-primary mx-1"
-          [routerLink]="['/admin/producto/edit', oProducto.id]"
-        >
+        <a class="btn btn-primary mx-1" [routerLink]="['/admin/producto/edit', oProducto.id]">
           <i class="bi bi-pencil"></i> Editar Producto
         </a>
       </div>
     </div>
 
-    <!-- Parte derecha: Imágenes -->
+    <!-- Parte derecha: imágenes y documentos -->
     <div class="col-lg-6 col-md-12 text-center">
-      <ng-container
-        *ngIf="
-          oProducto.imagenes && oProducto.imagenes.length > 0;
-          else sinImagenes
-        "
-      >
-        <div
-          id="carouselProductoImagenes"
-          class="carousel slide"
-          data-bs-ride="carousel"
-        >
+
+      <!-- 🖼️ IMÁGENES -->
+      <ng-container *ngIf="!!oProducto?.imagenes?.length; else sinImagenes">
+        <div id="carouselProductoImagenes" class="carousel slide mt-3" data-bs-ride="carousel">
           <div class="carousel-inner">
-            <div
-              class="carousel-item"
-              *ngFor="let img of oProducto.imagenes; let i = index"
-              [class.active]="i === 0"
-            >
-              <img
-                [src]="
-                  img.imagenUrl!.startsWith('http')
-                    ? img.imagenUrl
-                    : 'http://localhost:8086' + img.imagenUrl
-                "
-                class="d-block w-100"
-                alt="Imagen del producto"
-                style="
-                  max-height: 300px;
-                  object-fit: contain;
-                  border-radius: 8px;
-                "
-              />
+            <div class="carousel-item" *ngFor="let img of oProducto.imagenes; let i = index" [class.active]="i === 0">
+              <img [src]="img.imagenUrl!.startsWith('http') ? img.imagenUrl : 'http://localhost:8086' + img.imagenUrl"
+                   class="d-block w-100"
+                   style="max-height: 300px; object-fit: contain; border-radius: 8px;"
+                   alt="Imagen del producto" />
             </div>
           </div>
           <div class="text-center mt-2 total-imagenes">
-            Total de Imágenes: <span id="imageCount">{{ totalImagenes }}</span>
+            Total de Imágenes: <span id="imageCount">{{ oProducto.imagenes?.length }}</span>
           </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselProductoImagenes"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Anterior</span>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductoImagenes" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Anterior</span>
           </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselProductoImagenes"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Siguiente</span>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselProductoImagenes" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Siguiente</span>
           </button>
         </div>
       </ng-container>
       <ng-template #sinImagenes>
-        <span class="text-muted">No hay imágenes disponibles</span>
+        <div class="text-muted mt-4">No hay imágenes disponibles</div>
       </ng-template>
 
-      <!-- Documentos actuales -->
-<ng-container *ngIf="oProducto && oProducto.documentos && oProducto.documentos.length > 0; else sinDocumentos">
-  <div class="mb-4">
-    <label class="form-label fw-bold d-block">Documentos actuales</label>
-    <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of oProducto.documentos">
-        <a [href]="'http://localhost:8086' + doc.documentoUrl" target="_blank">{{ doc.nombreOriginal || 'Documento sin nombre' }}</a>
-      </li>
-    </ul>
-  </div>
-</ng-container>
-
-<ng-template #sinDocumentos>
-  <div class="text-center text-muted mb-4">No hay documentos disponibles</div>
-</ng-template>
-
+      <!-- 📄 DOCUMENTOS -->
+      <ng-container *ngIf="!!oProducto?.documentos?.length; else sinDocumentos">
+        <div class="mt-5">
+          <label class="form-label fw-bold d-block">Documentos actuales</label>
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let doc of oProducto.documentos">
+              <a [href]="'http://localhost:8086' + doc.documentoUrl" target="_blank">
+                {{ doc.nombreOriginal || 'Documento sin nombre' }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+      <ng-template #sinDocumentos>
+        <div class="text-muted mt-4">No hay documentos disponibles</div>
+      </ng-template>
+    </div>
   </div>
 </div>

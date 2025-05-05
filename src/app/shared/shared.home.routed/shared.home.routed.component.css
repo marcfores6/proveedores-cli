@@ -39,15 +39,62 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Tarjetas de características */
+/* === Tarjetas de características mejoradas === */
 .feature-card {
-  transition: transform 0.3s ease, box-shadow 0.4s ease;
+  background-color: #ffffff;
+  border: 2px solid #e0e0e0;
+  border-radius: 1.5rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
 }
+
+.feature-card i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card h5 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+/* Forzar igualdad de altura en columnas */
+.features-section .row > div {
+  display: flex;
+}
+
+.features-section .row > div > .feature-card {
+  flex: 1;
+}
+
+/* Responsive para móvil: apila las tarjetas y ajusta tamaño */
+@media (max-width: 768px) {
+  .feature-card {
+    min-height: auto;
+    padding: 1.5rem 1rem;
+  }
+
+  .feature-card h5 {
+    font-size: 1.1rem;
+  }
+
+  .feature-card i {
+    font-size: 2.2rem;
+  }
+}
+
 
 /* Footer */
 footer {
@@ -120,4 +167,69 @@ footer {
 .login-alert a.btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+/* === Eslogan destacado sin <p> === */
+.eslogan-banner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(90deg, #e0ffe0, #ffffff, #e0ffe0);
+  border: 3px solid #4caf50;
+  border-radius: 2rem;
+  padding: 0.75rem 2rem;
+  margin: 1.5rem auto;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1b5e20;
+  box-shadow: 0 8px 20px rgba(0, 128, 0, 0.25);
+  animation: glowPulse 2s infinite alternate;
+}
+
+.eslogan-text {
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+.eslogan-icon {
+  font-size: 1.5rem;
+  color: #2e7d32;
+  animation: spinScale 2s infinite ease-in-out;
+}
+
+/* Animaciones llamativas */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 12px rgba(0, 255, 0, 0.4);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 0 24px rgba(0, 255, 0, 0.7);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes spinScale {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.15);
+  }
+}
+
+/* Responsive para móvil */
+@media (max-width: 768px) {
+  .eslogan-banner {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border-width: 2px;
+  }
+
+  .eslogan-icon {
+    font-size: 1.2rem;
+  }
 }

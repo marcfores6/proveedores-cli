@@ -20,45 +20,37 @@
     />
 
     <!-- Título -->
-    <h1
-      class="masthead-heading text-uppercase mb-3"
-      style="
-        font-size: 2.5rem;
-        font-weight: bold;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-      "
-    >
+    <h1 class="masthead-heading text-uppercase mb-2 text-shadow">
       Proveedores & Productos
     </h1>
 
+    <!-- ESLOGAN como bloque destacado sin <p> -->
+    <div class="eslogan-banner animate__animated animate__fadeInDown">
+      <span class="eslogan-text">NO SON OFERTAS, SON NUESTROS PRECIOS</span>
+    </div>
+
     <!-- Subtítulo -->
-    <p
-      class="masthead-subheading font-weight-light mb-4"
-      style="font-size: 1.2rem; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5)"
-    >
+    <p class="masthead-subheading font-weight-light mb-4 text-shadow">
       Gestión avanzada de proveedores y productos de Family Cash
     </p>
 
     <!-- Botones principales -->
     <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
       <a
-        routerLink="/admin/producto/plist"
+        routerLink="/admin/producto/xproveedor/plist"
         class="btn btn-success btn-lg shadow-lg px-4 py-3"
-        style="font-size: 1.2rem; border-radius: 50px"
       >
         <i class="bi bi-box-seam"></i> Gestión de Productos
       </a>
       <a
         routerLink="/admin/proveedor/plist"
         class="btn btn-primary btn-lg shadow-lg px-4 py-3"
-        style="font-size: 1.2rem; border-radius: 50px"
       >
         <i class="bi bi-people-fill"></i> Gestión de Proveedores
       </a>
       <a
         routerLink="/admin/conexion/plist"
         class="btn btn-warning btn-lg shadow-lg px-4 py-3"
-        style="font-size: 1.2rem; border-radius: 50px"
       >
         <i class="bi bi-diagram-3-fill"></i> Conexiones & Instalaciones
       </a>
@@ -98,9 +90,6 @@
         >
           <i class="bi bi-box-seam display-4 text-success mb-3"></i>
           <h5 class="mb-2">Gestión de Productos</h5>
-          <p class="text-muted">
-            Administra y organiza todos los productos de manera eficiente.
-          </p>
         </div>
       </div>
       <div class="col-md-4">
@@ -110,9 +99,6 @@
         >
           <i class="bi bi-people-fill display-4 text-primary mb-3"></i>
           <h5 class="mb-2">Gestión de Proveedores</h5>
-          <p class="text-muted">
-            Conecta y gestiona tus proveedores de forma centralizada.
-          </p>
         </div>
       </div>
       <div class="col-md-4">
@@ -122,9 +108,7 @@
         >
           <i class="bi bi-diagram-3-fill display-4 text-warning mb-3"></i>
           <h5 class="mb-2">Conexiones & Instalaciones</h5>
-          <p class="text-muted">
-            Gestiona las conexiones y configuraciones de tus instalaciones.
-          </p>
+          <p class="text-muted"></p>
         </div>
       </div>
     </div>
