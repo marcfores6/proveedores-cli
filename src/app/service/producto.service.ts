@@ -68,6 +68,7 @@ export class ProductoService {
   update(codigo: number, formData: FormData): Observable<IProducto> {
     return this.oHttp.put<IProducto>('http://localhost:8086/producto/update/' + codigo, formData);
   }
+  
 
   getOne(codigo: number): Observable<IProducto> {
     let URL: string = '';
@@ -92,15 +93,20 @@ export class ProductoService {
   }
 
   // 🔥 Subir nuevos documentos PDF
-  uploadDocumentos(codigo: number, documentos: File[]): Observable<IProducto> {
+  uploadDocumentos(codigo: number, documentos: File[], tipos: string[]): Observable<IProducto> {
     const formData = new FormData();
-
-    documentos.forEach(documento => {
+  
+    documentos.forEach((documento, i) => {
       formData.append('documentos', documento);
+      formData.append('tiposDocumentos', tipos[i]); // importante
     });
-
-    return this.oHttp.put<IProducto>('http://localhost:8086/producto/update/' + codigo, formData);
+  
+    return this.oHttp.put<IProducto>(
+      `http://localhost:8086/producto/update/${codigo}`, 
+      formData
+    );
   }
+  
 
   // 🔥 Eliminar un documento PDF existente
   deleteDocumento(idDocumento: number): Observable<any> {
