@@ -121,6 +121,13 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           ancho_caja: new FormControl(data.ancho_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
           alto_caja: new FormControl(data.alto_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
 
+          largo_unidad: new FormControl(data.largo_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          ancho_unidad: new FormControl(data.ancho_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          alto_unidad: new FormControl(data.alto_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+
+          peso_neto_unidad: new FormControl(data.peso_neto_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
+          peso_escurrido_unidad: new FormControl(data.peso_escurrido_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
+
           peso_caja: new FormControl(data.peso_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
           cajasCapa: new FormControl(data.cajasCapa ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
           cajasPalet: new FormControl(data.cajasPalet ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
@@ -173,6 +180,11 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         if (controls['ancho_caja'].value === '') controls['ancho_caja'].markAsTouched();
         if (controls['alto_caja'].value === '') controls['alto_caja'].markAsTouched();
         if (controls['peso_caja'].value === '') controls['peso_caja'].markAsTouched();
+        if (controls['largo_unidad'].value === '') controls['largo_unidad'].markAsTouched();
+        if (controls['ancho_unidad'].value === '') controls['ancho_unidad'].markAsTouched();
+        if (controls['alto_unidad'].value === '') controls['alto_unidad'].markAsTouched();
+        if (controls['peso_neto_unidad'].value === '') controls['peso_neto_unidad'].markAsTouched();
+        if (controls['peso_escurrido_unidad'].value === '') controls['peso_escurrido_unidad'].markAsTouched();
         if (controls['cajasCapa'].value === '') controls['cajasCapa'].markAsTouched();
         if (controls['cajasPalet'].value === '') controls['cajasPalet'].markAsTouched();
         if (controls['diasCaducidad'].value === '') controls['diasCaducidad'].markAsTouched();

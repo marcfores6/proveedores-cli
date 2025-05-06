@@ -96,18 +96,23 @@
               <th>Centralizado</th>
               <th>Unidad Caja</th>
               <th>Unidad Servicio</th>
-              <th>Unidad Palet</th>
+              <th>Unidad Pack</th>
               <th>Cajas Capa</th>
-              <th>Cajas Palet</th>
+              <th>Cajas Pack</th>
               <th>Proveedor</th>
               <th>Referencia Proveedor</th>
               <th>EAN</th>
               <th>EAN Caja</th>
               <th>EAN Palet</th>
-              <th>Largo</th>
-              <th>Ancho</th>
-              <th>Alto</th>
-              <th>Peso</th>
+              <th>Largo Caja</th>
+              <th>Ancho Caja</th>
+              <th>Alto Caja</th>
+              <th>Peso Caja</th>
+              <th>Largo Unidad</th>
+              <th>Ancho Unidad</th>
+              <th>Alto Unidad</th>
+              <th>Peso Neto Unidad</th>
+              <th>Peso Escurrido Unidad</th>
               <th>Días Caducidad</th>
               <th>IVA</th>
               <th>Observaciones</th>
@@ -180,6 +185,21 @@
               </td>
               <td [ngClass]="getCellClass(producto.peso_caja)">
                 {{ producto.peso_caja || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.largo_unidad)"> 
+                {{ producto.largo_unidad }}
+              </td>
+              <td [ngClass]="getCellClass(producto.ancho_unidad)">
+                {{ producto.ancho_unidad  }}
+              </td>
+              <td [ngClass]="getCellClass(producto.alto_unidad)">
+                {{ producto.alto_unidad  }}
+              </td>
+              <td [ngClass]="getCellClass(producto.peso_neto_unidad)">
+                {{ producto.peso_neto_unidad }}
+              </td>
+              <td [ngClass]="getCellClass(producto.peso_escurrido_unidad)">
+                {{ producto.peso_escurrido_unidad }}
               </td>
               <td [ngClass]="getCellClass(producto.diasCaducidad)">
                 {{ producto.diasCaducidad || "Sin dato" }}

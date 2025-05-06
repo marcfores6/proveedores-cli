@@ -27,6 +27,12 @@ export interface IProducto {
   alto_caja?: number;
   peso_caja?: number;
 
+  largo_unidad?: number;
+  ancho_unidad?: number;
+  alto_unidad?: number;
+  peso_neto_unidad?: number;
+  peso_escurrido_unidad?: number;
+
   diasCaducidad?: number;
   iva?: string;
 

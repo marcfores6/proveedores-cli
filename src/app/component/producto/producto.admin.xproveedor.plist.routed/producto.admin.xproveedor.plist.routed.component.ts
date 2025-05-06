@@ -110,7 +110,7 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
       'descripcion', 'marca',
       'unidadDeMedida', 'centralizado', 'unidadDeCaja', 'unidadDeServicio',
       'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor', 'ean', 'ean_caja', 'ean_pack',
-      'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja', 'diasCaducidad', 'iva', 'observaciones', 'partidaArancelaria', 'leadtime', 'paisOrigen'
+      'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja','largo_unidad', 'ancho_unidad', 'alto_unidad', 'peso_neto_unidad', 'peso_escurrido_unidad', 'diasCaducidad', 'iva', 'observaciones', 'partidaArancelaria', 'leadtime', 'paisOrigen'
     ];
 
     // Comprobamos si algún campo requerido está vacío
@@ -287,7 +287,7 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
       return;
     }
 
-    this.enviandoProductos = true; // 🚀 Activar el spinner
+    this.enviandoProductos = true; 
 
     let enviados = 0;
     let errores = 0;
@@ -311,7 +311,7 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
 
   checkIfAllFinished(enviados: number, errores: number, total: number) {
     if (enviados + errores === total) {
-      this.enviandoProductos = false; // ❌ Ocultar spinner
+      this.enviandoProductos = false; 
       this.showModal(
         `Se han enviado ${enviados} producto(s) correctamente${errores > 0 ? ` y ${errores} con error` : ''}.`
       );
