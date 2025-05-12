@@ -89,13 +89,14 @@
         >
           <thead class="table-success text-white bg-success">
             <tr>
-              <th>ID</th>
               <th>Descripción</th>
               <th>Marca</th>
               <th>Unidad de Medida</th>
               <th>Centralizado</th>
               <th>Unidad Caja</th>
+              <!--
               <th>Unidad Servicio</th>
+              -->
               <th>Unidad Pack</th>
               <th>Cajas Capa</th>
               <th>Cajas Pack</th>
@@ -119,7 +120,6 @@
               <th>Partida Arancelaria</th>
               <th>Lead Time</th>
               <th>País Origen</th>
-              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -129,9 +129,6 @@
               class="clickable-row"
               (click)="edit(producto)"
             >
-              <td [ngClass]="getCellClass(producto.id)">
-                {{ producto.id || "Sin dato" }}
-              </td>
               <td [ngClass]="getCellClass(producto.descripcion)">
                 {{ producto.descripcion || "Sin dato" }}
               </td>
@@ -147,12 +144,15 @@
               <td [ngClass]="getCellClass(producto.unidadDeCaja)">
                 {{ producto.unidadDeCaja || "Sin dato" }}
               </td>
+              <!--
               <td [ngClass]="getCellClass(producto.unidadDeServicio)">
                 {{ producto.unidadDeServicio || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.unidadDePack)">
+              -->
+              <td [ngClass]="getCellClassUnidadDePack(producto)">
                 {{ producto.unidadDePack || "Sin dato" }}
               </td>
+              
               <td [ngClass]="getCellClass(producto.cajasCapa)">
                 {{ producto.cajasCapa || "Sin dato" }}
               </td>
@@ -187,26 +187,26 @@
                 {{ producto.peso_caja || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.largo_unidad)"> 
-                {{ producto.largo_unidad }}
+                {{ producto.largo_unidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.ancho_unidad)">
-                {{ producto.ancho_unidad  }}
+                {{ producto.ancho_unidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.alto_unidad)">
-                {{ producto.alto_unidad  }}
+                {{ producto.alto_unidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.peso_neto_unidad)">
-                {{ producto.peso_neto_unidad }}
+                {{ producto.peso_neto_unidad || "Sin dato"}}
               </td>
               <td [ngClass]="getCellClass(producto.peso_escurrido_unidad)">
-                {{ producto.peso_escurrido_unidad }}
+                {{ producto.peso_escurrido_unidad || "Sin dato"}}
               </td>
               <td [ngClass]="getCellClass(producto.diasCaducidad)">
                 {{ producto.diasCaducidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.iva)">
-                {{ producto.iva || "Sin dato" }}
-              </td>
+                {{ getIvaTexto(producto.iva) }}
+              </td>                                         
               <td [ngClass]="getCellClass(producto.observaciones)">
                 {{ producto.observaciones || "Sin dato" }}
               </td>
@@ -216,12 +216,9 @@
               <td [ngClass]="getCellClass(producto.leadtime)">
                 {{ producto.leadtime || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.paisOrigen)">
-                {{ producto.paisOrigen || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.estado)">
-                {{ producto.estado || "Sin dato" }}
-              </td>
+              <td [ngClass]="getCellClassCodigoPais(producto.paisOrigen)">
+                {{ getPaisTexto(producto.paisOrigen) }}
+              </td>                           
               <td>
                 <div class="btn-group btn-group-sm">
                   <button

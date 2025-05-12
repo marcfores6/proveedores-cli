@@ -37,6 +37,8 @@ export class SharedLoginRoutedComponent implements OnInit {
   errorMessage: string | null = null;
   proveedores: any[] = [];
   loginForm: FormGroup = new FormGroup({});
+  nifError: string | null = null;
+
 
   constructor(
     private oLoginService: LoginService,
@@ -72,21 +74,28 @@ export class SharedLoginRoutedComponent implements OnInit {
       this.oLoginService.getProveedoresPorNif(nif).subscribe({
         next: (proveedores) => {
           this.proveedores = proveedores;
-          // Si solo hay un proveedor, lo seleccionamos automáticamente
-          if (this.proveedores.length === 1) {
-            this.loginForm.patchValue({ proveedorId: this.proveedores[0].id });
+  
+          if (this.proveedores.length === 0) {
+            this.nifError = 'No se encontró ninguna empresa asociada a ese NIF';
           } else {
-            this.loginForm.patchValue({ proveedorId: '' });
+            this.nifError = null;
+            if (this.proveedores.length === 1) {
+              this.loginForm.patchValue({ proveedorId: this.proveedores[0].id });
+            } else {
+              this.loginForm.patchValue({ proveedorId: '' });
+            }
           }
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error al buscar proveedores', error);
           this.proveedores = [];
+          this.nifError = 'Error al consultar el NIF. Intenta más tarde.';
           this.loginForm.patchValue({ proveedorId: '' });
         }
       });
     } else {
       this.proveedores = [];
+      this.nifError = null;
       this.loginForm.patchValue({ proveedorId: '' });
     }
   }
@@ -94,27 +103,38 @@ export class SharedLoginRoutedComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.oLoginService.login(this.loginForm.value.nif, this.loginForm.value.password, this.loginForm.value.proveedorId).subscribe({
+      this.oLoginService.login(
+        this.loginForm.value.nif,
+        this.loginForm.value.password,
+        this.loginForm.value.proveedorId
+      ).subscribe({
         next: (token: string) => {
-          console.log('Token recibido:', token);
-          this.errorMessage = null; // Limpia el mensaje de error
+          this.errorMessage = null;
   
-          // Mostrar el modal de éxito
           const successModal = document.getElementById('successModal');
           if (successModal) {
             const modal = new bootstrap.Modal(successModal);
             modal.show();
           }
   
-          // Guardar sesión
           this.oSessionService.login(token);
           this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
         },
         error: (error: HttpErrorResponse) => {
-          console.error('Error al realizar la solicitud', error);
-          this.errorMessage = 'NIF, proveedor o contraseña incorrectos';
+          console.error('Error de login:', error);
   
-          // Mostrar el modal de error
+          if (error.status === 401) {
+            try {
+              const backendError = typeof error.error === 'string' ? JSON.parse(error.error) : error.error;
+              this.errorMessage = backendError.message || 'Credenciales incorrectas';
+            } catch (e) {
+              this.errorMessage = 'Credenciales incorrectas';
+            }
+          } else {
+            this.errorMessage = 'Error de conexión con el servidor. Intenta de nuevo más tarde.';
+          }
+          
+  
           const errorModal = document.getElementById('errorModal');
           if (errorModal) {
             const modal = new bootstrap.Modal(errorModal);
@@ -124,6 +144,7 @@ export class SharedLoginRoutedComponent implements OnInit {
       });
     }
   }
+  
   
 
   onAdmin() {

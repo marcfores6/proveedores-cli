@@ -11,7 +11,7 @@ export interface IProducto {
   centralizado?: string;
   apeso?: number;
   unidadDeCaja?: number;
-  unidadDeServicio?: number;
+  //unidadDeServicio?: number;
   unidadDePack?: number;
   cajasCapa?: number;
   cajasPalet?: number;
@@ -42,7 +42,7 @@ export interface IProducto {
   partidaArancelaria?: string;
   paisOrigen?: string;
 
-  imagenes?: IProductoImagen[]; // por si usás imágenes relacionadas
+  imagenes?: IProductoImagen[]; // por si usas imágenes relacionadas
 
   documentos?: IProductoDocumento[];
 

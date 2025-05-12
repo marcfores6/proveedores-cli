@@ -99,6 +99,8 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
+
+              <!--
               <div class="col-md-4 mb-3">
                 <label class="form-label">Ud. Servicio</label>
                 <input type="number" formControlName="unidadDeServicio" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeServicio')}" />
@@ -106,6 +108,7 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
+              -->
               <div class="col-md-4 mb-3">
                 <label class="form-label">Ud. Pack</label>
                 <input type="number" formControlName="unidadDePack" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDePack')}" />
@@ -113,69 +116,7 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Largo Caja</label>
-                <input type="number" formControlName="largo_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('largo_caja')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Ancho Caja</label>
-                <input type="number" formControlName="ancho_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_caja')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Alto Caja</label>
-                <input type="number" formControlName="alto_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('alto_caja')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Peso Caja</label>
-                <input type="number" formControlName="peso_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_caja')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Largo Unidad</label>
-                <input type="number" formControlName="largo_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('largo_unidad')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Ancho Unidad</label>
-                <input type="number" formControlName="ancho_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_unidad')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Alto Unidad</label>
-                <input type="number" formControlName="alto_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('alto_unidad')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Peso Neto Unidad</label>
-                <input type="number" formControlName="peso_neto_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_neto_unidad')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Peso Escurrido Unidad</label>
-                <input type="number" formControlName="peso_escurrido_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_escurrido_unidad')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
-                </div>
-              </div>
+
               <div class="col-md-4 mb-3">
                 <label class="form-label">Cajas por Capa</label>
                 <input type="number" formControlName="cajasCapa" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('cajasCapa')}" />
@@ -208,6 +149,18 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
+
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Total de la Operación</label>
+                <input
+                  type="text"
+                  class="form-control bg-light"
+                  [value]="totalOperacion"
+                  readonly
+                  disabled
+                />
+              </div>
+              
 
               <div class="col-md-4 mb-3">
                 <label class="form-label">Lead Time</label>
@@ -247,6 +200,80 @@
                 </div>
               </div>
             </div>
+
+              <!-- Dimensiones de la caja -->
+              <h6 class="seccion-titulo mt-3" style="font-size: 1.25rem;">Dimensiones de la Caja</h6>
+              <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Largo Caja</label>
+                <input type="number" formControlName="largo_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('largo_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ancho Caja</label>
+                <input type="number" formControlName="ancho_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Alto Caja</label>
+                <input type="number" formControlName="alto_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('alto_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Peso Caja</label>
+                <input type="number" formControlName="peso_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+              </div>
+              </div>
+
+              <!-- Dimensiones de la unidad -->
+              <h6 class="seccion-titulo mt-3" style="font-size: 1.25rem;">Dimensiones de la Unidad</h6>
+              <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Largo Unidad</label>
+                <input type="number" formControlName="largo_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('largo_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ancho Unidad</label>
+                <input type="number" formControlName="ancho_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Alto Unidad</label>
+                <input type="number" formControlName="alto_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('alto_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Peso Neto Unidad</label>
+                <input type="number" formControlName="peso_neto_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_neto_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Peso Escurrido Unidad</label>
+                <input type="number" formControlName="peso_escurrido_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_escurrido_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+              </div>
+            </div>
+
 
              <!-- Imágenes actuales -->
              <div class="mb-4" *ngIf="oProducto && oProducto.imagenes && oProducto.imagenes.length > 0">

@@ -26,8 +26,11 @@
           <tr><th>EAN Caja / Pack</th><td>{{ oProducto.ean_caja | noDisponible }} / {{ oProducto.ean_pack | noDisponible }}</td></tr>
           <tr><th>Unidades (Caja / Servicio / Pack)</th><td>{{ oProducto.unidadDeCaja | noDisponible }} / {{ oProducto.unidadDeServicio | noDisponible }} / {{ oProducto.unidadDePack | noDisponible }}</td></tr>
           <tr><th>Cajas Capa / Palet</th><td>{{ oProducto.cajasCapa | noDisponible }} / {{ oProducto.cajasPalet | noDisponible }}</td></tr>
-          <tr><th>Largo x Ancho x Alto x Peso</th><td>{{ oProducto.largo_caja | noDisponible }} x {{ oProducto.ancho_caja | noDisponible }} x {{ oProducto.alto_caja | noDisponible }} x {{ oProducto.peso_caja | noDisponible }}</td></tr>
+          <tr><th>Largo x Ancho x Alto x Peso (Caja)</th><td>{{ oProducto.largo_caja | noDisponible }} x {{ oProducto.ancho_caja | noDisponible }} x {{ oProducto.alto_caja | noDisponible }} x {{ oProducto.peso_caja | noDisponible }}</td></tr>
+          <tr><th>Largo x Ancho x Alto (Unidad)</th><td>{{ oProducto.largo_unidad | noDisponible }} x {{ oProducto.ancho_unidad | noDisponible }} x {{ oProducto.alto_unidad | noDisponible }}</td></tr>
+          <tr><th>Peso Neto / Peso Escurrido (Unidad)</th><td>{{ oProducto.peso_neto_unidad | noDisponible }} / {{ oProducto.peso_escurrido_unidad | noDisponible }}</td></tr>
           <tr><th>Días Caducidad</th><td>{{ oProducto.diasCaducidad | noDisponible }}</td></tr>
+          <tr><th>Leadtime</th><td>{{ oProducto.leadtime | noDisponible }}</td></tr>
         </tbody>
       </table>
 
@@ -37,7 +40,7 @@
         <tbody>
           <tr><th>Partida Arancelaria</th><td>{{ oProducto.partidaArancelaria | noDisponible }}</td></tr>
           <tr><th>País Origen</th><td>{{ oProducto.paisOrigen | noDisponible }}</td></tr>
-          <tr><th>IVA</th><td>{{ oProducto.iva | noDisponible }}</td></tr>
+          <tr><th>IVA</th><td>{{ oProducto.iva | noDisponible }} %</td></tr>
         </tbody>
       </table>
 

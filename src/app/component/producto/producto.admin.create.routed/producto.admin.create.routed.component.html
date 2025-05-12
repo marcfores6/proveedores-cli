@@ -1,573 +1,376 @@
-<div class="container py-5">
+<!-- <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-12">
       <div class="card shadow border-0">
         <div class="card-header bg-primary text-white text-center">
           <h2 class="fw-bold">
-            <i class="bi bi-plus-square"></i> Crear nuevo producto
+            <i class="bi bi-pencil-square"></i> Edición del Producto
           </h2>
         </div>
+
         <div class="card-body">
-          <form [formGroup]="oProductoForm" (ngSubmit)="onSubmit()">
-            <div class="row g-3">
-              <!-- CAMPO ID -->
-              <div class="col-md-4">
-                <label class="form-label fw-bold">ID</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="id"
-                />
+          <form *ngIf="oProductoForm.controls['marca']" [formGroup]="oProductoForm" (ngSubmit)="onSubmit()">
+            <!-- DATOS COMERCIALES 
+            <h5 class="seccion-titulo mt-4">Datos comerciales</h5>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Descripción</label>
+                <input type="text" formControlName="descripcion" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('descripcion')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- Descripción -->
-              <div class="col-md-8">
-                <label class="form-label fw-bold">Descripción</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="descripcion"
-                />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Marca</label>
+                <input type="text" formControlName="marca" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('marca')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- Descripción Tic -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Descripción TIC</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="descripcionTic"
-                />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Unidad de Medida</label>
+                <input type="text" formControlName="unidadDeMedida" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeMedida')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- Departamento -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Departamento</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="departamento"
-                />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Referencia Proveedor</label>
+                <input type="text" formControlName="referenciaProveedor" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('referenciaProveedor')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- Familia -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Familia</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="familia"
-                />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Centralizado</label>
+                <input type="text" formControlName="centralizado" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('centralizado')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
+            </div>
 
-              <!-- SubFamilia -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">SubFamilia</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="subfamilia"
-                />
+            <!-- DATOS LOGÍSTICOS 
+            <h5 class="seccion-titulo mt-4">Datos logísticos</h5>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">EAN Unidad</label>
+                <input type="text" formControlName="ean" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ean')}" />
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean')?.errors?.['eanInvalido']">
+                  <i class="bi bi-exclamation-circle"></i> El EAN no es válido
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean')?.errors?.['pattern']">
+                  <i class="bi bi-exclamation-circle"></i> Debe tener 13 dígitos
+                </div>
               </div>
-
-              <!-- Marca -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Marca</label>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">EAN Caja</label>
                 <input
                   type="text"
-                  class="form-control"
-                  formControlName="marca"
-                />
-              </div>
-
-              <!-- Unidad de medida -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Unidad de Medida</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="unidadDeMedida"
-                />
-              </div>
-
-              <!-- Cantidad -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Cantidad</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="cantidad"
-                />
-              </div>
-
-              <!-- Centralizado -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Centralizado</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="centralizado"
-                />
-              </div>
-
-              <!-- APeso -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">APeso</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="apeso"
-                />
-              </div>
-
-              <!-- Unidad de Caja -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Unidad de Caja</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="unidadDeCaja"
-                />
-              </div>
-
-              <!-- Unidad de Servicio -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Unidad de Servicio</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="unidadDeServicio"
-                />
-              </div>
-
-              <!-- PK -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">PK</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pk"
-                />
-              </div>
-
-              <!-- CajasCapa -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">CajasCapa</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="cajasCapa"
-                />
-              </div>
-
-              <!-- CajasPalet -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">CajasPalet</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="cajasPalet"
-                />
-              </div>
-
-              <!-- Proveedor -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Proveedor</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="proveedor"
-                />
-              </div>
-
-              <!-- ReferenciaProveedor -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Referencia Proveedor</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="referenciaProveedor"
-                />
-              </div>
-
-              <!-- Ean -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Ean</label>
-                <input type="text" class="form-control" formControlName="ean" />
-              </div>
-
-              <!-- EanC -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Ean C</label>
-                <input
-                  type="text"
-                  class="form-control"
                   formControlName="ean_caja"
-                />
-              </div>
-
-              <!-- EanP -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Ean P</label>
-                <input
-                  type="text"
                   class="form-control"
-                  formControlName="ean_p"
+                  [ngClass]="{ 'is-invalid': isFieldInvalid('ean_caja') }"
                 />
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('required')">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('pattern')">
+                  <i class="bi bi-exclamation-circle"></i> Deben ser 14 dígitos
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('ean14Invalido')">
+                  <i class="bi bi-exclamation-circle"></i> El EAN-14 no es válido (fallo en dígito de control)
+                </div>
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label class="form-label">EAN Pack</label>
+                <input type="text" formControlName="ean_pack" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ean_pack')}" />
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_pack')?.errors?.['eanInvalido']">
+                  <i class="bi bi-exclamation-circle"></i> El EAN no es válido
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_pack')?.errors?.['pattern']">
+                  <i class="bi bi-exclamation-circle"></i> Debe tener 13 dígitos
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ud. Caja</label>
+                <input type="number" formControlName="unidadDeCaja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeCaja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ud. Servicio</label>
+                <input type="number" formControlName="unidadDeServicio" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeServicio')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ud. Pack</label>
+                <input type="number" formControlName="unidadDePack" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDePack')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
 
-              <!-- Dias de Caducidad -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Dias de Caducidad</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="diasCaducidad"
-                />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Cajas por Capa</label>
+                <input type="number" formControlName="cajasCapa" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('cajasCapa')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
               </div>
-
-              <!-- Largo -->
-              <div class="col-md-3">
-                <label class="form-label fw-bold">Largo</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="largo"
-                />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Cajas por Palet</label>
+                <input type="number" formControlName="cajasPalet" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('cajasPalet')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
               </div>
-
-              <!-- Ancho -->
-              <div class="col-md-3">
-                <label class="form-label fw-bold">Ancho</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="ancho"
-                />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Días de Caducidad</label>
+                <input type="number" formControlName="diasCaducidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('diasCaducidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- Alto -->
-              <div class="col-md-3">
-                <label class="form-label fw-bold">Alto</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="alto"
-                />
-              </div>
-
-              <!-- Alto -->
-              <div class="col-md-3">
-                <label class="form-label fw-bold">Peso</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="peso"
-                />
-              </div>
-
-              <!-- Ara_cen -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Ara_cen</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="ara_cen"
-                />
-              </div>
-
-              <!-- IVA -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">IVA</label>
-                <input type="text" class="form-control" formControlName="iva" />
-              </div>
-
-              <!-- Precio de Venta -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio de Venta</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="precioVenta"
-                />
-              </div>
-
-              <!-- Pvp_Hom -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Pvp_hom</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pvp_hom"
-                />
-              </div>
-
-              <!-- Pvp_And -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Pvp_and</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pvp_and"
-                />
-              </div>
-
-              <!-- Pvp_cat -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Pvp_cat</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pvp_cat"
-                />
-              </div>
-
-              <!-- PrecioTarifa -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio de Tarifa</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="precioTarifa"
-                />
-              </div>
-
-              <!-- PrecioFac -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio Fac</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="pro_fac"
-                />
-              </div>
-
-              <!-- PrecioNeto -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio Neto</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="precioNeto"
-                />
-              </div>
-
-              <!-- Pro_ffac -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio Ffac</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="pro_ffac"
-                />
-              </div>
-
-              <!-- Pro_neton -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Precio neton</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pro_neton"
-                />
-              </div>
-
-              <!-- art_mkd -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">art_mkd</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="art_mkd"
-                />
-              </div>
-
-              <!-- Articulo de Sustitución -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold"
-                  >Articulo de Sustitución</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="articuloSustituido"
-                />
-              </div>
-
-              <!-- InsertedBy -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">InsertedBy</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="insertedBy"
-                />
-              </div>
-
-              <!-- InsertedAt -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">InsertedAt</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="insertedAt"
-                />
-              </div>
-
-              <!-- UpdateBy -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">UpdateBy</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="updateBy"
-                />
-              </div>
-
-              <!-- UpdateAt -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">UpdateAt</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="updateAt"
-                />
-              </div>
-
-              <!-- Status -->
-              <div class="col-md-1">
-                <label class="form-label fw-bold">Status</label>
-                <select class="form-select" formControlName="status">
-                  <option [value]="1">1</option>
-                  <option [value]="2">2</option>
-                  <option [value]="3">3</option>
+            
+              <div class="col-md-4 mb-3">
+                <label class="form-label">IVA</label>
+                <select formControlName="iva" class="form-select" [ngClass]="{'is-invalid': isFieldInvalid('iva')}">
+                  <option value="" disabled selected>Seleccione IVA</option>
+                  <option *ngFor="let option of ivaOptions" [value]="option.id">{{ option.label }}</option>
                 </select>
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
 
-              <!-- Observaciones -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Observaciones</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="observaciones"
-                />
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Lead Time</label>
+                <input type="number" formControlName="leadtime" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('leadtime')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- Partida Arandelaria -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Partida Arandelaria</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="partidaArancelaria"
-                />
+              
+            
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Partida Arancelaria</label>
+                <input type="text" formControlName="partidaArancelaria" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('partidaArancelaria')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
               </div>
-
-              <!-- pvp_mel -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">pvp_mel</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="pvp_mel"
-                />
-              </div>
-
-              <!-- País de Origen -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">País de Origen</label>
-                <select class="form-select" formControlName="paisOrigen">
-                  <option *ngFor="let pais of paisesList" [value]="pais.nombre">
+            
+              <div class="col-md-4 mb-3">
+                <label class="form-label">País de Origen</label>
+                <select formControlName="paisOrigen" class="form-select" [ngClass]="{'is-invalid': isFieldInvalid('paisOrigen')}">
+                  <option value="" disabled selected>Seleccione un país</option>
+                  <option *ngFor="let pais of paisesList" [value]="pais.codigo">
                     {{ pais.nombre }}
                   </option>
                 </select>
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+            
+              <div class="col-md-8 mb-3">
+                <label class="form-label">Observaciones</label>
+                <textarea formControlName="observaciones" class="form-control" rows="3" [ngClass]="{'is-invalid': isFieldInvalid('observaciones')}"></textarea>
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+            </div>
+
+              <!-- Dimensiones de la caja 
+              <h6 class="seccion-titulo mt-3" style="font-size: 1.25rem;">Dimensiones de la Caja</h6>
+              <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Largo Caja</label>
+                <input type="number" formControlName="largo_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('largo_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ancho Caja</label>
+                <input type="number" formControlName="ancho_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Alto Caja</label>
+                <input type="number" formControlName="alto_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('alto_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Peso Caja</label>
+                <input type="number" formControlName="peso_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_caja')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+              </div>
               </div>
 
-              <!-- Imágenes actuales -->
-              <div
-                class="mb-4"
-                *ngIf="
-                  oProducto &&
-                  oProducto.imagenes &&
-                  oProducto.imagenes.length > 0
-                "
-              >
-                <label class="form-label fw-bold">Imágenes actuales</label>
-                <div class="d-flex flex-wrap gap-3 justify-content-center">
-                  <div
-                    *ngFor="let img of oProducto.imagenes"
-                    class="position-relative"
+              <!-- Dimensiones de la unidad 
+              <h6 class="seccion-titulo mt-3" style="font-size: 1.25rem;">Dimensiones de la Unidad</h6>
+              <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Largo Unidad</label>
+                <input type="number" formControlName="largo_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('largo_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Ancho Unidad</label>
+                <input type="number" formControlName="ancho_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Alto Unidad</label>
+                <input type="number" formControlName="alto_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('alto_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Peso Neto Unidad</label>
+                <input type="number" formControlName="peso_neto_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_neto_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Peso Escurrido Unidad</label>
+                <input type="number" formControlName="peso_escurrido_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_escurrido_unidad')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+              </div>
+            </div>
+
+
+             <!-- Imágenes actuales 
+             <div class="mb-4" *ngIf="oProducto && oProducto.imagenes && oProducto.imagenes.length > 0">
+              <label class="form-label fw-bold">Imágenes actuales</label>
+              <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <div *ngFor="let img of oProducto.imagenes" class="position-relative">
+                  <img [src]="'http://localhost:8086' + img.imagenUrl" alt="Imagen" width="145" height="135" class="rounded shadow border" />
+                  <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle" (click)="eliminarImagen(img.id)" style="width: 24px; height: 24px; line-height: 0.9" title="Eliminar imagen">
+                    &times;
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subida de nuevas imágenes 
+            <div class="col-12">
+              <label class="form-label fw-bold">Añadir nuevas imágenes</label>
+              <input type="file" id="imagenes" (change)="onFileSelect($event)" accept=".png,.jpg,.jpeg,.webp" class="form-control" multiple />
+            </div>
+
+            <!-- Vista previa de imágenes nuevas 
+            <div *ngIf="imagenPreviews.length > 0" class="col-12 text-center">
+              <label class="form-label fw-bold">Vista previa de imágenes nuevas</label>
+              <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <div *ngFor="let preview of imagenPreviews; let i = index" class="position-relative">
+                  <img [src]="preview" alt="Vista previa" width="120" height="120" class="rounded shadow border border-info" style="object-fit: cover" />
+                  <button type="button" class="btn-close position-absolute top-0 end-0 bg-white p-1" aria-label="Cerrar" (click)="removeImage(i)"></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documentos actuales 
+            <div class="mb-4" *ngIf="oProducto && oProducto.documentos && oProducto.documentos.length > 0">
+              <label class="form-label fw-bold">Documentos actuales</label>
+              <ul class="list-group">
+                <li class="list-group-item d-flex align-items-center justify-content-between flex-wrap" *ngFor="let doc of oProducto.documentos">
+                  <a [href]="'http://localhost:8086' + doc.documentoUrl" target="_blank" class="me-3">
+                    {{ doc.nombreOriginal }}
+                  </a>                  
+                
+                  <select
+                    class="form-select form-select-sm w-auto me-3"
+                    [(ngModel)]="doc.tipo"
+                    [attr.name]="'tipoDocActual_' + doc.id"
+                    [ngModelOptions]="{ standalone: true }"
                   >
-                    <img
-                      [src]="'http://localhost:8086' + img.imagenUrl"
-                      alt="Imagen"
-                      width="145"
-                      height="135"
-                      class="rounded shadow border"
-                    />
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle"
-                      (click)="eliminarImagen(img.id)"
-                      style="width: 24px; height: 24px; line-height: 0.9"
-                      title="Eliminar imagen"
+                    <option [ngValue]="'T'">Ficha técnica</option>
+                    <option [ngValue]="'N'">Ficha nutricional/alérgenos</option>
+                    <option [ngValue]="'L'">Ficha logística</option>
+                  </select>
+
+                  <button type="button" class="btn btn-danger btn-sm" (click)="eliminarDocumento(doc.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </li>
+                
+              </ul>
+            </div>
+
+            <!-- Subida de nuevos documentos 
+            <div class="col-12">
+              <label class="form-label fw-bold">Añadir nuevos documentos (PDF)</label>
+              <input type="file" id="documentos" (change)="onFileSelectDocumentos($event)" accept=".pdf" class="form-control" multiple />
+            </div>
+
+            <!-- Vista previa de documentos nuevos 
+            <form #f="ngForm">
+              <div *ngIf="documentoPreviews.length > 0" class="col-12 text-center">
+                <label class="form-label fw-bold">Vista previa de documentos nuevos</label>
+                <ul class="list-group">
+                  <li
+                    class="list-group-item d-flex align-items-center justify-content-between flex-wrap"
+                    *ngFor="let doc of documentoNuevos; let i = index"
+                  >
+                    <span class="me-3">{{ doc.file.name }}</span>
+            
+                    <select
+                      class="form-select form-select-sm w-auto me-3"
+                      [(ngModel)]="documentoNuevos[i].tipo"
+                      [ngModelOptions]="{ standalone: true }"
+                      [ngClass]="{
+                        'is-invalid': documentoNuevos[i].tipo === '' || documentoNuevos[i].tipo == null
+                      }"
                     >
-                      &times;
-                    </button>
-                  </div>
-                </div>
+                      <option [ngValue]="''" disabled selected>Seleccione tipo</option>
+                      <option [ngValue]="'T'">Ficha técnica</option>
+                      <option [ngValue]="'N'">Ficha nutricional/alérgenos</option>
+                      <option [ngValue]="'L'">Ficha logística</option>
+                    </select>
+            
+                    <div
+                      *ngIf="documentoNuevos[i].tipo === '' || documentoNuevos[i].tipo == null"
+                      class="invalid-feedback d-block"
+                    >
+                      <i class="bi bi-exclamation-circle"></i> Debes seleccionar un tipo de documento
+                    </div>
+            
+                    <button type="button" class="btn-close" (click)="removeDocumento(i)"></button>
+                  </li>
+                </ul>
               </div>
+            </form>
+            
 
-              <!-- Subida de nuevas imágenes -->
-              <div class="mb-3">
-                <label class="form-label fw-bold">Añadir nuevas imágenes</label>
-                <input
-                  type="file"
-                  id="imagenes"
-                  (change)="onFileSelect($event)"
-                  accept=".png,.jpg,.jpeg,.webp"
-                  class="form-control"
-                  multiple
-                />
-              </div>
-
-              <!-- Vista previa -->
-              <div *ngIf="imagenPreviews.length > 0" class="mb-4 text-center">
-                <label class="form-label fw-bold"
-                  >Vista previa de imágenes nuevas</label
-                >
-                <div class="d-flex flex-wrap gap-2 justify-content-center">
-                  <div
-                    *ngFor="let preview of imagenPreviews; let i = index"
-                    class="position-relative"
-                  >
-                    <img
-                      [src]="preview"
-                      alt="Vista previa"
-                      width="120"
-                      height="120"
-                      class="rounded shadow border border-info"
-                      style="object-fit: cover"
-                    />
-                    <button
-                      type="button"
-                      class="btn-close position-absolute top-0 end-0 bg-white p-1"
-                      aria-label="Cerrar"
-                      (click)="removeImage(i)"
-                    ></button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="text-center mt-4">
-                <button type="submit" class="btn btn-success me-2">
-                  <i class="bi bi-save"></i> Guardar
-                </button>
-                <a routerLink="/admin/producto/plist" class="btn btn-secondary">
-                  <i class="bi bi-arrow-left"></i> Volver
-                </a>
-              </div>
+            <!-- Botones 
+            <div class="text-center mt-4">
+              <a routerLink="/admin/producto/xproveedor/plist" class="btn btn-secondary me-4">
+                <i class="bi bi-arrow-left"></i> Volver
+              </a>
+              <button type="button" class="btn btn-success" (click)="confirmarGuardar()">
+                <i class="bi bi-save"></i> Guardar
+              </button>
             </div>
           </form>
         </div>
@@ -575,3 +378,94 @@
     </div>
   </div>
 </div>
+
+
+
+<!-- Modal de confirmación 
+<div
+  class="modal fade"
+  id="confirmModal"
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success shadow">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title d-flex align-items-center" id="confirmModalLabel">
+          <i class="bi bi-question-circle-fill me-2 fs-4"></i> Confirmación
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body text-center">
+        <i class="bi bi-exclamation-triangle-fill text-success fs-1 mb-3 d-block"></i>
+        <p class="fs-5">{{ confirmMessage }}</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          data-bs-dismiss="modal"
+        >
+          No
+        </button>
+        <button
+          type="button"
+          class="btn btn-success px-4"
+          (click)="confirmarAccion()"
+        >
+          Sí
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal de éxito / error 
+<div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success shadow">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="mimodalLabel">
+          <i class="bi bi-info-circle-fill me-2"></i> Aviso
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="fs-5" [innerHTML]="message"></p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-outline-success px-4" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmación de eliminación 
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger shadow">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="eliminarModalLabel">
+          <i class="bi bi-trash-fill me-2"></i> Confirmar eliminación
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="fs-5">¿Estás seguro de que deseas eliminar este elemento?</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger px-4" (click)="confirmarEliminacion()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+-->

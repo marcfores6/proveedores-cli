@@ -18,6 +18,12 @@
           El formato no es válido.
         </mat-error>
       </mat-form-field>
+      <div class="text-danger mt-1" *ngIf="nifError">
+        {{ nifError }}
+      </div>
+
+      <br>
+      
 
       <!-- Empresa (Proveedor) -->
       <mat-form-field appearance="outline" class="w-100 mb-3" *ngIf="proveedores.length > 0">
@@ -62,6 +68,25 @@
     <!-- Mensaje de error -->
     <div class="error-message mt-4" *ngIf="errorMessage">
       {{ errorMessage }}
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal de error -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger shadow">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Error de inicio de sesión</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-danger">{{ errorMessage }}</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
+      </div>
     </div>
   </div>
 </div>

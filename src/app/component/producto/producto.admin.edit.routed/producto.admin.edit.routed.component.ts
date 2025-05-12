@@ -48,6 +48,8 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   documentoNuevos: { file: File; tipo: string }[] = [];
   eliminarModal: any; // para cerrar el modal tras eliminar
   shouldRedirectAfterModal: boolean = true;
+  totalOperacion: number = 0;
+
 
 
 
@@ -114,16 +116,15 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
 
           unidadDeCaja: new FormControl(data.unidadDeCaja ?? '', { nonNullable: true, validators: [Validators.required] }),
-          unidadDeServicio: new FormControl(data.unidadDeServicio ?? '', { nonNullable: true, validators: [Validators.required] }),
           unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true }),
 
           largo_caja: new FormControl(data.largo_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
           ancho_caja: new FormControl(data.ancho_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
           alto_caja: new FormControl(data.alto_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
 
-          largo_unidad: new FormControl(data.largo_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-          ancho_unidad: new FormControl(data.ancho_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-          alto_unidad: new FormControl(data.alto_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          largo_unidad: new FormControl(data.largo_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          ancho_unidad: new FormControl(data.ancho_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
+          alto_unidad: new FormControl(data.alto_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
 
           peso_neto_unidad: new FormControl(data.peso_neto_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
           peso_escurrido_unidad: new FormControl(data.peso_escurrido_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
@@ -140,6 +141,18 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           paisOrigen: new FormControl(data.paisOrigen ?? '', { nonNullable: true, validators: [Validators.required] }),
 
         });
+
+        // Añade esto justo después de crear el formulario:
+        this.oProductoForm.get('cajasPalet')?.valueChanges.subscribe(() => {
+          this.calcularTotalOperacion();
+        });
+
+        this.oProductoForm.get('unidadDeCaja')?.valueChanges.subscribe(() => {
+          this.calcularTotalOperacion();
+        });
+
+        // Ejecutar una vez con los valores iniciales
+        this.calcularTotalOperacion();
 
         // Validar dinámicamente unidadDePack en función de unidadDeCaja
         const unidadDeCajaControl = this.oProductoForm.get('unidadDeCaja');
@@ -174,7 +187,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         if (controls['ean_caja'].value === '') controls['ean_caja'].markAsTouched();
         if (controls['ean_pack'].value === '') controls['ean_pack'].markAsTouched();
         if (controls['unidadDeCaja'].value === '') controls['unidadDeCaja'].markAsTouched();
-        if (controls['unidadDeServicio'].value === '') controls['unidadDeServicio'].markAsTouched();
         if (controls['unidadDePack'].value === '') controls['unidadDePack'].markAsTouched();
         if (controls['largo_caja'].value === '') controls['largo_caja'].markAsTouched();
         if (controls['ancho_caja'].value === '') controls['ancho_caja'].markAsTouched();
@@ -229,18 +241,18 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   showModal(mensaje: string, redirect: boolean = true) {
     this.message = mensaje;
     this.shouldRedirectAfterModal = redirect;
-  
+
     const modalElement = document.getElementById('mimodal');
     if (modalElement) {
       this.myModal = new bootstrap.Modal(modalElement, { keyboard: false });
       this.myModal.show();
-  
+
       modalElement.addEventListener('hidden.bs.modal', () => {
         if (this.shouldRedirectAfterModal) {
           this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
         }
       }, { once: true });
-  
+
       // Cierra automático solo si hay redirección
       if (redirect) {
         setTimeout(() => {
@@ -249,7 +261,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       }
     }
   }
-  
+
 
 
 
@@ -265,13 +277,13 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       this.showModal('Debes seleccionar un tipo para todos los documentos nuevos');
       return;
     }
-  
+
     this.mostrarConfirmacion(
       '¿Estás seguro de que deseas guardar los cambios en este producto?',
       this.onSubmit.bind(this)
     );
   }
-  
+
 
   mostrarModalEliminar(): void {
     setTimeout(() => {
@@ -423,15 +435,15 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       const files = Array.from(input.files);
       this.documentoPreviews = [];
       this.documentoNuevos = [];
-  
+
       files.forEach(file => {
         this.documentoPreviews.push(file.name);
         this.documentoNuevos.push({ file, tipo: '' }); // SIN 'T', obligatorio seleccionar
       });
     }
   }
-  
-  
+
+
 
 
   removeDocumento(index: number): void {
@@ -530,6 +542,11 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     return calculated === checksum ? null : { ean14Invalido: true };
   }
 
+  calcularTotalOperacion(): void {
+    const cajas = this.oProductoForm.get('cajasPalet')?.value || 0;
+    const unidades = this.oProductoForm.get('unidadDeCaja')?.value || 0;
+    this.totalOperacion = cajas * unidades;
+  }
 
 
 
