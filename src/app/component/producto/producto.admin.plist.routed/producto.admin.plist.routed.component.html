@@ -85,6 +85,8 @@
               <th>Partida Arancelaria</th>
               <th>Lead Time</th>
               <th>País Origen</th>
+              <th>MOQ</th>
+              <th>Multiplo de Pedido</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -115,6 +117,8 @@
               <td [ngClass]="getCellClass(producto.partidaArancelaria)">{{ getCellDisplay(producto.partidaArancelaria)}}</td>
               <td [ngClass]="getCellClass(producto.leadtime)">{{ getCellDisplay(producto.leadtime)}}</td>
               <td [ngClass]="getCellClass(producto.paisOrigen)">{{ getCellDisplay(producto.paisOrigen)}}</td>
+              <td [ngClass]="getCellClass(producto.moq)">{{ getCellDisplay(producto.moq)}}</td>
+              <td [ngClass]="getCellClass(producto.multiploDePedido)">{{ getCellDisplay(producto.multiploDePedido)}}</td>
               <td>
                 <div class="btn-group btn-group-sm">
                   <button class="btn btn-success" (click)="view(producto); $event.stopPropagation()">

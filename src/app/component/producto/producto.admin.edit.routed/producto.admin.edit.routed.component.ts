@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 
 declare let bootstrap: any;
@@ -42,6 +43,12 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     { id: 2, label: '10%' },
     { id: 3, label: '21%' }
   ];
+  multiploDePedidoOptions = [
+    { value: 'Caja', label: 'Caja' },
+    { value: 'Palet', label: 'Palet' },
+    { value: 'Camión', label: 'Camión' }
+  ];
+  
   confirmMessage: string = '';
   accionConfirmada: Function = () => { };
   confirmModal: any;
@@ -49,8 +56,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   eliminarModal: any; // para cerrar el modal tras eliminar
   shouldRedirectAfterModal: boolean = true;
   totalOperacion: number = 0;
-
-
 
 
   readonly dialog = inject(MatDialog);
@@ -69,6 +74,21 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.id = this.oActivatedRoute.snapshot.params['id'];
     this.cargarPaises();
     this.cargarProducto();
+
+    // Añadir validación min(1) a todos excepto los campos permitidos con 0
+Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
+  if (
+    key !== 'ean_pack' &&
+    key !== 'unidadDePack' &&
+    key !== 'documentos' &&
+    control instanceof FormControl
+  ) {
+    const currentValidators = control.validator ? [control.validator] : [];
+    control.setValidators([...currentValidators, Validators.min(1)]);
+    control.updateValueAndValidity();
+  }
+});
+
   }
 
   cargarProducto(): void {
@@ -85,14 +105,13 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           }
         });
 
-
         this.oProductoForm = this.fb.group({
           descripcion: new FormControl(data.descripcion ?? '', { nonNullable: true, validators: [Validators.required] }),
           marca: new FormControl(data.marca ?? '', { nonNullable: true, validators: [Validators.required] }),
           unidadDeMedida: new FormControl(data.unidadDeMedida ?? '', { nonNullable: true, validators: [Validators.required] }),
           referenciaProveedor: new FormControl(data.referenciaProveedor ?? '', { nonNullable: true, validators: [Validators.required] }),
           centralizado: new FormControl(data.centralizado ?? '', { nonNullable: true, validators: [Validators.required] }),
-
+        
           ean: new FormControl(data.ean ?? '', {
             nonNullable: true,
             validators: [
@@ -103,44 +122,107 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           }),
           ean_caja: new FormControl(data.ean_caja ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d{14}$/), this.ean14Validator]
-          }),
-          ean_pack: new FormControl(data.ean ?? '', {
-            nonNullable: true,
             validators: [
               Validators.required,
-              Validators.pattern(/^\d{13}$/),
-              this.eanValidator
+              Validators.pattern(/^\d{13,14}$/),
+              this.eanFlexibleOptionalValidator
             ]
           }),
-
-
-          unidadDeCaja: new FormControl(data.unidadDeCaja ?? '', { nonNullable: true, validators: [Validators.required] }),
-          unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true }),
-
-          largo_caja: new FormControl(data.largo_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-          ancho_caja: new FormControl(data.ancho_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-          alto_caja: new FormControl(data.alto_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-
-          largo_unidad: new FormControl(data.largo_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-          ancho_unidad: new FormControl(data.ancho_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-          alto_unidad: new FormControl(data.alto_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-
-          peso_neto_unidad: new FormControl(data.peso_neto_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
-          peso_escurrido_unidad: new FormControl(data.peso_escurrido_unidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
-
-          peso_caja: new FormControl(data.peso_caja ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)] }),
-          cajasCapa: new FormControl(data.cajasCapa ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-          cajasPalet: new FormControl(data.cajasPalet ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-
-          diasCaducidad: new FormControl(data.diasCaducidad ?? '', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
-          iva: new FormControl(data.iva ?? '', { nonNullable: true, validators: [Validators.required] }),
-          leadtime: new FormControl(data.leadtime ?? '', { nonNullable: true, validators: [Validators.required] }),
-          partidaArancelaria: new FormControl(data.partidaArancelaria ?? '', { nonNullable: true, validators: [Validators.required] }),
-          observaciones: new FormControl(data.observaciones ?? '', { nonNullable: true, validators: [Validators.required] }),
-          paisOrigen: new FormControl(data.paisOrigen ?? '', { nonNullable: true, validators: [Validators.required] }),
-
+          ean_pack: this.fb.control(data.ean_pack ?? '', {
+            nonNullable: true,
+            validators: [this.eanFlexibleOptionalValidator] // puede estar vacío, pero si hay valor se valida
+          }),
+        
+          unidadDeCaja: new FormControl(data.unidadDeCaja ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.min(1)]
+          }),
+          unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true }), // puede ser 0 o vacío
+        
+          largo_caja: new FormControl(data.largo_caja ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+          ancho_caja: new FormControl(data.ancho_caja ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+          alto_caja: new FormControl(data.alto_caja ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+        
+          largo_unidad: new FormControl(data.largo_unidad ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+          ancho_unidad: new FormControl(data.ancho_unidad ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+          alto_unidad: new FormControl(data.alto_unidad ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+        
+          peso_neto_unidad: new FormControl(data.peso_neto_unidad ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]
+          }),
+          peso_escurrido_unidad: new FormControl(data.peso_escurrido_unidad ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]
+          }),
+        
+          peso_caja: new FormControl(data.peso_caja ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]
+          }),
+          cajasCapa: new FormControl(data.cajasCapa ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+          cajasPalet: new FormControl(data.cajasPalet ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+        
+          diasCaducidad: new FormControl(data.diasCaducidad ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+          }),
+          iva: new FormControl(data.iva ?? '', {
+            nonNullable: true,
+            validators: [Validators.required]
+          }),
+          leadtime: new FormControl(data.leadtime ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.min(1)]
+          }),
+          partidaArancelaria: new FormControl(data.partidaArancelaria ?? '', {
+            nonNullable: true,
+            validators: [Validators.required]
+          }),
+          observaciones: new FormControl(data.observaciones ?? '', {
+            nonNullable: true,
+            validators: [Validators.required]
+          }),
+          paisOrigen: new FormControl(data.paisOrigen ?? '', {
+            nonNullable: true,
+            validators: [Validators.required]
+          }),
+        
+          moq: new FormControl(data.moq ?? '', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.min(1)]
+          }),          
+        
+          multiplo_de_pedido: new FormControl(this.normalizarMultiplo(data.multiploDePedido ?? ''), {
+            nonNullable: true,
+            validators: [Validators.required]
+          }),
         });
+        
 
         // Añade esto justo después de crear el formulario:
         this.oProductoForm.get('cajasPalet')?.valueChanges.subscribe(() => {
@@ -154,26 +236,21 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         // Ejecutar una vez con los valores iniciales
         this.calcularTotalOperacion();
 
-        // Validar dinámicamente unidadDePack en función de unidadDeCaja
+        // Establecer moq con unidadDeCaja al cargar
+        const unidadDeCaja = data.unidadDeCaja ?? 1;
+        const moqControl = this.oProductoForm.get('moq');
         const unidadDeCajaControl = this.oProductoForm.get('unidadDeCaja');
-        const unidadDePackControl = this.oProductoForm.get('unidadDePack');
 
-        const actualizarValidadorUnidadDePack = (valorCaja: number) => {
-          if (valorCaja !== 1) {
-            unidadDePackControl?.setValidators([Validators.required]);
-          } else {
-            unidadDePackControl?.clearValidators();
+        if (moqControl && (data.moq == null)) {
+          moqControl.setValue(unidadDeCaja);
+        }
+
+        // Actualizar moq en tiempo real si el usuario no lo ha tocado
+        unidadDeCajaControl?.valueChanges.subscribe((nuevoValor) => {
+          if (moqControl && !moqControl.dirty) {
+            moqControl.setValue(nuevoValor ?? 1);
           }
-          unidadDePackControl?.updateValueAndValidity();
-        };
-
-        // Suscribirse a cambios en unidadDeCaja
-        unidadDeCajaControl?.valueChanges.subscribe((valor) => {
-          actualizarValidadorUnidadDePack(valor);
         });
-
-        // Ejecutar una vez al cargar
-        actualizarValidadorUnidadDePack(unidadDeCajaControl?.value);
 
 
         // Marcar como tocado si está vacío (sin bucles)
@@ -185,9 +262,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         if (controls['centralizado'].value === '') controls['centralizado'].markAsTouched();
         if (controls['ean'].value === '') controls['ean'].markAsTouched();
         if (controls['ean_caja'].value === '') controls['ean_caja'].markAsTouched();
-        if (controls['ean_pack'].value === '') controls['ean_pack'].markAsTouched();
         if (controls['unidadDeCaja'].value === '') controls['unidadDeCaja'].markAsTouched();
-        if (controls['unidadDePack'].value === '') controls['unidadDePack'].markAsTouched();
         if (controls['largo_caja'].value === '') controls['largo_caja'].markAsTouched();
         if (controls['ancho_caja'].value === '') controls['ancho_caja'].markAsTouched();
         if (controls['alto_caja'].value === '') controls['alto_caja'].markAsTouched();
@@ -204,6 +279,8 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         if (controls['leadtime'].value === '') controls['leadtime'].markAsTouched();
         if (controls['partidaArancelaria'].value === '') controls['partidaArancelaria'].markAsTouched();
         if (controls['observaciones'].value === '') controls['observaciones'].markAsTouched();
+        if (controls['moq'].value === '') controls['moq'].markAsTouched();
+        if (controls['multiplo_de_pedido'].value === '') controls['multiplo_de_pedido'].markAsTouched();
 
       },
       error: (error) => {
@@ -338,10 +415,25 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // Validar que todos los nuevos documentos tienen tipo seleccionado
-    const documentoInvalido = this.documentoNuevos.some(doc => !doc.tipo || doc.tipo.trim() === '');
-    if (documentoInvalido) {
-      this.showModal('Debes seleccionar un tipo para todos los documentos nuevos', false);
+    const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
+
+   
+  // Marca todos los campos como tocados para activar las validaciones
+  Object.values(this.oProductoForm.controls).forEach(control => {
+    control.markAsTouched();
+  });
+
+  // Validación global del formulario
+  if (this.oProductoForm.invalid) {
+    this.showModal('Debes rellenar correctamente todos los campos obligatorios antes de guardar.', false);
+    return;
+  }
+
+    const tieneImagenesExistentes = !!(this.oProducto && this.oProducto.imagenes && this.oProducto.imagenes.length > 0);
+    const tieneNuevasImagenes = inputImagenes?.files && inputImagenes.files.length > 0;
+
+    if (!tieneImagenesExistentes && !tieneNuevasImagenes) {
+      this.showModal('Debes añadir al menos una imagen para poder guardar el producto.', false);
       return;
     }
 
@@ -359,7 +451,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.imagenUrls.forEach(url => formData.append('imagenUrls', url));
 
     // Añadir nuevas imágenes subidas por archivo
-    const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
     if (inputImagenes?.files) {
       Array.from(inputImagenes.files).forEach(file => {
         formData.append('imagenes', file);
@@ -542,12 +633,49 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     return calculated === checksum ? null : { ean14Invalido: true };
   }
 
+  eanFlexibleOptionalValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value;
+    if (!value || value.trim() === '') return null; // Permitir vacío
+  
+    if (!/^\d{13,14}$/.test(value)) {
+      return { formatoInvalido: true };
+    }
+  
+    const digits = value.split('').map(d => parseInt(d, 10));
+    const checksum = digits.pop();
+    const length = digits.length;
+  
+    let sum = 0;
+    if (length === 12) {
+      sum = digits.reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 1 : 3), 0);
+    } else if (length === 13) {
+      sum = digits.reverse().reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 3 : 1), 0);
+    } else {
+      return { formatoInvalido: true };
+    }
+  
+    const expectedChecksum = (10 - (sum % 10)) % 10;
+    return expectedChecksum === checksum ? null : { digitoControlIncorrecto: true };
+  };
+  
+  
+  
+
   calcularTotalOperacion(): void {
     const cajas = this.oProductoForm.get('cajasPalet')?.value || 0;
     const unidades = this.oProductoForm.get('unidadDeCaja')?.value || 0;
     this.totalOperacion = cajas * unidades;
   }
 
+
+  normalizarMultiplo(valor: any): string {
+    const opcionesValidas = ['Caja', 'Palet', 'Camión'];
+    if (opcionesValidas.includes(valor)) {
+      return valor;
+    }
+    return ''; // valor por defecto si viene mal o null
+  }
+  
 
 
   cargarPaises(): void {

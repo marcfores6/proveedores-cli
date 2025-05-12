@@ -104,7 +104,7 @@
               <th>Referencia Proveedor</th>
               <th>EAN</th>
               <th>EAN Caja</th>
-              <th>EAN Palet</th>
+              <th>EAN Pack</th>
               <th>Largo Caja</th>
               <th>Ancho Caja</th>
               <th>Alto Caja</th>
@@ -120,6 +120,8 @@
               <th>Partida Arancelaria</th>
               <th>Lead Time</th>
               <th>País Origen</th>
+              <th>MOQ</th>
+              <th>Multiplo de Pedido</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -219,6 +221,12 @@
               <td [ngClass]="getCellClassCodigoPais(producto.paisOrigen)">
                 {{ getPaisTexto(producto.paisOrigen) }}
               </td>                           
+              <td [ngClass]="getCellClass(producto.moq)">
+                {{ producto.moq || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.multiploDePedido)">
+                {{ producto.multiploDePedido || "Sin dato" }}
+              </td>
               <td>
                 <div class="btn-group btn-group-sm">
                   <button

@@ -119,12 +119,13 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     'unidadDeMedida', 'centralizado', 'unidadDeCaja',
     'unidadDePack',
     'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor',
-    'ean', 'ean_caja', 'ean_pack',
+    'ean', 'ean_caja', 
     'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja',
     'largo_unidad', 'ancho_unidad', 'alto_unidad',
     'peso_neto_unidad', 'peso_escurrido_unidad',
     'diasCaducidad', 'iva', 'observaciones',
-    'partidaArancelaria', 'leadtime', 'paisOrigen'
+    'partidaArancelaria', 'leadtime', 'paisOrigen',
+    'moq', 'multiploDePedido', 'imagenes'
   ];
 
   return requiredFields.every(field => {
@@ -138,9 +139,6 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     return value !== null && value !== undefined && value !== '';
   });
 }
-
-
-
 
   checkCompleteFields(product: IProducto): boolean {
     // Comprobar si todos los campos necesarios están completos

@@ -50,5 +50,7 @@ export interface IProducto {
   showEnviarButton?: boolean;
 
   leadtime?: number; 
+  moq?:number; 
+  multiploDePedido?: string;
 
 }

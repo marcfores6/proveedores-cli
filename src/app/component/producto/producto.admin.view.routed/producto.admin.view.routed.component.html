@@ -24,7 +24,7 @@
         <tbody>
           <tr><th>EAN</th><td>{{ oProducto.ean | noDisponible }}</td></tr>
           <tr><th>EAN Caja / Pack</th><td>{{ oProducto.ean_caja | noDisponible }} / {{ oProducto.ean_pack | noDisponible }}</td></tr>
-          <tr><th>Unidades (Caja / Servicio / Pack)</th><td>{{ oProducto.unidadDeCaja | noDisponible }} / {{ oProducto.unidadDeServicio | noDisponible }} / {{ oProducto.unidadDePack | noDisponible }}</td></tr>
+          <tr><th>Unidades (Caja / Pack)</th><td>{{ oProducto.unidadDeCaja | noDisponible }} / {{ oProducto.unidadDePack | noDisponible }}</td></tr>
           <tr><th>Cajas Capa / Palet</th><td>{{ oProducto.cajasCapa | noDisponible }} / {{ oProducto.cajasPalet | noDisponible }}</td></tr>
           <tr><th>Largo x Ancho x Alto x Peso (Caja)</th><td>{{ oProducto.largo_caja | noDisponible }} x {{ oProducto.ancho_caja | noDisponible }} x {{ oProducto.alto_caja | noDisponible }} x {{ oProducto.peso_caja | noDisponible }}</td></tr>
           <tr><th>Largo x Ancho x Alto (Unidad)</th><td>{{ oProducto.largo_unidad | noDisponible }} x {{ oProducto.ancho_unidad | noDisponible }} x {{ oProducto.alto_unidad | noDisponible }}</td></tr>

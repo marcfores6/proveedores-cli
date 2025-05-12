@@ -75,29 +75,41 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('pattern')">
-                  <i class="bi bi-exclamation-circle"></i> Deben ser 14 dígitos
+                  <i class="bi bi-exclamation-circle"></i> Deben ser 13 o 14 dígitos
                 </div>
-                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('ean14Invalido')">
-                  <i class="bi bi-exclamation-circle"></i> El EAN-14 no es válido (fallo en dígito de control)
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_caja')?.hasError('digitoControlIncorrecto')">
+                  <i class="bi bi-exclamation-circle"></i> Dígito de control incorrecto
                 </div>
               </div>
               
               <div class="col-md-4 mb-3">
                 <label class="form-label">EAN Pack</label>
-                <input type="text" formControlName="ean_pack" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ean_pack')}" />
-                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_pack')?.errors?.['eanInvalido']">
-                  <i class="bi bi-exclamation-circle"></i> El EAN no es válido
+                <input
+                  type="text"
+                  formControlName="ean_pack"
+                  class="form-control"
+                  [ngClass]="{ 'is-invalid': isFieldInvalid('ean_pack') }"
+                />
+              
+                <!-- Solo mostrar error si se ha escrito algo -->
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_pack')?.hasError('formatoInvalido') && oProductoForm.get('ean_pack')?.touched">
+                  <i class="bi bi-exclamation-circle"></i> Deben ser 13 o 14 dígitos
                 </div>
-                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_pack')?.errors?.['pattern']">
-                  <i class="bi bi-exclamation-circle"></i> Debe tener 13 dígitos
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ean_pack')?.hasError('digitoControlIncorrecto') && oProductoForm.get('ean_pack')?.touched">
+                  <i class="bi bi-exclamation-circle"></i> Dígito de control incorrecto
                 </div>
               </div>
+              
               <div class="col-md-4 mb-3">
                 <label class="form-label">Ud. Caja</label>
                 <input type="number" formControlName="unidadDeCaja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeCaja')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('required') || oProductoForm.get('unidadDeCaja')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
+
               </div>
 
               <!--
@@ -115,6 +127,9 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDePack')?.hasError('required') || oProductoForm.get('unidadDePack')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
 
               <div class="col-md-4 mb-3">
@@ -123,6 +138,9 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Solo números enteros
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('cajasCapa')?.hasError('required') || oProductoForm.get('cajasCapa')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Cajas por Palet</label>
@@ -130,12 +148,18 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Solo números enteros
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('cajasPalet')?.hasError('required') || oProductoForm.get('cajasPalet')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Días de Caducidad</label>
                 <input type="number" formControlName="diasCaducidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('diasCaducidad')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('diasCaducidad')?.hasError('required') || oProductoForm.get('diasCaducidad')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
               </div>
             
@@ -168,6 +192,9 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('leadtime')?.hasError('required') || oProductoForm.get('leadtime')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
               
             
@@ -176,6 +203,9 @@
                 <input type="text" formControlName="partidaArancelaria" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('partidaArancelaria')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('partidaArancelaria')?.hasError('required') || oProductoForm.get('partidaArancelaria')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
               </div>
             
@@ -189,6 +219,28 @@
                 </select>
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Multiplo de Pedido</label>
+                <select formControlName="multiplo_de_pedido" class="form-select" [ngClass]="{'is-invalid': isFieldInvalid('multiplo_de_pedido')}">
+                  <option value="" disabled>Seleccione Multiplo de Pedido</option>
+                  <option *ngFor="let option of multiploDePedidoOptions" [value]="option.value">{{ option.label }}</option>
+                </select>
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <label class="form-label">MOQ (Cantidad Mínima Pedido)</label>
+                <input type="text" formControlName="moq" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('moq')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('moq')?.hasError('required') || oProductoForm.get('moq')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
               </div>
             
@@ -210,12 +262,18 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Solo números enteros
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('largo_caja')?.hasError('required') || oProductoForm.get('largo_caja')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Ancho Caja</label>
                 <input type="number" formControlName="ancho_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_caja')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ancho_caja')?.hasError('required') || oProductoForm.get('ancho_caja')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
               </div>
               <div class="col-md-4 mb-3">
@@ -224,12 +282,18 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Solo números enteros
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('alto_caja')?.hasError('required') || oProductoForm.get('alto_caja')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Peso Caja</label>
                 <input type="number" formControlName="peso_caja" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_caja')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('peso_caja')?.hasError('required') || oProductoForm.get('peso_caja')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
               </div>
               </div>
@@ -243,12 +307,18 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Solo números enteros
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('largo_unidad')?.hasError('required') || oProductoForm.get('largo_unidad')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Ancho Unidad</label>
                 <input type="number" formControlName="ancho_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('ancho_unidad')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Solo números enteros
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('ancho_unidad')?.hasError('required') || oProductoForm.get('ancho_unidad')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
               </div>
               <div class="col-md-4 mb-3">
@@ -257,6 +327,9 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Solo números enteros
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('alto_unidad')?.hasError('required') || oProductoForm.get('alto_unidad')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Peso Neto Unidad</label>
@@ -264,12 +337,18 @@
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Valor decimal válido
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('peso_neto_unidad')?.hasError('required') || oProductoForm.get('peso_neto_unidad')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Peso Escurrido Unidad</label>
                 <input type="number" formControlName="peso_escurrido_unidad" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('peso_escurrido_unidad')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Valor decimal válido
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('peso_escurrido_unidad')?.hasError('required') || oProductoForm.get('peso_escurrido_unidad')?.hasError('min')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
               </div>
             </div>
@@ -291,7 +370,10 @@
             <!-- Subida de nuevas imágenes -->
             <div class="col-12">
               <label class="form-label fw-bold">Añadir nuevas imágenes</label>
-              <input type="file" id="imagenes" (change)="onFileSelect($event)" accept=".png,.jpg,.jpeg,.webp" class="form-control" multiple />
+              <input type="file" id="imagenes" (change)="onFileSelect($event)" accept=".png,.jpg,.jpeg,.webp" class="form-control" [ngClass]="{'is-invalid': !oProducto?.imagenes?.length && !imagenPreviews.length}" multiple />
+              <div *ngIf="!oProducto?.imagenes?.length && !imagenPreviews.length" class="invalid-feedback d-block">
+                <i class="bi bi-exclamation-circle"></i> Debes añadir al menos una imagen
+              </div>
             </div>
 
             <!-- Vista previa de imágenes nuevas -->
