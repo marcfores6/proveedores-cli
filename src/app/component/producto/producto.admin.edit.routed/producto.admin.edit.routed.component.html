@@ -121,6 +121,8 @@
                 </div>
               </div>
               -->
+
+
               <div class="col-md-4 mb-3">
                 <label class="form-label">Ud. Pack</label>
                 <input type="number" formControlName="unidadDePack" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDePack')}" />
@@ -235,7 +237,7 @@
 
               <div class="col-md-4 mb-3">
                 <label class="form-label">MOQ (Cantidad Mínima Pedido)</label>
-                <input type="text" formControlName="moq" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('moq')}" />
+                <input type="number" formControlName="moq" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('moq')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
@@ -360,9 +362,10 @@
               <div class="d-flex flex-wrap gap-3 justify-content-center">
                 <div *ngFor="let img of oProducto.imagenes" class="position-relative">
                   <img [src]="'http://localhost:8086' + img.imagenUrl" alt="Imagen" width="145" height="135" class="rounded shadow border" />
-                  <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle" (click)="eliminarImagen(img.id)" style="width: 24px; height: 24px; line-height: 0.9" title="Eliminar imagen">
+                  <button type="button" class="boton-eliminar-imagen" (click)="eliminarImagen(img.id)" title="Eliminar imagen">
                     &times;
                   </button>
+
                 </div>
               </div>
             </div>
