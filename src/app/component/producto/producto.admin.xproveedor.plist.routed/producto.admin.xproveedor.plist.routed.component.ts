@@ -114,31 +114,43 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   }
 
   checkIfAllFieldsAreFilled(product: IProducto): boolean {
-  const requiredFields: (keyof IProducto)[] = [
-    'descripcion', 'marca',
-    'unidadDeMedida', 'centralizado', 'unidadDeCaja',
-    'unidadDePack',
-    'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor',
-    'ean', 'ean_caja', 
-    'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja',
-    'largo_unidad', 'ancho_unidad', 'alto_unidad',
-    'peso_neto_unidad', 'peso_escurrido_unidad',
-    'diasCaducidad', 'iva', 'observaciones',
-    'partidaArancelaria', 'leadtime', 'paisOrigen',
-    'moq', 'multiploDePedido', 'imagenes'
-  ];
-
-  return requiredFields.every(field => {
-    // Excepción especial: si unidadDeCaja es 1, se permite unidadDePack nulo
-    if (field === 'unidadDePack') {
-      if (product.unidadDeCaja === 1) {
-        return true;
+    const camposIgnorados: (keyof IProducto)[] = ['unidadDePack', 'ean_pack', 'documentos'];
+  
+    const camposObligatorios: (keyof IProducto)[] = [
+      'descripcion', 'marca', 'unidadDeMedida', 'centralizado', 'unidadDeCaja',
+      'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor',
+      'ean', 'ean_caja',
+      'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja',
+      'largo_unidad', 'ancho_unidad', 'alto_unidad',
+      'peso_neto_unidad', 'peso_escurrido_unidad',
+      'diasCaducidad', 'iva', 'observaciones',
+      'partidaArancelaria', 'leadtime', 'paisOrigen',
+      'moq', 'multiploDePedido', 'imagenes'
+    ];
+  
+    for (const campo of camposObligatorios) {
+      const valor = product[campo];
+  
+      // Comprobamos que no esté vacío
+      if (valor === null || valor === undefined || valor === '') {
+        return false;
+      }
+  
+      // Si es numérico, debe ser mayor que 0
+      if (typeof valor === 'number' && valor <= 0) {
+        return false;
+      }
+  
+      // En algunos casos los campos numéricos vienen como string (como '0'), validamos también
+      if (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0) {
+        return false;
       }
     }
-    const value = product[field];
-    return value !== null && value !== undefined && value !== '';
-  });
-}
+  
+    return true;
+  }
+  
+  
 
   checkCompleteFields(product: IProducto): boolean {
     // Comprobar si todos los campos necesarios están completos
@@ -243,15 +255,19 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   }
 
   getCellClass(valor: any): string {
-    if (valor === null || valor === undefined) return 'text-danger fw-bold';
-  
-    if (typeof valor === 'string') {
-      const trimmed = valor.trim();
-      return trimmed === '' ? 'text-danger fw-bold' : '';
+    if (
+      valor === null ||
+      valor === undefined ||
+      (typeof valor === 'string' && valor.trim() === '') ||
+      (typeof valor === 'number' && valor <= 0) ||
+      (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0) 
+    ) {
+      return 'text-danger fw-bold';
     }
   
     return '';
   }
+  
 
   loadProveedorDescripcion(): void {
     const proveedorId = this.oSessionService.getSessionProveedorId();
