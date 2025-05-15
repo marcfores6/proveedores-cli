@@ -73,6 +73,16 @@ body {
   .proveedor-table tbody tr:nth-child(even) td {
     background-color: #f8f9f8;
   }
+
+  .animate-pencil {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+}
+
+.animate-pencil:hover {
+  transform: scale(1.15) rotate(-5deg);
+  box-shadow: 0 0 5px rgba(25, 135, 84, 0.6);
+}
+
   
   /* Responsive */
   @media (max-width: 768px) {
@@ -87,3 +97,31 @@ body {
     }
   }
   
+
+/* 🎨 Estilo solo para entorno de desarrollo - AZUL TEST */
+.dev-style h1,
+.dev-style h2 {
+  color: #0d6efd !important; /* Azul Bootstrap */
+}
+
+.dev-style h1 i,
+.dev-style h2 i {
+  color: #0d6efd !important; /* Iconos en azul */
+}
+
+.dev-style .proveedor-table th {
+  background-color: #0b5ed7 !important; /* Azul más fuerte */
+  color: white !important;
+}
+
+.dev-style .proveedor-table td {
+  background-color: #e7f1ff !important; /* Azul clarito */
+}
+
+.dev-style .proveedor-table tbody tr:nth-child(odd) td {
+  background-color: #e0ebff !important;
+}
+
+.dev-style .proveedor-table tbody tr:nth-child(even) td {
+  background-color: #f5faff !important;
+}

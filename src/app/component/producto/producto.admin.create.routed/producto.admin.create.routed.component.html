@@ -1,4 +1,4 @@
-<!-- <div class="container py-5">
+ <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-12">
       <div class="card shadow border-0">
@@ -10,7 +10,7 @@
 
         <div class="card-body">
           <form *ngIf="oProductoForm.controls['marca']" [formGroup]="oProductoForm" (ngSubmit)="onSubmit()">
-            <!-- DATOS COMERCIALES 
+            <!-- DATOS COMERCIALES -->
             <h5 class="seccion-titulo mt-4">Datos comerciales</h5>
             <div class="row">
               <div class="col-md-4 mb-3">
@@ -50,7 +50,7 @@
               </div>
             </div>
 
-            <!-- DATOS LOGÍSTICOS 
+            <!-- DATOS LOGÍSTICOS -->
             <h5 class="seccion-titulo mt-4">Datos logísticos</h5>
             <div class="row">
               <div class="col-md-4 mb-3">
@@ -186,7 +186,7 @@
               </div>
             </div>
 
-              <!-- Dimensiones de la caja 
+              <!-- Dimensiones de la caja -->
               <h6 class="seccion-titulo mt-3" style="font-size: 1.25rem;">Dimensiones de la Caja</h6>
               <div class="row">
               <div class="col-md-4 mb-3">
@@ -219,7 +219,7 @@
               </div>
               </div>
 
-              <!-- Dimensiones de la unidad 
+              <!-- Dimensiones de la unidad -->
               <h6 class="seccion-titulo mt-3" style="font-size: 1.25rem;">Dimensiones de la Unidad</h6>
               <div class="row">
               <div class="col-md-4 mb-3">
@@ -260,7 +260,7 @@
             </div>
 
 
-             <!-- Imágenes actuales 
+             <!-- Imágenes actuales -->
              <div class="mb-4" *ngIf="oProducto && oProducto.imagenes && oProducto.imagenes.length > 0">
               <label class="form-label fw-bold">Imágenes actuales</label>
               <div class="d-flex flex-wrap gap-3 justify-content-center">
@@ -273,13 +273,13 @@
               </div>
             </div>
 
-            <!-- Subida de nuevas imágenes 
+            <!-- Subida de nuevas imágenes -->
             <div class="col-12">
               <label class="form-label fw-bold">Añadir nuevas imágenes</label>
               <input type="file" id="imagenes" (change)="onFileSelect($event)" accept=".png,.jpg,.jpeg,.webp" class="form-control" multiple />
             </div>
 
-            <!-- Vista previa de imágenes nuevas 
+            <!-- Vista previa de imágenes nuevas -->
             <div *ngIf="imagenPreviews.length > 0" class="col-12 text-center">
               <label class="form-label fw-bold">Vista previa de imágenes nuevas</label>
               <div class="d-flex flex-wrap gap-2 justify-content-center">
@@ -290,7 +290,7 @@
               </div>
             </div>
 
-            <!-- Documentos actuales 
+            <!-- Documentos actuales -->
             <div class="mb-4" *ngIf="oProducto && oProducto.documentos && oProducto.documentos.length > 0">
               <label class="form-label fw-bold">Documentos actuales</label>
               <ul class="list-group">
@@ -318,13 +318,13 @@
               </ul>
             </div>
 
-            <!-- Subida de nuevos documentos 
+            <!-- Subida de nuevos documentos -->
             <div class="col-12">
               <label class="form-label fw-bold">Añadir nuevos documentos (PDF)</label>
               <input type="file" id="documentos" (change)="onFileSelectDocumentos($event)" accept=".pdf" class="form-control" multiple />
             </div>
 
-            <!-- Vista previa de documentos nuevos 
+            <!-- Vista previa de documentos nuevos -->
             <form #f="ngForm">
               <div *ngIf="documentoPreviews.length > 0" class="col-12 text-center">
                 <label class="form-label fw-bold">Vista previa de documentos nuevos</label>
@@ -363,7 +363,7 @@
             </form>
             
 
-            <!-- Botones 
+            <!-- Botones -->
             <div class="text-center mt-4">
               <a routerLink="/admin/producto/xproveedor/plist" class="btn btn-secondary me-4">
                 <i class="bi bi-arrow-left"></i> Volver
@@ -381,7 +381,7 @@
 
 
 
-<!-- Modal de confirmación 
+<!-- Modal de confirmación -->
 <div
   class="modal fade"
   id="confirmModal"
@@ -428,7 +428,7 @@
 
 
 
-<!-- Modal de éxito / error 
+<!-- Modal de éxito / error -->
 <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-success shadow">
@@ -448,7 +448,7 @@
   </div>
 </div>
 
-<!-- Modal de confirmación de eliminación 
+<!-- Modal de confirmación de eliminación -->
 <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-danger shadow">
@@ -468,4 +468,3 @@
     </div>
   </div>
 </div>
--->

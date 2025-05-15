@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -8,6 +8,8 @@ import { IProducto } from '../../../model/producto.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 declare let bootstrap: any;
 
@@ -16,14 +18,7 @@ declare let bootstrap: any;
   templateUrl: './producto.admin.create.routed.component.html',
   styleUrls: ['./producto.admin.create.routed.component.css'],
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    RouterModule
-  ]
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, FormsModule],
 })
 export class ProductoAdminCreateRoutedComponent implements OnInit {
 
@@ -33,6 +28,30 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
   imagenUrls: string[] = [];
   strMessage: string = '';
   paisesList: { id: number; nombre: string; codigo: string }[] = [];
+  ivaOptions = [
+    { id: 1, label: '4%' },
+    { id: 2, label: '10%' },
+    { id: 3, label: '21%' }
+  ];
+  multiploDePedidoOptions = [
+    { value: 'Caja', label: 'Caja' },
+    { value: 'Palet', label: 'Palet' },
+    { value: 'Camión', label: 'Camión' }
+  ];
+  idElementoPendienteEliminar: number | null = null;
+  tipoElementoPendiente: 'imagen' | 'documento' | null = null;
+  documentoPreviews: string[] = [];
+  documentoUrls: string[] = [];
+  confirmMessage: string = '';
+  accionConfirmada: Function = () => { };
+  confirmModal: any;
+  documentoNuevos: { file: File; tipo: string }[] = [];
+  eliminarModal: any; // para cerrar el modal tras eliminar
+  shouldRedirectAfterModal: boolean = true;
+  myModal: any;
+  message: string = '';
+
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -1345,19 +1364,19 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
   onSubmit(): void {
     if (this.oProductoForm.valid) {
       const formData = new FormData();
-  
+
       // Añadir todos los campos excepto id
       Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           formData.append(key, value.toString());
         }
       });
-  
+
       // Añadir URLs de imagen
       this.imagenUrls.forEach((url, index) => {
         formData.append(`imagenUrls[${index}]`, url);
       });
-  
+
       // Añadir imágenes por archivo desde input
       const input = document.getElementById('imagenes') as HTMLInputElement;
       if (input?.files) {
@@ -1365,21 +1384,21 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
           formData.append('imagenes', file); // ← backend espera este nombre
         });
       }
-  
+
       this.oProductoService.create(formData).subscribe({
         next: (data: IProducto) => {
           this.strMessage = `Producto ${data.id} creado correctamente.`;
-          this.showModal();
+          this.showModal(this.strMessage);
         },
         error: (err) => {
           console.error(err);
           this.strMessage = "Error en la creación del producto";
-          this.showModal();
+          this.showModal(this.strMessage);
         }
       });
     }
   }
-  
+
 
 
   onFileSelect(event: Event): void {
@@ -1387,7 +1406,7 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
     if (input.files) {
       const files = Array.from(input.files);
       this.imagenPreviews = [];
-  
+
       files.forEach(file => {
         const reader = new FileReader();
         reader.onload = (e: any) => {
@@ -1397,7 +1416,7 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
       });
     }
   }
-  
+
 
   addImageUrl(url: string): void {
     if (url && !this.imagenUrls.includes(url)) {
@@ -1415,35 +1434,184 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
     this.imagenUrls = [];
   }
 
-  showModal(): void {
-    const myModal = document.getElementById('mimodal');
-    if (myModal) new bootstrap.Modal(myModal).show();
+  showModal(mensaje: string, redirect: boolean = true) {
+    this.message = mensaje;
+    this.shouldRedirectAfterModal = redirect;
+
+    const modalElement = document.getElementById('mimodal');
+    if (modalElement) {
+      this.myModal = new bootstrap.Modal(modalElement, { keyboard: false });
+      this.myModal.show();
+
+      modalElement.addEventListener('hidden.bs.modal', () => {
+        if (this.shouldRedirectAfterModal) {
+          this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+        }
+      }, { once: true });
+
+      // Cierra automático solo si hay redirección
+      if (redirect) {
+        setTimeout(() => {
+          this.myModal.hide();
+        }, 25000); // lo bajamos a 2.5s para errores
+      }
+    }
   }
 
   hideModal(): void {
     this.oRouter.navigate(['/admin/producto/plist']);
   }
 
- removeImage(index: number): void {
-  const input = document.getElementById('imagenes') as HTMLInputElement;
+  removeImage(index: number): void {
+    const input = document.getElementById('imagenes') as HTMLInputElement;
 
-  // Eliminar la preview
-  this.imagenPreviews.splice(index, 1);
+    // Eliminar la preview
+    this.imagenPreviews.splice(index, 1);
 
-  // Para eliminar del input `type="file"` (no es trivial):
-  if (input?.files) {
-    const dt = new DataTransfer();
-    const files = Array.from(input.files);
-    files.splice(index, 1);
-    files.forEach(f => dt.items.add(f));
-    input.files = dt.files;
+    // Para eliminar del input `type="file"` (no es trivial):
+    if (input?.files) {
+      const dt = new DataTransfer();
+      const files = Array.from(input.files);
+      files.splice(index, 1);
+      files.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    }
   }
-}
 
   eliminarImagen(id: number): void {
     if (!this.oProducto || !this.oProducto.imagenes) return;
     this.oProducto.imagenes = this.oProducto.imagenes.filter(img => img.id !== id);
   }
-  
+
+  isFieldInvalid(fieldName: string): boolean {
+    const control = this.oProductoForm.get(fieldName);
+    return control ? control.invalid && control.touched : false;
+  }
+
+  eliminarDocumento(idDocumento: number): void {
+    this.idElementoPendienteEliminar = idDocumento;
+    this.tipoElementoPendiente = 'documento';
+    this.mostrarModalEliminar();
+
+  }
+
+  onFileSelectDocumentos(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const files = Array.from(input.files);
+      this.documentoPreviews = [];
+      this.documentoNuevos = [];
+
+      files.forEach(file => {
+        this.documentoPreviews.push(file.name);
+        this.documentoNuevos.push({ file, tipo: '' }); // SIN 'T', obligatorio seleccionar
+      });
+    }
+  }
+
+  mostrarModalEliminar(): void {
+    setTimeout(() => {
+      const modalElement = document.getElementById('eliminarModal');
+      if (modalElement) {
+        this.eliminarModal = new bootstrap.Modal(modalElement, {
+          keyboard: false
+        });
+        this.eliminarModal.show();
+      }
+    }, 0);
+  }
+
+  removeDocumento(index: number): void {
+    this.documentoPreviews.splice(index, 1);
+    this.documentoNuevos.splice(index, 1);
+
+    const input = document.getElementById('documentos') as HTMLInputElement;
+    if (input?.files) {
+      const dt = new DataTransfer();
+      const files = Array.from(input.files);
+      files.splice(index, 1);
+      files.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    }
+  }
+
+  confirmarGuardar(): void {
+    const faltanTipos = this.documentoNuevos.some(doc => !doc.tipo || doc.tipo.trim() === '');
+    if (faltanTipos) {
+      this.showModal('Debes seleccionar un tipo para todos los documentos nuevos');
+      return;
+    }
+
+    this.mostrarConfirmacion(
+      '¿Estás seguro de que deseas guardar los cambios en este producto?',
+      this.onSubmit.bind(this)
+    );
+  }
+
+  mostrarConfirmacion(mensaje: string, accion: () => void): void {
+    this.confirmMessage = mensaje;
+    this.accionConfirmada = accion;
+
+    setTimeout(() => {
+      const modalElement = document.getElementById('confirmModal');
+      if (modalElement) {
+        this.confirmModal = new bootstrap.Modal(modalElement, {
+          keyboard: false
+        });
+        this.confirmModal.show();
+      }
+    }, 0);
+  }
+
+  confirmarAccion(): void {
+    this.confirmModal.hide();
+    if (this.accionConfirmada) {
+      this.accionConfirmada();
+    }
+  }
+
+  confirmarEliminacion(): void {
+    if (this.eliminarModal) {
+      this.eliminarModal.hide(); // cierra el modal de eliminación
+    }
+
+    const id = this.idElementoPendienteEliminar;
+
+    if (this.tipoElementoPendiente === 'imagen' && id !== null) {
+      this.oProductoService.deleteImagen(id).subscribe({
+        next: () => {
+          this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== id);
+          this.cargarProducto();
+        },
+        error: (err) => {
+          console.error('Error al eliminar imagen:', err);
+          this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== id);
+          this.message = 'La imagen ya no existía o no se pudo eliminar.';
+          this.cargarProducto();
+        }
+      });
+    }
+
+    if (this.tipoElementoPendiente === 'documento' && id !== null) {
+      this.oProductoService.deleteDocumento(id).subscribe({
+        next: () => {
+          this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== id);
+          this.cargarProducto();
+        },
+        error: (err) => {
+          console.error('Error al eliminar documento:', err);
+          this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== id);
+          this.message = 'El documento ya no existía o no se pudo eliminar.';
+          this.cargarProducto();
+        }
+      });
+    }
+
+    this.tipoElementoPendiente = null;
+    this.idElementoPendienteEliminar = null;
+  }
+
+  cargarProducto(): void {}
+
 
 }

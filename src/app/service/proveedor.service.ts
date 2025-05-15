@@ -1,87 +1,58 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { httpOptions, serverURL } from '../environment/environment';
 import { IPage } from '../model/model.interface';
 import { IProveedor } from '../model/proveedor.interface';
+import { EntornoService } from './entorno.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProveedorService {
 
-  serverURL: string = serverURL + '/proveedor';
+  constructor(
+    private oHttp: HttpClient,
+    private entornoService: EntornoService
+  ) { }
 
-  constructor(private oHttp: HttpClient) { }
-
-  getPage(
-    page: number,
-    size: number,
-    field: string,
-    dir: string,
-    filtro: string
-  ): Observable<IPage<IProveedor>> {
-    let URL: string = '';
-    URL += this.serverURL;
-    if (!page) {
-      page = 0;
-    }
-    URL += '?page=' + page;
-    if (!size) {
-      size = 10;
-    }
-    URL += '&size=' + size;
-    if (field) {
-      URL += '&sort=' + field;
-      if (dir === 'asc') {
-        URL += ',asc';
-      } else {
-        URL += ',desc';
-      }
-    }
-    if (filtro) {
-      URL += '&filter=' + filtro;
-    }
-    return this.oHttp.get<IPage<IProveedor>>(URL, httpOptions);
+  private get serverURL(): string {
+    return `${this.entornoService.getApiUrl()}/proveedor`;
   }
 
+  getPage(page: number, size: number, field: string, dir: string, filtro: string): Observable<IPage<IProveedor>> {
+    let URL = `${this.serverURL}?page=${page ?? 0}&size=${size ?? 10}`;
+    if (field) URL += `&sort=${field},${dir === 'asc' ? 'asc' : 'desc'}`;
+    if (filtro) URL += `&filter=${filtro}`;
+    return this.oHttp.get<IPage<IProveedor>>(URL);
+  }
 
   get(id: number): Observable<IProveedor> {
-    let URL: string = '';
-    URL += this.serverURL;
-    URL += '/' + id;
-    return this.oHttp.get<IProveedor>(URL);
+    return this.oHttp.get<IProveedor>(`${this.serverURL}/${id}`);
   }
 
   getOne(id: number): Observable<IProveedor> {
-    let URL: string = '';
-    URL += 'http://localhost:8086';
-    URL += '/proveedor';
-    URL += '/' + id;
-    return this.oHttp.get<IProveedor>(URL);
+    return this.oHttp.get<IProveedor>(`${this.serverURL}/${id}`);
   }
 
   getProveedorByNif(nif: string): Observable<IProveedor> {
-    const token = localStorage.getItem('token'); // o sessionStorage.getItem('token')
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Entorno', 'prod');;
+  return this.oHttp.get<IProveedor>(`${this.entornoService.getApiUrl()}/proveedor/bynif/${nif}`, { headers });
+}
 
-    return this.oHttp.get<IProveedor>(`${this.serverURL}/bynif/${nif}`, { headers });
-  }
 
   getProveedorFromToken(): Observable<IProveedor> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
     return this.oHttp.get<IProveedor>(`${this.serverURL}/bytoken`, { headers });
   }
 
   getAll(): Observable<IProveedor[]> {
-    return this.oHttp.get<IProveedor[]>(this.serverURL + '/all');
+    return this.oHttp.get<IProveedor[]>(`${this.serverURL}/all`);
   }
 
   getProveedoresPorNif(nif: string): Observable<IProveedor[]> {
-    return this.oHttp.get<IProveedor[]>(`http://localhost:8086/auth/proveedores-por-nif?nif=${nif}`);
+    return this.oHttp.get<IProveedor[]>(`${this.entornoService.getApiUrl()}/auth/proveedores-por-nif?nif=${nif}`);
   }
-  
 
 }

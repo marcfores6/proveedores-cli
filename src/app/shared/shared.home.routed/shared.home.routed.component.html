@@ -1,5 +1,6 @@
 <div
   class="container d-flex align-items-center flex-column mt-5 text-center home-container"
+  [ngClass]="{ 'dev-home': isDev }"
 >
   <!-- Hero Section -->
   <div
@@ -13,9 +14,9 @@
     <!-- Logo -->
     <img
       class="mb-3 home-logo"
-      src="assets/img/supermercados-family-cash.png"
+      [src]="logoUrl"
       width="200"
-      alt="Logo Family Cash"
+      alt="Logo"
       style="filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.5))"
     />
 
@@ -31,7 +32,8 @@
 
     <!-- Subtítulo -->
     <p class="masthead-subheading font-weight-light mb-4 text-shadow">
-      Gestión avanzada de proveedores y productos de Family Cash
+      Gestión avanzada de proveedores y productos de
+      <strong>{{ nombreEmpresa }}</strong>
     </p>
 
     <!-- Botones principales -->
@@ -67,8 +69,10 @@
     </h4>
     <p class="mb-4">
       Para acceder a todas las funcionalidades, por favor inicia sesión con tu
-      cuenta de <strong>Family Cash</strong>.
+      cuenta de <strong>{{ nombreEmpresa }}</strong
+      >.
     </p>
+
     <a
       routerLink="/login"
       class="btn btn-outline-success btn-lg rounded-pill px-4"
@@ -116,6 +120,6 @@
 
   <!-- Footer Section -->
   <footer class="mt-5 text-center text-muted">
-    <p class="mb-0">© 2025 Family Cash. Todos los derechos reservados.</p>
+    <p class="mb-0">© 2025 {{ nombreEmpresa }}. Todos los derechos reservados.</p>
   </footer>
 </div>

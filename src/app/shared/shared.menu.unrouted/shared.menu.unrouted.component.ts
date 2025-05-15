@@ -4,6 +4,8 @@ import { SessionService } from '../../service/session.service';
 import { CommonModule } from '@angular/common';
 import { ProveedorService } from '../../service/proveedor.service';
 import { AuthHelperService } from '../../service/auth-helper.service'; // 👈 Importa tu helper
+import { EntornoService } from '../../service/entorno.service';
+
 
 @Component({
   selector: 'app-shared-menu-unrouted',
@@ -20,14 +22,21 @@ export class SharedMenuUnroutedComponent implements OnInit {
   proveedorDescripcion: string = '';
   isAdmin: boolean = false;
   isProveedor: boolean = false;
+  entorno!: 'dev' | 'prod';
+  isDev: boolean = false;
+  logoUrl: string = 'assets/img/supermercados-family-cash.png';
+
+
 
   constructor(
     private oRouter: Router,
     private oSessionService: SessionService,
     private oProveedorService: ProveedorService,
-    private oAuthHelper: AuthHelperService // 👈 Inyectamos helper
+    private oAuthHelper: AuthHelperService,
+    private entornoService: EntornoService
   ) {
     this.oRouter.events.subscribe((oEvent) => {
+      this.entorno = this.entornoService.getEntorno();
       if (oEvent instanceof NavigationEnd) {
         this.strRuta = oEvent.url;
       }
@@ -38,10 +47,9 @@ export class SharedMenuUnroutedComponent implements OnInit {
 
   ngOnInit() {
     this.oSessionService.onLogin().subscribe({
-      next: () => {
-        this.initializeSession();
-      },
+      next: () => this.initializeSession()
     });
+
     this.oSessionService.onLogout().subscribe({
       next: () => {
         this.activeSession = false;
@@ -49,9 +57,21 @@ export class SharedMenuUnroutedComponent implements OnInit {
         this.proveedorDescripcion = '';
         this.isAdmin = false;
         this.isProveedor = false;
-      },
+      }
     });
+    this.entornoService.getEntorno$().subscribe({
+      next: (nuevoEntorno) => {
+        this.entorno = nuevoEntorno;
+        this.isDev = this.entorno === 'dev';
+        this.logoUrl = this.isDev
+          ? 'assets/img/cash&carry.png'  // 🔁 Tu logo de entorno desarrollo
+          : 'assets/img/supermercados-family-cash.png';
+        this.initializeSession(); // recarga proveedor tras cambiar entorno
+      }
+    });
+
   }
+
 
   initializeSession(): void {
     this.activeSession = this.oSessionService.isSessionActive();
@@ -61,22 +81,28 @@ export class SharedMenuUnroutedComponent implements OnInit {
     this.isProveedor = this.oAuthHelper.isProveedor();
 
     const proveedorId = this.oSessionService.getSessionProveedorId();
-    this.cargarProveedorDescripcion(proveedorId);
+    this.cargarProveedorDescripcionPorNif(this.userNif);
   }
 
-  cargarProveedorDescripcion(proveedorDescripcion: string): void {
-    const idNumerico = Number(proveedorDescripcion);
+  cargarProveedorDescripcionPorNif(nif: string): void {
+    if (!nif) return;
 
-    if (!idNumerico) return;
-
-    this.oProveedorService.get(idNumerico).subscribe({
+    this.oProveedorService.getProveedorByNif(nif).subscribe({
       next: (proveedor) => {
         this.proveedorDescripcion = proveedor.descripcion || 'Proveedor';
       },
       error: (err) => {
-        console.error('Error al cargar proveedor', err);
+        console.error('Error al cargar proveedor por NIF', err);
         this.proveedorDescripcion = 'Proveedor';
       }
     });
   }
+
+
+  onChangeEntorno(event: any) {
+    const nuevoEntorno = event.target.value as 'dev' | 'prod';
+    this.entornoService.setEntorno(nuevoEntorno);
+  }
+
+
 }

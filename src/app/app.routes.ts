@@ -23,7 +23,7 @@ export const routes: Routes = [
     { path: 'admin/producto/plist', component: ProductoAdminPlistRoutedComponent, canActivate: [AdminGuard] },
     { path: 'admin/producto/edit/:id', component: ProductoAdminEditRoutedComponent, canActivate: [AdminOrProveedorGuard] },
     { path: 'admin/producto/view/:id', component: ProductoAdminViewRoutedComponent, canActivate: [AdminOrProveedorGuard] },
-    { path: 'admin/producto/new', component: ProductoAdminCreateRoutedComponent, canActivate: [ProveedorGuard] },
+    { path: 'admin/producto/new', component: ProductoAdminCreateRoutedComponent, canActivate: [AdminGuard] },
   
     // Rutas de proveedor
     { path: 'admin/producto/xproveedor/plist', component: ProductoAdminXProveedorPlistRoutedComponent, canActivate: [AdminOrProveedorGuard] },

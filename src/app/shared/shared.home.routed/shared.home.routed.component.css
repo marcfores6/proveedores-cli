@@ -233,3 +233,70 @@ footer {
     font-size: 1.2rem;
   }
 }
+
+
+/* 🔵 Estilo para entorno de desarrollo */
+.dev-home {
+  background: linear-gradient(135deg, #e0f0ff 0%, #d1e9ff 100%) !important;
+}
+
+.dev-home .hero-section {
+  background: linear-gradient(135deg, #d1e9ff, #ffffff) !important;
+  border: 2px dashed #0d6efd;
+}
+
+.dev-home .feature-card h5 {
+  color: #0d6efd !important;
+}
+
+.dev-home .feature-card i {
+  color: #0d6efd !important;
+}
+
+.dev-home .eslogan-banner {
+  background: linear-gradient(90deg, #e0f7ff, #ffffff, #e0f7ff);
+  border-color: #2196f3;
+  color: #0d47a1;
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+}
+
+.dev-home .eslogan-icon {
+  color: #0d6efd !important;
+}
+
+.dev-home .login-alert {
+  background: linear-gradient(135deg, #e7f3ff 0%, #cfe5ff 100%);
+  border-color: #90caf9;
+  color: #0d47a1;
+}
+
+.dev-home .btn-outline-success {
+  border-color: #0d6efd !important;
+  color: #0d6efd !important;
+}
+
+.dev-home .btn-outline-success:hover {
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+/* 🟦 Colores de texto en entorno de desarrollo */
+.dev-home h1,
+.dev-home h2,
+.dev-home h4,
+.dev-home p,
+.dev-home .masthead-subheading,
+.dev-home .navbar-text,
+.dev-home .eslogan-banner,
+.dev-home .feature-card h5 {
+  color: #0b2545 !important; /* Azul oscuro corporativo */
+}
+
+/* Colorea también los íconos grandes de las cards */
+.dev-home .feature-card i {
+  color: #0b2545 !important;
+}
+
+/* Opcional: subtítulos y descripciones */
+.dev-home .text-muted {
+  color: #1e1e1e !important; /* Gris oscuro / casi negro */
+}

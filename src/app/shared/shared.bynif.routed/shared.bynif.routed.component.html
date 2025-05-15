@@ -1,4 +1,4 @@
-<div class="row justify-content-center m-3">
+<div class="row justify-content-center m-3" [ngClass]="{ 'dev-style': isDev }">
   <div class="col-lg-7 col-md-10 col-sm-12">
     <h1 class="my-5 text-center">
       <i class="bi bi-card-list"></i>
@@ -25,6 +25,41 @@
           <th scope="row">NIF</th>
           <td>{{ oProveedor.nif }}</td>
         </tr>
+        <tr>
+          <th scope="row">Email</th>
+          <td>
+            <span *ngIf="!editandoEmail">
+              {{ oProveedor.email }}
+              <button
+                class="btn btn-sm btn-outline-success ms-2 animate-pencil"
+                (click)="activarEdicionEmail()"
+                title="Editar email"
+              >
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+            </span>
+            <span *ngIf="editandoEmail">
+              <input
+                type="email"
+                [(ngModel)]="nuevoEmail"
+                class="form-control d-inline-block w-75 me-2"
+              />
+              <button
+                class="btn btn-success btn-sm me-1"
+                (click)="mostrarModalConfirmacion()"
+              >
+                <i class="bi bi-check-lg"></i>
+              </button>
+              <button
+                class="btn btn-danger btn-sm"
+                (click)="cancelarEdicionEmail()"
+              >
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </span>
+          </td>
+        </tr>
+
         <!--<tr>
           <th scope="row">ID_COMPRADOR</th>
           <td>{{ oProveedor.id_comprador }}</td>
@@ -66,5 +101,68 @@
   </div>
 </div>
 -->
+  </div>
+</div>
+
+<!-- Modal de confirmación -->
+<div
+  class="modal fade"
+  id="modalConfirmarEmail"
+  tabindex="-1"
+  aria-labelledby="modalConfirmarEmailLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="modalConfirmarEmailLabel">
+          Confirmar cambio de email
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body text-center">
+        ¿Estás seguro de que quieres cambiar el email a<br /><strong>{{
+          nuevoEmail
+        }}</strong
+        >?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="guardarEmail()"
+          data-bs-dismiss="modal"
+        >
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal de resultado -->
+<div class="modal fade" id="modalResultadoEmail" tabindex="-1" aria-labelledby="modalResultadoEmailLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-{{ colorModal }}">
+      <div class="modal-header bg-{{ colorModal }} text-white">
+        <h5 class="modal-title" id="modalResultadoEmailLabel">{{ tituloModal }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        {{ mensajeModal }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-{{ colorModal }}" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
   </div>
 </div>

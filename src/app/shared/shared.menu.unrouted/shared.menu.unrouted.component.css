@@ -82,4 +82,79 @@
     }
   }
   
-  
+  /* 🎨 Navbar azul para entorno de desarrollo */
+.dev-navbar {
+  background: linear-gradient(90deg, #0d6efd 0%, #1a73e8 100%) !important;
+}
+
+.dev-navbar .nav-link,
+.dev-navbar .navbar-brand,
+.dev-navbar .btn-outline-light {
+  color: white !important;
+}
+
+.dev-navbar .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+}
+
+.dev-navbar .btn-outline-light:hover {
+  background-color: white;
+  color: #0d6efd !important;
+}
+
+.dev-navbar .bi {
+  color: white !important;
+}
+
+/* 🎨 Texto y fondo adaptado para entorno de desarrollo */
+.dev-navbar .nav-link,
+.dev-navbar .navbar-brand,
+.dev-navbar .navbar-text,
+.dev-navbar .dropdown-toggle,
+.dev-navbar select {
+  color: #0b2545 !important; /* Azul oscuro elegante */
+}
+
+/* Íconos del menú también en azul oscuro */
+.dev-navbar .bi {
+  color: #0b2545 !important;
+}
+
+/* Fondo más claro para dar contraste */
+.dev-navbar {
+  background: linear-gradient(90deg, #dbefff, #f0f8ff) !important;
+  border-bottom: 2px dashed #0d6efd;
+}
+
+/* Hover para los botones en entorno dev */
+.dev-navbar .btn-outline-light {
+  color: #0b2545 !important;
+  border-color: #0b2545 !important;
+}
+
+.dev-navbar .btn-outline-light:hover {
+  background-color: #0b2545 !important;
+  color: white !important;
+}
+
+/* 👕 Tamaño reducido del logo SOLO en entorno de desarrollo */
+.logo-dev {
+  width: 110px !important;
+  max-width: 110px !important;
+}
+/* 🔵 Color de texto para sesión en desarrollo */
+.text-dev {
+  color: #08377c !important; /* Azul oscuro */
+}
+
+/* 🔵 Botón logout adaptado al entorno de desarrollo */
+.btn-outline-dev {
+  color: #08377c !important;
+  border: 1px solid #08377c !important;
+}
+
+.btn-outline-dev:hover {
+  background-color: #08377c !important;
+  color: white !important;
+}
