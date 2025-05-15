@@ -160,7 +160,7 @@ export class SharedBynifRoutedComponent implements OnInit {
     // ✅ Añadir cabecera X-Entorno
     const entorno = this.entornoService.getEntorno();
 
-    fetch(`http://localhost:8086/proveedor/update-email?${params.toString()}`, {
+    fetch(`http://localhost:8086/proveedor/${this.oProveedor.id}/update-email?${params.toString()}`, {
       method: 'PUT',
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
