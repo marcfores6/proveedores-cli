@@ -95,8 +95,6 @@ export class SharedMenuUnroutedComponent implements OnInit {
   }
 }
 
-
-
   onChangeEntorno(event: any) {
     const nuevoEntorno = event.target.value as 'dev' | 'prod';
     this.entornoService.setEntorno(nuevoEntorno);

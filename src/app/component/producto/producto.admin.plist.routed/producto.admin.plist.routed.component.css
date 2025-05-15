@@ -184,6 +184,34 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Estilo del mensaje "No tiene artículos" */
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Estilo para el botón de Enviar */
+.btn-primary {
+  background-color: #005507;
+  color: white;
+  border-radius: 0.3rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
 .modal-content {
   background: #f8f9fa;
   border-radius: 1.2rem;
@@ -217,4 +245,22 @@
 
 .btn-close-white {
   filter: brightness(0) invert(1);
+}
+
+
+.modal-content {
+  border-radius: 1rem;
+}
+
+.modal-footer .btn {
+  min-width: 100px;
+}
+
+.modal-body i {
+  animation: bounce 0.6s infinite alternate;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-5px); }
 }
