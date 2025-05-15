@@ -5,6 +5,7 @@ import { IProveedor } from '../../model/proveedor.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EntornoService } from '../../service/entorno.service';
+import { SessionService } from '../../service/session.service';
 
 declare let bootstrap: any;
 
@@ -18,8 +19,6 @@ declare let bootstrap: any;
 })
 export class SharedBynifRoutedComponent implements OnInit {
 
-  id: number = 0;
-  nif: string = '';
   oProveedor: IProveedor = {} as IProveedor;
   newPassword: string = '';
   confirmPassword: string = '';
@@ -32,70 +31,78 @@ export class SharedBynifRoutedComponent implements OnInit {
   isDev: boolean = false;
 
 
-  constructor(private oActivatedRoute: ActivatedRoute, private oProveedorService: ProveedorService, private entornoService: EntornoService) { }
+  constructor(private oActivatedRoute: ActivatedRoute, private oProveedorService: ProveedorService, private entornoService: EntornoService, private sessionService: SessionService) { }
 
   ngOnInit() {
-    this.nif = this.oActivatedRoute.snapshot.params['nif'];
-    this.isDev = this.entornoService.getEntorno() === 'dev'; // ✅ detectamos entorno
+    this.isDev = this.entornoService.getEntorno() === 'dev';
     this.getOne();
 
-     this.entornoService.getEntorno$().subscribe({
-    next: () => {
-      this.isDev = this.entornoService.getEntorno() === 'dev'; // 🔄 actualiza entorno al vuelo
-      this.getOne(); // 🔄 Vuelve a pedir el proveedor cuando cambia el entorno
-    }
-  });
+    this.entornoService.getEntorno$().subscribe({
+      next: () => {
+        this.isDev = this.entornoService.getEntorno() === 'dev';
+        this.getOne();
+      }
+    });
   }
 
+
   getOne() {
-  this.oProveedorService.getProveedorByNif(this.nif).subscribe({
-    next: (oProveedor) => {
-      this.oProveedor = oProveedor;
-    },
-    error: (err) => {
-      console.error('Error al obtener proveedor por NIF:', err);
+    const proveedorId = this.sessionService.getSessionProveedorId();
+    if (!proveedorId) {
+      console.error('No se pudo obtener el proveedorId del token.');
+      return;
     }
-  });
-}
+
+    this.oProveedorService.get(+proveedorId).subscribe({
+      next: (oProveedor) => {
+        this.oProveedor = oProveedor;
+      },
+      error: (err) => {
+        console.error('Error al obtener proveedor por ID:', err);
+      }
+    });
+  }
+
+
 
 
 
   cambiarPassword(): void {
-  const validationMessage = this.validatePassword();
-  if (validationMessage) {
-    this.passwordChangeMessage = validationMessage;
-    return;
-  }
-
-  if (this.newPassword !== this.confirmPassword) {
-    this.passwordChangeMessage = 'Las contraseñas no coinciden.';
-    return;
-  }
-
-  const params = new URLSearchParams();
-  params.set('newPassword', this.newPassword);
-
-  // ✅ Añadir cabecera X-Entorno
-  const entorno = this.entornoService.getEntorno();
-
-  fetch(`http://localhost:8086/proveedor/update-password?${params.toString()}`, {
-    method: 'PUT',
-    headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      'X-Entorno': entorno // 💥 aquí va la clave
+    const validationMessage = this.validatePassword();
+    if (validationMessage) {
+      this.passwordChangeMessage = validationMessage;
+      return;
     }
-  })
-    .then(response => response.text())
-    .then(data => {
-      this.passwordChangeMessage = data;
-      this.newPassword = '';
-      this.confirmPassword = '';
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.passwordChangeMessage = 'Las contraseñas no coinciden.';
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set('newPassword', this.newPassword);
+
+    // ✅ Añadir cabecera X-Entorno
+    const entorno = this.entornoService.getEntorno();
+
+    fetch(`http://localhost:8086/proveedor/update-password?${params.toString()}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'X-Entorno': entorno // 💥 aquí va la clave
+      }
     })
-    .catch(error => {
-      console.error(error);
-      this.passwordChangeMessage = 'Error al actualizar la contraseña.';
-    });
-}
+      .then(response => response.text())
+      .then(data => {
+        this.passwordChangeMessage = data;
+        this.newPassword = '';
+        this.confirmPassword = '';
+      })
+      .catch(error => {
+        console.error(error);
+        this.passwordChangeMessage = 'Error al actualizar la contraseña.';
+      });
+  }
 
 
 
@@ -137,49 +144,49 @@ export class SharedBynifRoutedComponent implements OnInit {
   }
 
   guardarEmail() {
-  const emailValido = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(this.nuevoEmail);
+    const emailValido = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(this.nuevoEmail);
 
-  if (!emailValido) {
-    this.mensajeModal = 'Introduce un email válido como usuario@dominio.com / .es / .org...';
-    this.colorModal = 'danger';
-    this.tituloModal = 'Email inválido';
-    this.mostrarModalResultado();
-    return;
-  }
-
-  const params = new URLSearchParams();
-  params.set('email', this.nuevoEmail);
-
-  // ✅ Añadir cabecera X-Entorno
-  const entorno = this.entornoService.getEntorno();
-
-  fetch(`http://localhost:8086/proveedor/update-email?${params.toString()}`, {
-    method: 'PUT',
-    headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      'X-Entorno': entorno // 💥 ¡cabecera mágica!
-    }
-  })
-    .then(res => {
-      if (!res.ok) throw new Error('Error en la actualización');
-      return res.text();
-    })
-    .then(msg => {
-      this.oProveedor.email = this.nuevoEmail;
-      this.editandoEmail = false;
-      this.mensajeModal = 'Email actualizado correctamente.';
-      this.colorModal = 'success';
-      this.tituloModal = 'Actualización correcta';
-      this.mostrarModalResultado();
-    })
-    .catch(err => {
-      console.error(err);
-      this.mensajeModal = 'No se ha podido actualizar el email.';
+    if (!emailValido) {
+      this.mensajeModal = 'Introduce un email válido como usuario@dominio.com / .es / .org...';
       this.colorModal = 'danger';
-      this.tituloModal = 'Error al actualizar';
+      this.tituloModal = 'Email inválido';
       this.mostrarModalResultado();
-    });
-}
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set('email', this.nuevoEmail);
+
+    // ✅ Añadir cabecera X-Entorno
+    const entorno = this.entornoService.getEntorno();
+
+    fetch(`http://localhost:8086/proveedor/update-email?${params.toString()}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'X-Entorno': entorno // 💥 ¡cabecera mágica!
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Error en la actualización');
+        return res.text();
+      })
+      .then(msg => {
+        this.oProveedor.email = this.nuevoEmail;
+        this.editandoEmail = false;
+        this.mensajeModal = 'Email actualizado correctamente.';
+        this.colorModal = 'success';
+        this.tituloModal = 'Actualización correcta';
+        this.mostrarModalResultado();
+      })
+      .catch(err => {
+        console.error(err);
+        this.mensajeModal = 'No se ha podido actualizar el email.';
+        this.colorModal = 'danger';
+        this.tituloModal = 'Error al actualizar';
+        this.mostrarModalResultado();
+      });
+  }
 
 
 

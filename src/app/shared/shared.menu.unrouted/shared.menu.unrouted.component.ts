@@ -74,29 +74,27 @@ export class SharedMenuUnroutedComponent implements OnInit {
 
 
   initializeSession(): void {
-    this.activeSession = this.oSessionService.isSessionActive();
-    this.userNif = this.oSessionService.getSessionNif();
+  this.activeSession = this.oSessionService.isSessionActive();
+  this.userNif = this.oSessionService.getSessionNif();
+  this.isAdmin = this.oAuthHelper.isAdmin();
+  this.isProveedor = this.oAuthHelper.isProveedor();
 
-    this.isAdmin = this.oAuthHelper.isAdmin();
-    this.isProveedor = this.oAuthHelper.isProveedor();
-
-    const proveedorId = this.oSessionService.getSessionProveedorId();
-    this.cargarProveedorDescripcionPorNif(this.userNif);
-  }
-
-  cargarProveedorDescripcionPorNif(nif: string): void {
-    if (!nif) return;
-
-    this.oProveedorService.getProveedorByNif(nif).subscribe({
+  const proveedorId = this.oSessionService.getSessionProveedorId();
+  if (proveedorId) {
+    this.oProveedorService.get(+proveedorId).subscribe({
       next: (proveedor) => {
         this.proveedorDescripcion = proveedor.descripcion || 'Proveedor';
       },
       error: (err) => {
-        console.error('Error al cargar proveedor por NIF', err);
+        console.error('Error al cargar proveedor por ID', err);
         this.proveedorDescripcion = 'Proveedor';
       }
     });
+  } else {
+    this.proveedorDescripcion = 'Proveedor';
   }
+}
+
 
 
   onChangeEntorno(event: any) {
