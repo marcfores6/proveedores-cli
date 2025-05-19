@@ -137,45 +137,50 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
   this.oProductoForm.get('multiplo_de_pedido')?.setValue('');
 }
 
+onSubmit(): void {
+  if (this.oProductoForm.valid) {
+    const formData = new FormData();
 
-  onSubmit(): void {
-    if (this.oProductoForm.valid) {
-      const formData = new FormData();
-
-      // Añadir todos los campos excepto id
-      Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          formData.append(key, value.toString());
-        }
-      });
-
-      // Añadir URLs de imagen
-      this.imagenUrls.forEach((url, index) => {
-        formData.append(`imagenUrls[${index}]`, url);
-      });
-
-      // Añadir imágenes por archivo desde input
-      const input = document.getElementById('imagenes') as HTMLInputElement;
-      if (input?.files) {
-        Array.from(input.files).forEach(file => {
-          formData.append('imagenes', file); // ← backend espera este nombre
-        });
+    // Añadir campos del formulario
+    Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        formData.append(key, value.toString());
       }
+    });
 
-      this.oProductoService.create(formData).subscribe({
-        next: (data: IProducto) => {
-          this.strMessage = `Producto ${data.id} creado correctamente.`;
-          this.showModal(this.strMessage);
-        },
-        error: (err) => {
-          console.error(err);
-          this.strMessage = "Error en la creación del producto";
-          this.showModal(this.strMessage);
-        }
+    // Añadir URLs de imagen
+    this.imagenUrls.forEach((url, index) => {
+      formData.append(`imagenUrls[${index}]`, url);
+    });
+
+    // Añadir imágenes por archivo
+    const input = document.getElementById('imagenes') as HTMLInputElement;
+    if (input?.files) {
+      Array.from(input.files).forEach(file => {
+        formData.append('imagenes', file);
       });
     }
-  }
 
+    // ✅ AÑADIR ESTO para los documentos
+    this.documentoNuevos.forEach((doc, index) => {
+      formData.append('documentos', doc.file);
+      formData.append(`tiposDocumentos`, doc.tipo);
+    });
+
+    // Enviar al backend
+    this.oProductoService.create(formData).subscribe({
+      next: (data: IProducto) => {
+        this.strMessage = `Producto ${data.id} creado correctamente.`;
+        this.showModal(this.strMessage);
+      },
+      error: (err) => {
+        console.error(err);
+        this.strMessage = "Error en la creación del producto";
+        this.showModal(this.strMessage);
+      }
+    });
+  }
+}
 
 
   onFileSelect(event: Event): void {
