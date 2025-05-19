@@ -11,7 +11,6 @@ import { SharedBynifRoutedComponent } from './shared/shared.bynif.routed/shared.
 import { ProductoAdminViewRoutedComponent } from './component/producto/producto.admin.view.routed/producto.admin.view.routed.component';
 import { SharedRecuperarContrasenaUnroutedComponent } from './shared/shared.recuperarcontrasena.unrouted/shared.recuperarcontrasena.unrouted.component';
 import { SharedRestablecerContrasenaUnroutedComponent } from './shared/shared.restablecercontrasena.unrouted/shared.restablecercontrasena.unrouted.component';
-import { ProveedorGuard } from './guards/proveedor.guard';
 import { ProductoAdminCreateRoutedComponent } from './component/producto/producto.admin.create.routed/producto.admin.create.routed.component';
 
 
@@ -24,6 +23,7 @@ export const routes: Routes = [
     { path: 'admin/producto/edit/:id', component: ProductoAdminEditRoutedComponent, canActivate: [AdminOrProveedorGuard] },
     { path: 'admin/producto/view/:id', component: ProductoAdminViewRoutedComponent, canActivate: [AdminOrProveedorGuard] },
     { path: 'admin/producto/new', component: ProductoAdminCreateRoutedComponent, canActivate: [AdminGuard] },
+
   
     // Rutas de proveedor
     { path: 'admin/producto/xproveedor/plist', component: ProductoAdminXProveedorPlistRoutedComponent, canActivate: [AdminOrProveedorGuard] },

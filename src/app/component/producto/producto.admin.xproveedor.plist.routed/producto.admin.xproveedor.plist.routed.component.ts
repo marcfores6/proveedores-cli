@@ -10,6 +10,7 @@ import { FormGroup, FormsModule, FormBuilder } from '@angular/forms';
 import { SessionService } from '../../../service/session.service';
 import { ProveedorService } from '../../../service/proveedor.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { EntornoService } from '../../../service/entorno.service';
 
 declare var bootstrap: any; // Para usar Bootstrap en TypeScript
 
@@ -52,13 +53,16 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
 
   private debounceSubject = new Subject<string>();
 
+  isDev: boolean = false;
+
   constructor(
     private oProductoService: ProductoService,
     private oBotoneraService: BotoneraService,
     private oRouter: Router,
     private oSessionService: SessionService,
     private oProveedorService: ProveedorService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private entornoService: EntornoService
   ) {
     this.debounceSubject.pipe(debounceTime(300)).subscribe(() => {
       this.getPage();
@@ -70,6 +74,15 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     this.cargarPaises(); // <- primero
     this.loadProveedorDescripcion();
     this.getPage();
+    this.entornoService.getEntorno$().subscribe({
+      next: (nuevoEntorno) => {
+        this.isDev = nuevoEntorno === 'dev';
+        this.nPage = 0;
+        this.getPage();
+      }
+    });
+
+    this.isDev = this.entornoService.getEntorno() === 'dev';
   }
 
   getPage() {

@@ -190,3 +190,109 @@
     transform: translateY(0);
   }
 }
+
+/* === Estilo alternativo completo para entorno de desarrollo === */
+
+.entorno-dev .card {
+  box-shadow: 0 8px 30px rgba(0, 123, 255, 0.3);
+}
+
+.entorno-dev .card-header {
+  background: linear-gradient(90deg, #0d6efd, #5eb7ff);
+  color: white;
+  box-shadow: inset 0 -2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.entorno-dev .seccion-titulo {
+  border-left-color: #0d6efd;
+  color: #003d99;
+}
+
+.entorno-dev .form-label {
+  color: #003d99;
+}
+
+.entorno-dev .form-control:focus,
+.entorno-dev .form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.entorno-dev .btn-success {
+  background-color: #0d6efd !important;
+}
+
+.entorno-dev .btn-success:hover {
+  background-color: #0b5ed7 !important;
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+}
+
+.entorno-dev .btn-outline-success {
+  border-color: #0d6efd !important;
+  color: #0d6efd !important;
+}
+
+.entorno-dev .btn-outline-success:hover {
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+
+.entorno-dev .btn-close {
+  border-color: #0d6efd !important;
+}
+
+.entorno-dev .modal-content {
+  box-shadow: 0 10px 40px rgba(13, 110, 253, 0.3);
+}
+
+.entorno-dev .modal-header.bg-success,
+.entorno-dev .modal-header.bg-danger {
+  background-color: #0d6efd !important;
+}
+
+.entorno-dev .modal-footer .btn.btn-outline-secondary {
+  border-color: #0d6efd !important;
+  color: #0d6efd !important;
+}
+
+.entorno-dev .modal-footer .btn.btn-outline-secondary:hover {
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+
+.entorno-dev .modal-title,
+.entorno-dev .modal-body,
+.entorno-dev .modal-footer {
+  color: #003d99;
+}
+
+/* Imágenes y documentos: bordes y sombras azules */
+.entorno-dev .d-flex.flex-wrap.gap-3 img,
+.entorno-dev .vista-previa img {
+  border: 2px solid #0d6efd;
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
+}
+
+.entorno-dev .list-group-item {
+  background-color: #e6f0ff;
+  border: 1px solid #0d6efd;
+}
+
+.entorno-dev .list-group-item a {
+  color: #0050b3;
+}
+
+.entorno-dev .list-group-item a:hover {
+  color: #0d6efd;
+}
+
+/* Inputs inválidos */
+.entorno-dev .is-invalid {
+  border-color: #dc3545 !important;
+}
+
+/* Títulos y botones adaptados */
+.entorno-dev .card-header h2 {
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}

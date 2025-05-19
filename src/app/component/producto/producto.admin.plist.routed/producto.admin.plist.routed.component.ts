@@ -8,6 +8,7 @@ import { IProducto } from '../../../model/producto.interface';
 import { ProductoService } from '../../../service/producto.service';
 import { BotoneraService } from '../../../service/botonera.service';
 import { SessionService } from '../../../service/session.service';
+import { EntornoService } from '../../../service/entorno.service';
 
 @Component({
   selector: 'app-producto.admin.plist.routed',
@@ -43,6 +44,8 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   message: string = '';
   myModal: any;
 
+  isDev: boolean = false;
+
   paisesList: { id: number; nombre: string; codigo: string }[] = [];
 
   private debounceSubject = new Subject<string>();
@@ -51,7 +54,8 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
     private oProductoService: ProductoService,
     private oBotoneraService: BotoneraService,
     private oRouter: Router,
-    private oSessionService: SessionService
+    private oSessionService: SessionService,
+    private entornoService: EntornoService
   ) {
     this.debounceSubject.pipe(debounceTime(300)).subscribe(() => {
       this.getPage();
@@ -61,28 +65,38 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   ngOnInit() {
     this.cargarPaises();
     this.getPage();
+
+    this.entornoService.getEntorno$().subscribe({
+      next: (nuevoEntorno) => {
+        this.isDev = nuevoEntorno === 'dev';
+        this.nPage = 0;
+        this.getPage();
+      }
+    });
+
+    this.isDev = this.entornoService.getEntorno() === 'dev';
   }
 
   getPage() {
-  this.loading = true;
-  this.oProductoService
-    .getPage(this.nPage, this.nRpp, this.strField, this.strDir, this.strFiltro)
-    .subscribe({
-      next: (oPageFromServer: IPage<IProducto>) => {
-        this.oPage = oPageFromServer;
-        this.productosFiltrados = oPageFromServer.content; // <-- AÑADE ESTO
-        this.arrBotonera = this.oBotoneraService.getBotonera(
-          this.nPage,
-          oPageFromServer.totalPages
-        );
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      },
-    });
-}
+    this.loading = true;
+    this.oProductoService
+      .getPage(this.nPage, this.nRpp, this.strField, this.strDir, this.strFiltro)
+      .subscribe({
+        next: (oPageFromServer: IPage<IProducto>) => {
+          this.oPage = oPageFromServer;
+          this.productosFiltrados = oPageFromServer.content; // <-- AÑADE ESTO
+          this.arrBotonera = this.oBotoneraService.getBotonera(
+            this.nPage,
+            oPageFromServer.totalPages
+          );
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        },
+      });
+  }
 
 
   edit(oProducto: IProducto) {
@@ -171,11 +185,11 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
       valor === undefined ||
       (typeof valor === 'string' && valor.trim() === '') ||
       (typeof valor === 'number' && valor <= 0) ||
-      (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0) 
+      (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0)
     ) {
       return 'text-danger fw-bold';
     }
-  
+
     return '';
   }
 
@@ -188,21 +202,21 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
       default: return 'Sin dato';
     }
   }
-  
+
 
   getPaisTexto(codigo: string | number | undefined): string {
     if (!codigo || typeof codigo !== 'string') return 'Sin dato';
-  
+
     const pais = this.paisesList.find(p => p.codigo === codigo);
     return pais ? pais.nombre : 'Sin dato';
   }
-  
+
 
   getCellClassCodigoPais(codigo: string | undefined | null): string {
     if (!codigo || typeof codigo !== 'string' || codigo.trim() === '') {
       return 'text-danger fw-bold';
     }
-  
+
     const encontrado = this.paisesList.find(p => p.codigo === codigo);
     return encontrado ? '' : 'text-danger fw-bold'; // si no existe el código, marcar en rojo
   }
@@ -215,16 +229,16 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
   getCellClassUnidadDePack(producto: IProducto): string {
     const unidadDePack = producto.unidadDePack;
     const unidadDeCaja = producto.unidadDeCaja;
-  
+
     // Si unidadDeCaja es 1, permitir que unidadDePack sea nulo
-    if ((unidadDeCaja === 1) && (unidadDePack === null || unidadDePack === undefined )) {
+    if ((unidadDeCaja === 1) && (unidadDePack === null || unidadDePack === undefined)) {
       return ''; // No marcar en rojo
     }
-  
+
     // Si unidadDePack es nulo en cualquier otro caso, marcarlo en rojo
     return this.getCellClass(unidadDePack);
   }
-  
+
   confirmarAccion(): void {
     this.confirmModal.hide();
     if (this.accionConfirmada) {
@@ -232,7 +246,7 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
     }
   }
 
-  
+
 
   cargarPaises(): void {
     this.paisesList = [{

@@ -4,6 +4,7 @@ import { IProducto } from '../../../model/producto.interface';
 import { ProductoService } from '../../../service/producto.service';
 import { CommonModule } from '@angular/common';
 import { NoDisponiblePipe } from '../../../pipe/no-disponible.pipe';
+import { EntornoService } from '../../../service/entorno.service';
 
 @Component({
   selector: 'app-producto.admin.view.routed',
@@ -19,16 +20,36 @@ export class ProductoAdminViewRoutedComponent implements OnInit {
   totalImagenes: number = 0;
   imagenesUrl: string[] = [];
 
+  isDev: boolean = false;
+
   @ViewChild('carouselProductoImagenes', { static: false }) carouselRef!: ElementRef;
 
   constructor(
     private oActivatedRoute: ActivatedRoute,
-    private oProductoService: ProductoService
+    private oProductoService: ProductoService,
+    private entornoService: EntornoService,
   ) {}
 
   ngOnInit() {
     this.id = this.oActivatedRoute.snapshot.params['id'];
     this.getOne();
+
+    const entornoAnterior = localStorage.getItem('entornoActual');
+
+    this.entornoService.getEntorno$().subscribe({
+      next: (nuevoEntorno) => {
+        this.isDev = nuevoEntorno === 'dev';
+
+        if (nuevoEntorno !== entornoAnterior) {
+          localStorage.setItem('entornoActual', nuevoEntorno);
+
+          // Esperamos un poco para asegurar que el localStorage se ha actualizado antes de recargar
+          setTimeout(() => {
+            location.reload();
+          }, 100);
+        }
+      }
+    });
   }
 
   getOne() {

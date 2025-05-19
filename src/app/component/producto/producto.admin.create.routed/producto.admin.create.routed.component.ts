@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { EntornoService } from '../../../service/entorno.service';
 
 declare let bootstrap: any;
 
@@ -51,136 +52,157 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
   myModal: any;
   message: string = '';
   totalOperacion: number = 0;
-
+  proveedor: string = '';
+  isDev: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private oProductoService: ProductoService,
     private oRouter: Router,
+    private entornoService: EntornoService
   ) { }
 
   ngOnInit(): void {
-  this.cargarPaises();
+    this.cargarPaises();
 
-  this.oProductoForm = this.formBuilder.group({
-    descripcion: new FormControl('', [Validators.required]),
-    marca: new FormControl('', [Validators.required]),
-    unidadDeMedida: new FormControl('', [Validators.required]),
-    referenciaProveedor: new FormControl('', [Validators.required]),
-    centralizado: new FormControl('', [Validators.required]),
+    const entornoAnterior = localStorage.getItem('entornoActual');
 
-    ean: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^\d{13}$/),
-      this.eanValidator
-    ]),
-    ean_caja: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^\d{13,14}$/),
-      this.eanFlexibleOptionalValidator
-    ]),
-    ean_pack: new FormControl('', [
-      this.eanFlexibleOptionalValidator
-    ]),
+    this.entornoService.getEntorno$().subscribe({
+      next: (nuevoEntorno) => {
+        this.isDev = nuevoEntorno === 'dev';
 
-    unidadDeCaja: new FormControl('', [Validators.required, Validators.min(1)]),
-    unidadDePack: new FormControl('', []), // puede ser 0
+        if (nuevoEntorno !== entornoAnterior) {
+          localStorage.setItem('entornoActual', nuevoEntorno);
 
-    largo_caja: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-    ancho_caja: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-    alto_caja: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-
-    largo_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-    ancho_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-    alto_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-
-    peso_neto_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]),
-    peso_escurrido_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]),
-    peso_caja: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]),
-
-    cajasCapa: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-    cajasPalet: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-
-    diasCaducidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
-    iva: new FormControl('', [Validators.required]),
-    leadtime: new FormControl('', [Validators.required, Validators.min(1)]),
-    partidaArancelaria: new FormControl('', [Validators.required]),
-    observaciones: new FormControl('', [Validators.required]),
-    paisOrigen: new FormControl('', [Validators.required]),
-    moq: new FormControl('', [Validators.required, Validators.min(1)]),
-    multiplo_de_pedido: new FormControl('', [Validators.required]),
-  });
-
-  // Cálculo del total operación
-  this.oProductoForm.get('cajasPalet')?.valueChanges.subscribe(() => {
-    this.calcularTotalOperacion();
-  });
-
-  this.oProductoForm.get('unidadDeCaja')?.valueChanges.subscribe(() => {
-    this.calcularTotalOperacion();
-  });
-
-  // Ejecutar al iniciar
-  this.calcularTotalOperacion();
-
-  // Lógica moq ↔ unidadDeCaja
-  const moqControl = this.oProductoForm.get('moq');
-  const unidadDeCajaControl = this.oProductoForm.get('unidadDeCaja');
-
-  unidadDeCajaControl?.valueChanges.subscribe((nuevoValor) => {
-    if (moqControl && !moqControl.dirty) {
-      moqControl.setValue(nuevoValor ?? 1);
-    }
-  });
-
-  // Normalización de multiplo
-  this.oProductoForm.get('multiplo_de_pedido')?.setValue('');
-}
-
-onSubmit(): void {
-  if (this.oProductoForm.valid) {
-    const formData = new FormData();
-
-    // Añadir campos del formulario
-    Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        formData.append(key, value.toString());
+          // Esperamos un poco para asegurar que el localStorage se ha actualizado antes de recargar
+          setTimeout(() => {
+            location.reload();
+          }, 100);
+        }
       }
     });
 
-    // Añadir URLs de imagen
-    this.imagenUrls.forEach((url, index) => {
-      formData.append(`imagenUrls[${index}]`, url);
+
+    this.oProductoForm = this.formBuilder.group({
+      descripcion: new FormControl('', [Validators.required]),
+      marca: new FormControl('', [Validators.required]),
+      unidadDeMedida: new FormControl('', [Validators.required]),
+      proveedor: new FormControl('', [Validators.required]),
+      referenciaProveedor: new FormControl('', [Validators.required]),
+      centralizado: new FormControl('', [Validators.required]),
+
+      ean: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^\d{13}$/),
+        this.eanValidator
+      ]),
+      ean_caja: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^\d{13,14}$/),
+        this.eanFlexibleOptionalValidator
+      ]),
+      ean_pack: new FormControl('', [
+        this.eanFlexibleOptionalValidator
+      ]),
+
+      unidadDeCaja: new FormControl('', [Validators.required, Validators.min(1)]),
+      unidadDePack: new FormControl('', []), // puede ser 0
+
+      largo_caja: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+      ancho_caja: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+      alto_caja: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+
+      largo_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+      ancho_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+      alto_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+
+      peso_neto_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]),
+      peso_escurrido_unidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]),
+      peso_caja: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]),
+
+      cajasCapa: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+      cajasPalet: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+
+      diasCaducidad: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]),
+      iva: new FormControl('', [Validators.required]),
+      leadtime: new FormControl('', [Validators.required, Validators.min(1)]),
+      partidaArancelaria: new FormControl('', [Validators.required]),
+      observaciones: new FormControl('', [Validators.required]),
+      paisOrigen: new FormControl('', [Validators.required]),
+      moq: new FormControl('', [Validators.required, Validators.min(1)]),
+      multiplo_de_pedido: new FormControl('', [Validators.required]),
     });
 
-    // Añadir imágenes por archivo
-    const input = document.getElementById('imagenes') as HTMLInputElement;
-    if (input?.files) {
-      Array.from(input.files).forEach(file => {
-        formData.append('imagenes', file);
+    // Cálculo del total operación
+    this.oProductoForm.get('cajasPalet')?.valueChanges.subscribe(() => {
+      this.calcularTotalOperacion();
+    });
+
+    this.oProductoForm.get('unidadDeCaja')?.valueChanges.subscribe(() => {
+      this.calcularTotalOperacion();
+    });
+
+    // Ejecutar al iniciar
+    this.calcularTotalOperacion();
+
+    // Lógica moq ↔ unidadDeCaja
+    const moqControl = this.oProductoForm.get('moq');
+    const unidadDeCajaControl = this.oProductoForm.get('unidadDeCaja');
+
+    unidadDeCajaControl?.valueChanges.subscribe((nuevoValor) => {
+      if (moqControl && !moqControl.dirty) {
+        moqControl.setValue(nuevoValor ?? 1);
+      }
+    });
+
+    // Normalización de multiplo
+    this.oProductoForm.get('multiplo_de_pedido')?.setValue('');
+  }
+
+  onSubmit(): void {
+    if (this.oProductoForm.valid) {
+      const formData = new FormData();
+
+      // Añadir campos del formulario
+      Object.entries(this.oProductoForm.value).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value.toString());
+        }
+      });
+
+      // Añadir URLs de imagen
+      this.imagenUrls.forEach((url, index) => {
+        formData.append(`imagenUrls[${index}]`, url);
+      });
+
+      // Añadir imágenes por archivo
+      const input = document.getElementById('imagenes') as HTMLInputElement;
+      if (input?.files) {
+        Array.from(input.files).forEach(file => {
+          formData.append('imagenes', file);
+        });
+      }
+
+      // ✅ AÑADIR ESTO para los documentos
+      this.documentoNuevos.forEach((doc, index) => {
+        formData.append('documentos', doc.file);
+        formData.append(`tiposDocumentos`, doc.tipo);
+      });
+
+      // Enviar al backend
+      this.oProductoService.create(formData).subscribe({
+        next: (data: IProducto) => {
+          this.strMessage = `Producto ${data.id} creado correctamente.`;
+          this.showModal(this.strMessage);
+        },
+        error: (err) => {
+          console.error(err);
+          this.strMessage = "Error en la creación del producto";
+          this.showModal(this.strMessage);
+        }
       });
     }
-
-    // ✅ AÑADIR ESTO para los documentos
-    this.documentoNuevos.forEach((doc, index) => {
-      formData.append('documentos', doc.file);
-      formData.append(`tiposDocumentos`, doc.tipo);
-    });
-
-    // Enviar al backend
-    this.oProductoService.create(formData).subscribe({
-      next: (data: IProducto) => {
-        this.strMessage = `Producto ${data.id} creado correctamente.`;
-        this.showModal(this.strMessage);
-      },
-      error: (err) => {
-        console.error(err);
-        this.strMessage = "Error en la creación del producto";
-        this.showModal(this.strMessage);
-      }
-    });
   }
-}
 
 
   onFileSelect(event: Event): void {
@@ -363,13 +385,13 @@ onSubmit(): void {
       this.oProductoService.deleteImagen(id).subscribe({
         next: () => {
           this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== id);
-          
+
         },
         error: (err) => {
           console.error('Error al eliminar imagen:', err);
           this.oProducto!.imagenes = this.oProducto!.imagenes!.filter(img => img.id !== id);
           this.message = 'La imagen ya no existía o no se pudo eliminar.';
-          
+
         }
       });
     }
@@ -378,13 +400,13 @@ onSubmit(): void {
       this.oProductoService.deleteDocumento(id).subscribe({
         next: () => {
           this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== id);
-          
+
         },
         error: (err) => {
           console.error('Error al eliminar documento:', err);
           this.oProducto!.documentos = this.oProducto!.documentos!.filter(doc => doc.id !== id);
           this.message = 'El documento ya no existía o no se pudo eliminar.';
-          
+
         }
       });
     }
@@ -394,71 +416,71 @@ onSubmit(): void {
   }
 
   eanValidator(control: FormControl): { [key: string]: any } | null {
-      const ean = control.value;
-      if (!ean || !/^\d{13}$/.test(ean)) {
-        return { eanInvalido: true };
-      }
-  
-      const digits: number[] = ean.split('').map((d: string) => parseInt(d, 10));
-      const checksum: number = digits.pop()!;
-  
-      const sum = digits
-        .map((digit: number, index: number) => (index % 2 === 0 ? digit : digit * 3))
-        .reduce((acc: number, val: number) => acc + val, 0);
-  
-      const calculated = (10 - (sum % 10)) % 10;
-  
-      return calculated === checksum ? null : { eanInvalido: true };
+    const ean = control.value;
+    if (!ean || !/^\d{13}$/.test(ean)) {
+      return { eanInvalido: true };
     }
-  
-  
-    ean14Validator(control: FormControl): { [key: string]: any } | null {
-      const ean = control.value;
-      if (!ean || !/^\d{14}$/.test(ean)) {
-        return { ean14Invalido: true };
-      }
-  
-      const digits: number[] = ean.split('').map((d: string) => parseInt(d, 10));
-      const checksum: number = digits.pop()!;
-  
-      // Desde la derecha (posición 1) alternando 3, 1, 3, 1...
-      const sum = digits
-        .reverse()
-        .map((digit: number, index: number) => (index % 2 === 0 ? digit * 3 : digit))
-        .reduce((acc: number, val: number) => acc + val, 0);
-  
-      const calculated = (10 - (sum % 10)) % 10;
-  
-      return calculated === checksum ? null : { ean14Invalido: true };
-    }
-  
-    eanFlexibleOptionalValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-      const value: string = control.value;
-      if (!value || value.trim() === '') return null; // Permitir vacío
-    
-      if (!/^\d{13,14}$/.test(value)) {
-        return { formatoInvalido: true };
-      }
-    
-      const digits = value.split('').map(d => parseInt(d, 10));
-      const checksum = digits.pop();
-      const length = digits.length;
-    
-      let sum = 0;
-      if (length === 12) {
-        sum = digits.reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 1 : 3), 0);
-      } else if (length === 13) {
-        sum = digits.reverse().reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 3 : 1), 0);
-      } else {
-        return { formatoInvalido: true };
-      }
-    
-      const expectedChecksum = (10 - (sum % 10)) % 10;
-      return expectedChecksum === checksum ? null : { digitoControlIncorrecto: true };
-    };
 
-    
-    calcularTotalOperacion(): void {
+    const digits: number[] = ean.split('').map((d: string) => parseInt(d, 10));
+    const checksum: number = digits.pop()!;
+
+    const sum = digits
+      .map((digit: number, index: number) => (index % 2 === 0 ? digit : digit * 3))
+      .reduce((acc: number, val: number) => acc + val, 0);
+
+    const calculated = (10 - (sum % 10)) % 10;
+
+    return calculated === checksum ? null : { eanInvalido: true };
+  }
+
+
+  ean14Validator(control: FormControl): { [key: string]: any } | null {
+    const ean = control.value;
+    if (!ean || !/^\d{14}$/.test(ean)) {
+      return { ean14Invalido: true };
+    }
+
+    const digits: number[] = ean.split('').map((d: string) => parseInt(d, 10));
+    const checksum: number = digits.pop()!;
+
+    // Desde la derecha (posición 1) alternando 3, 1, 3, 1...
+    const sum = digits
+      .reverse()
+      .map((digit: number, index: number) => (index % 2 === 0 ? digit * 3 : digit))
+      .reduce((acc: number, val: number) => acc + val, 0);
+
+    const calculated = (10 - (sum % 10)) % 10;
+
+    return calculated === checksum ? null : { ean14Invalido: true };
+  }
+
+  eanFlexibleOptionalValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value;
+    if (!value || value.trim() === '') return null; // Permitir vacío
+
+    if (!/^\d{13,14}$/.test(value)) {
+      return { formatoInvalido: true };
+    }
+
+    const digits = value.split('').map(d => parseInt(d, 10));
+    const checksum = digits.pop();
+    const length = digits.length;
+
+    let sum = 0;
+    if (length === 12) {
+      sum = digits.reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 1 : 3), 0);
+    } else if (length === 13) {
+      sum = digits.reverse().reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 3 : 1), 0);
+    } else {
+      return { formatoInvalido: true };
+    }
+
+    const expectedChecksum = (10 - (sum % 10)) % 10;
+    return expectedChecksum === checksum ? null : { digitoControlIncorrecto: true };
+  };
+
+
+  calcularTotalOperacion(): void {
     const cajas = this.oProductoForm.get('cajasPalet')?.value || 0;
     const unidades = this.oProductoForm.get('unidadDeCaja')?.value || 0;
     this.totalOperacion = cajas * unidades;

@@ -1,4 +1,4 @@
-<div class="container py-5">
+<div class="container py-5" [ngClass]="{ 'entorno-dev': isDev }">
   <div class="row justify-content-center">
     <div class="col-lg-12">
       <div class="card shadow border-0">
@@ -490,8 +490,8 @@
   aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-success shadow">
-      <div class="modal-header bg-success text-white">
+    <div class="modal-content shadow" [ngClass]="{ 'border-success': !isDev, 'border-primary': isDev }">
+      <div class="modal-header text-white" [ngClass]="{ 'bg-success': !isDev, 'bg-primary': isDev }">
         <h5 class="modal-title d-flex align-items-center" id="confirmModalLabel">
           <i class="bi bi-question-circle-fill me-2 fs-4"></i> Confirmación
         </h5>
@@ -503,7 +503,7 @@
         ></button>
       </div>
       <div class="modal-body text-center">
-        <i class="bi bi-exclamation-triangle-fill text-success fs-1 mb-3 d-block"></i>
+        <i class="bi bi-exclamation-triangle-fill fs-1 mb-3 d-block" [ngClass]="{ 'text-success': !isDev, 'text-primary': isDev }"></i>
         <p class="fs-5">{{ confirmMessage }}</p>
       </div>
       <div class="modal-footer justify-content-center">
@@ -516,7 +516,8 @@
         </button>
         <button
           type="button"
-          class="btn btn-success px-4"
+          class="btn px-4"
+          [ngClass]="{ 'btn-success': !isDev, 'btn-primary': isDev }"
           (click)="confirmarAccion()"
         >
           Sí
@@ -528,11 +529,12 @@
 
 
 
+
 <!-- Modal de éxito / error -->
 <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-success shadow">
-      <div class="modal-header bg-success text-white">
+    <div class="modal-content shadow" [ngClass]="{ 'border-success': !isDev, 'border-primary': isDev }">
+      <div class="modal-header text-white" [ngClass]="{ 'bg-success': !isDev, 'bg-primary': isDev }">
         <h5 class="modal-title" id="mimodalLabel">
           <i class="bi bi-info-circle-fill me-2"></i> Aviso
         </h5>
@@ -542,11 +544,19 @@
         <p class="fs-5" [innerHTML]="message"></p>
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-outline-success px-4" data-bs-dismiss="modal">Aceptar</button>
+        <button
+          type="button"
+          class="btn px-4"
+          [ngClass]="{ 'btn-outline-success': !isDev, 'btn-outline-primary': isDev }"
+          data-bs-dismiss="modal"
+        >
+          Aceptar
+        </button>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- Modal de confirmación de eliminación -->
 <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">

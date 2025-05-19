@@ -264,3 +264,91 @@
   0% { transform: translateY(0); }
   100% { transform: translateY(-5px); }
 }
+
+/* Estilo especial para entorno de desarrollo */
+.entorno-dev {
+  border: 3px  #007bff;
+  background-color: #e6f0ff !important;
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+}
+
+.entorno-dev .table th {
+  background-color: #007bff !important;
+}
+
+.entorno-dev .table tbody tr:hover {
+  background-color: #007bff !important;
+  box-shadow: inset 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+/* === Estilo azul para entorno de desarrollo === */
+.entorno-dev {
+  background-color: #e3f2fd !important; /* azul clarito */
+  min-height: 100vh;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+/* También puedes aplicar a la tabla para destacarla si quieres */
+.entorno-dev .table thead {
+  background-color: #0d6efd !important; /* azul bootstrap */
+  color: white;
+}
+
+.entorno-dev .table tbody tr:hover {
+  background-color: #d0e7ff;
+}
+
+.entorno-dev {
+  background-color: #e3f2fd !important;
+  min-height: 100vh;
+  padding: 2rem;
+  border-radius: 0;
+}
+
+.entorno-dev .table-responsive {
+  background-color: #e3f2fd !important;
+  box-shadow: none !important;
+}
+/* Estilo para selector de elementos por página */
+.entorno-dev .pagination .page-item .page-link {
+  background-color: #d0e7ff !important;
+  color: #0d6efd !important;
+  border-color: #a0c7ff !important;
+}
+
+.entorno-dev .pagination .page-item.active .page-link {
+  background-color: #0d6efd !important;
+  color: white !important;
+  border-color: #0a58ca !important;
+}
+
+/* Estilo para el "Ir a la página" */
+.entorno-dev .go-to-page-container label {
+  color: #0d6efd !important;
+}
+
+.entorno-dev .go-to-page-input {
+  border-color: #0d6efd !important;
+}
+
+.entorno-dev .go-to-page-input:focus {
+  border-color: #0a58ca !important;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+}
+
+.entorno-dev .go-to-page-button {
+  background-color: #0d6efd !important;
+}
+
+.entorno-dev .go-to-page-button:hover {
+  background-color: #0a58ca !important;
+  transform: translateY(-1px);
+}
+
+/* Evitar fondo blanco entre header y contenido */
+.entorno-dev .container-fluid {
+  background-color: #e3f2fd !important;
+  margin-top: 0 !important;
+  padding-top: 1rem !important;
+}

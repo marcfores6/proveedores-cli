@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { EntornoService } from '../../../service/entorno.service';
 
 
 declare let bootstrap: any;
@@ -48,7 +49,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     { value: 'Palet', label: 'Palet' },
     { value: 'Camión', label: 'Camión' }
   ];
-  
+
   confirmMessage: string = '';
   accionConfirmada: Function = () => { };
   confirmModal: any;
@@ -57,6 +58,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   shouldRedirectAfterModal: boolean = true;
   totalOperacion: number = 0;
 
+  isDev: boolean = false;
 
   readonly dialog = inject(MatDialog);
 
@@ -65,7 +67,8 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     private oProductoService: ProductoService,
     private oRouter: Router,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private entornoService: EntornoService,
   ) {
     this.oProductoForm = this.fb.group({});
   }
@@ -75,19 +78,36 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.cargarPaises();
     this.cargarProducto();
 
+     const entornoAnterior = localStorage.getItem('entornoActual');
+
+    this.entornoService.getEntorno$().subscribe({
+      next: (nuevoEntorno) => {
+        this.isDev = nuevoEntorno === 'dev';
+
+        if (nuevoEntorno !== entornoAnterior) {
+          localStorage.setItem('entornoActual', nuevoEntorno);
+
+          // Esperamos un poco para asegurar que el localStorage se ha actualizado antes de recargar
+          setTimeout(() => {
+            location.reload();
+          }, 100);
+        }
+      }
+    });
+
     // Añadir validación min(1) a todos excepto los campos permitidos con 0
-Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
-  if (
-    key !== 'ean_pack' &&
-    key !== 'unidadDePack' &&
-    key !== 'documentos' &&
-    control instanceof FormControl
-  ) {
-    const currentValidators = control.validator ? [control.validator] : [];
-    control.setValidators([...currentValidators, Validators.min(1)]);
-    control.updateValueAndValidity();
-  }
-});
+    Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
+      if (
+        key !== 'ean_pack' &&
+        key !== 'unidadDePack' &&
+        key !== 'documentos' &&
+        control instanceof FormControl
+      ) {
+        const currentValidators = control.validator ? [control.validator] : [];
+        control.setValidators([...currentValidators, Validators.min(1)]);
+        control.updateValueAndValidity();
+      }
+    });
 
   }
 
@@ -111,7 +131,7 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
           unidadDeMedida: new FormControl(data.unidadDeMedida ?? '', { nonNullable: true, validators: [Validators.required] }),
           referenciaProveedor: new FormControl(data.referenciaProveedor ?? '', { nonNullable: true, validators: [Validators.required] }),
           centralizado: new FormControl(data.centralizado ?? '', { nonNullable: true, validators: [Validators.required] }),
-        
+
           ean: new FormControl(data.ean ?? '', {
             nonNullable: true,
             validators: [
@@ -132,13 +152,13 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
             nonNullable: true,
             validators: [this.eanFlexibleOptionalValidator] // puede estar vacío, pero si hay valor se valida
           }),
-        
+
           unidadDeCaja: new FormControl(data.unidadDeCaja ?? '', {
             nonNullable: true,
             validators: [Validators.required, Validators.min(1)]
           }),
           unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true }), // puede ser 0 o vacío
-        
+
           largo_caja: new FormControl(data.largo_caja ?? '', {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
@@ -151,7 +171,7 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
           }),
-        
+
           largo_unidad: new FormControl(data.largo_unidad ?? '', {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
@@ -164,7 +184,7 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
           }),
-        
+
           peso_neto_unidad: new FormControl(data.peso_neto_unidad ?? '', {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]
@@ -173,7 +193,7 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]
           }),
-        
+
           peso_caja: new FormControl(data.peso_caja ?? '', {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/), Validators.min(0.0001)]
@@ -186,7 +206,7 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
           }),
-        
+
           diasCaducidad: new FormControl(data.diasCaducidad ?? '', {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
@@ -211,18 +231,18 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
             nonNullable: true,
             validators: [Validators.required]
           }),
-        
+
           moq: new FormControl(data.moq ?? '', {
             nonNullable: true,
             validators: [Validators.required, Validators.min(1)]
-          }),          
-        
+          }),
+
           multiplo_de_pedido: new FormControl(this.normalizarMultiplo(data.multiploDePedido ?? ''), {
             nonNullable: true,
             validators: [Validators.required]
           }),
         });
-        
+
 
         // Añade esto justo después de crear el formulario:
         this.oProductoForm.get('cajasPalet')?.valueChanges.subscribe(() => {
@@ -417,17 +437,17 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
   onSubmit(): void {
     const inputImagenes = document.getElementById('imagenes') as HTMLInputElement;
 
-   
-  // Marca todos los campos como tocados para activar las validaciones
-  Object.values(this.oProductoForm.controls).forEach(control => {
-    control.markAsTouched();
-  });
 
-  // Validación global del formulario
-  if (this.oProductoForm.invalid) {
-    this.showModal('Debes rellenar correctamente todos los campos obligatorios antes de guardar.', false);
-    return;
-  }
+    // Marca todos los campos como tocados para activar las validaciones
+    Object.values(this.oProductoForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+
+    // Validación global del formulario
+    if (this.oProductoForm.invalid) {
+      this.showModal('Debes rellenar correctamente todos los campos obligatorios antes de guardar.', false);
+      return;
+    }
 
     const tieneImagenesExistentes = !!(this.oProducto && this.oProducto.imagenes && this.oProducto.imagenes.length > 0);
     const tieneNuevasImagenes = inputImagenes?.files && inputImagenes.files.length > 0;
@@ -636,15 +656,15 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
   eanFlexibleOptionalValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const value: string = control.value;
     if (!value || value.trim() === '') return null; // Permitir vacío
-  
+
     if (!/^\d{13,14}$/.test(value)) {
       return { formatoInvalido: true };
     }
-  
+
     const digits = value.split('').map(d => parseInt(d, 10));
     const checksum = digits.pop();
     const length = digits.length;
-  
+
     let sum = 0;
     if (length === 12) {
       sum = digits.reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 1 : 3), 0);
@@ -653,13 +673,13 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
     } else {
       return { formatoInvalido: true };
     }
-  
+
     const expectedChecksum = (10 - (sum % 10)) % 10;
     return expectedChecksum === checksum ? null : { digitoControlIncorrecto: true };
   };
-  
-  
-  
+
+
+
 
   calcularTotalOperacion(): void {
     const cajas = this.oProductoForm.get('cajasPalet')?.value || 0;
@@ -675,7 +695,7 @@ Object.entries(this.oProductoForm.controls).forEach(([key, control]) => {
     }
     return ''; // valor por defecto si viene mal o null
   }
-  
+
 
 
   cargarPaises(): void {

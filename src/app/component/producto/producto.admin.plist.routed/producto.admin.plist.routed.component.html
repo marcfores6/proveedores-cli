@@ -1,15 +1,10 @@
-<div class="container-fluid mt-5">
+<div class="container-fluid" [ngClass]="{ 'entorno-dev': isDev, 'mt-5': !isDev }">
   <div class="row">
     <div class="col-12">
       <!-- Título -->
       <h2 class="mb-4 text-center">
         <i class="bi bi-list"></i> Listado de Productos
       </h2>
-
-      <!-- Mostrar mensaje de notificación si hay productos listos para enviar -->
-      <div *ngIf="productosParaEnviar > 0" class="alert alert-info text-center">
-        ¡Ya puedes enviar {{ productosParaEnviar }} producto(s)!
-      </div>
 
       <!-- Buscador -->
       <div class="mb-4 d-flex justify-content-center align-items-center">

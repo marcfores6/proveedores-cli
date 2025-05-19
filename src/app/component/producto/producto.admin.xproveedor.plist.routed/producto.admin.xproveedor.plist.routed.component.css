@@ -264,3 +264,108 @@
   0% { transform: translateY(0); }
   100% { transform: translateY(-5px); }
 }
+
+
+/* === Estilo alternativo completo para entorno de desarrollo === */
+.entorno-dev .table-responsive {
+  box-shadow: 0 2px 15px rgba(13, 110, 253, 0.3);
+}
+
+.entorno-dev .table th {
+  background-color: #0d6efd;
+}
+
+.entorno-dev .table tbody tr:hover {
+  background-color: #e0f0ff;
+  box-shadow: inset 0 0 8px rgba(13, 110, 253, 0.15);
+}
+
+.entorno-dev .pagination .page-link {
+  color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.entorno-dev .pagination .page-link:hover {
+  background-color: #e0f0ff;
+  color: #003d99;
+  border-color: #0d6efd;
+}
+
+.entorno-dev .pagination .page-item.active .page-link {
+  background-color: #0b5ed7;
+  color: white;
+  border-color: #0a58ca;
+}
+
+.entorno-dev .go-to-page-button {
+  background-color: #0d6efd;
+}
+
+.entorno-dev .go-to-page-button:hover:not(:disabled) {
+  background-color: #0b5ed7;
+}
+
+.entorno-dev .go-to-page-input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+}
+
+.entorno-dev .alert-info {
+  background-color: #d6eaff;
+  border-color: #bee5eb;
+  color: #0b5ed7;
+}
+
+.entorno-dev .spinner-border.text-success {
+  color: #0d6efd !important;
+}
+
+.entorno-dev .btn-primary {
+  background-color: #0d6efd;
+}
+
+.entorno-dev .btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+
+.entorno-dev .btn-success:hover {
+  background-color: #0b5ed7 !important;
+}
+
+.entorno-dev .btn-outline-success {
+  border-color: #0d6efd !important;
+  color: #0d6efd !important;
+}
+
+.entorno-dev .btn-outline-success:hover {
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+
+/* Modales */
+.entorno-dev .modal-content {
+  box-shadow: 0 10px 40px rgba(13, 110, 253, 0.3);
+}
+
+.entorno-dev .modal-header.bg-success {
+  background-color: #0d6efd !important;
+}
+
+.entorno-dev .modal-header.bg-danger {
+  background-color: #0d6efd !important;
+}
+
+.entorno-dev .modal-footer .btn.btn-outline-secondary {
+  border-color: #0d6efd !important;
+  color: #0d6efd !important;
+}
+
+.entorno-dev .modal-footer .btn.btn-outline-secondary:hover {
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+
+.entorno-dev .modal-body i {
+  color: #0d6efd !important;
+}

@@ -124,7 +124,7 @@
 /* Fondo más claro para dar contraste */
 .dev-navbar {
   background: linear-gradient(90deg, #dbefff, #f0f8ff) !important;
-  border-bottom: 2px dashed #0d6efd;
+  border-bottom: 2px #0d6efd;
 }
 
 /* Hover para los botones en entorno dev */
