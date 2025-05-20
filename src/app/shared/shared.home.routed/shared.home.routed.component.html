@@ -1,17 +1,16 @@
+<!-- HOME HTML CORREGIDO -->
 <div
   class="container d-flex align-items-center flex-column mt-5 text-center home-container"
   [ngClass]="{ 'dev-home': isDev }"
 >
+  <!-- AVISO SOLO EN DEV -->
+  <div *ngIf="isDev" class="entorno-dev-banner mb-4">
+    <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+    Estás en <strong>ENTORNO DE DESARROLLO</strong> – Los datos pueden ser de prueba.
+  </div>
+
   <!-- Hero Section -->
-  <div
-    class="hero-section position-relative text-white text-center p-5 rounded shadow"
-    style="
-      background: linear-gradient(135deg, #ffffff, #8af18e);
-      width: 100%;
-      max-width: 1200px;
-    "
-  >
-    <!-- Logo -->
+  <div [ngClass]="['hero-section', isDev ? 'hero-dev' : 'hero-prod']">
     <img
       class="mb-3 home-logo"
       [src]="logoUrl"
@@ -19,20 +18,17 @@
       alt="Logo"
       style="filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.5))"
     />
-
-    <!-- Título -->
     <h1 class="masthead-heading text-uppercase mb-2 text-shadow">
-      Proveedores & Productos
+      {{ isDev ? 'Entorno de Desarrollo' : 'Proveedores & Productos' }}
     </h1>
-
-    <!-- ESLOGAN como bloque destacado sin <p> -->
-    <div class="eslogan-banner animate__animated animate__fadeInDown">
-      <span class="eslogan-text">NO SON OFERTAS, SON NUESTROS PRECIOS</span>
+    <div class="eslogan-banner animate__animated animate__fadeInDown"
+         [ngClass]="{ 'eslogan-dev': isDev, 'eslogan-prod': !isDev }">
+      <span class="eslogan-text">
+        {{ isDev ? 'Área de pruebas internas - No es producción' : 'NO SON OFERTAS, SON NUESTROS PRECIOS' }}
+      </span>
     </div>
-
-    <!-- Subtítulo -->
     <p class="masthead-subheading font-weight-light mb-4 text-shadow">
-      Gestión avanzada de proveedores y productos de
+      {{ isDev ? 'Visualización y pruebas del sistema Cash&Carry' : 'Gestión avanzada de proveedores y productos de' }}
       <strong>{{ nombreEmpresa }}</strong>
     </p>
 
@@ -40,42 +36,46 @@
     <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
       <a
         routerLink="/admin/producto/xproveedor/plist"
-        class="btn btn-success btn-lg shadow-lg px-4 py-3"
+        class="btn btn-lg shadow-lg px-4 py-3"
+        [ngClass]="isDev ? 'btn-primary' : 'btn-success'"
       >
-        <i class="bi bi-box-seam"></i> Gestión de Productos
+        <i class="bi bi-box-seam"></i>
+        {{ isDev ? 'Productos [DEV]' : 'Gestión de Productos' }}
       </a>
+
       <a
         routerLink="/admin/proveedor/plist"
-        class="btn btn-primary btn-lg shadow-lg px-4 py-3"
+        class="btn btn-lg shadow-lg px-4 py-3"
+        [ngClass]="isDev ? 'btn-primary' : 'btn-success'"
       >
-        <i class="bi bi-people-fill"></i> Gestión de Proveedores
+        <i class="bi bi-people-fill"></i>
+        {{ isDev ? 'Proveedores [DEV]' : 'Gestión de Proveedores' }}
       </a>
+
       <a
         routerLink="/admin/conexion/plist"
-        class="btn btn-warning btn-lg shadow-lg px-4 py-3"
+        class="btn btn-lg shadow-lg px-4 py-3"
+        [ngClass]="isDev ? 'btn-primary' : 'btn-warning'"
       >
-        <i class="bi bi-diagram-3-fill"></i> Conexiones & Instalaciones
+        <i class="bi bi-diagram-3-fill"></i>
+        {{ isDev ? 'Conexiones & Tests' : 'Conexiones & Instalaciones' }}
       </a>
     </div>
   </div>
 
   <!-- Aviso para no logueados -->
-  <div
-    *ngIf="!isLoggedIn"
-    class="login-alert text-center mt-4 p-4 shadow w-100"
-  >
+  <div *ngIf="!isLoggedIn" class="login-alert text-center mt-4 p-4 shadow w-100">
     <h4 class="mb-3">
       <i class="bi bi-person-circle me-2"></i> ¿Aún no has iniciado sesión?
     </h4>
     <p class="mb-4">
       Para acceder a todas las funcionalidades, por favor inicia sesión con tu
-      cuenta de <strong>{{ nombreEmpresa }}</strong
-      >.
+      cuenta de <strong>{{ nombreEmpresa }}</strong>.
     </p>
-
     <a
       routerLink="/login"
       class="btn btn-outline-success btn-lg rounded-pill px-4"
+      [ngClass]="{ 'btn-outline-primary': isDev, 'btn-outline-success': !isDev }"
     >
       <i class="bi bi-box-arrow-in-right me-2"></i> Ir al login
     </a>
@@ -84,42 +84,36 @@
   <!-- Features Section -->
   <div class="features-section mt-5 text-center">
     <h2 class="mb-4" style="font-size: 2rem; font-weight: bold">
-      ¿Qué puedes hacer aquí?
+      {{ isDev ? 'Funciones disponibles en entorno de pruebas:' : '¿Qué puedes hacer aquí?' }}
     </h2>
     <div class="row g-4">
       <div class="col-md-4">
-        <div
-          class="feature-card p-4 rounded shadow"
-          style="background-color: #f9f9f9"
-        >
-          <i class="bi bi-box-seam display-4 text-success mb-3"></i>
+        <div class="feature-card p-4 rounded shadow">
+          <i class="bi bi-box-seam display-4 mb-3"
+             [ngClass]="isDev ? 'text-primary' : 'text-success'"></i>
           <h5 class="mb-2">Gestión de Productos</h5>
         </div>
       </div>
       <div class="col-md-4">
-        <div
-          class="feature-card p-4 rounded shadow"
-          style="background-color: #f9f9f9"
-        >
-          <i class="bi bi-people-fill display-4 text-primary mb-3"></i>
+        <div class="feature-card p-4 rounded shadow">
+          <i class="bi bi-people-fill display-4 mb-3"
+             [ngClass]="isDev ? 'text-primary' : 'text-success'"></i>
           <h5 class="mb-2">Gestión de Proveedores</h5>
         </div>
       </div>
       <div class="col-md-4">
-        <div
-          class="feature-card p-4 rounded shadow"
-          style="background-color: #f9f9f9"
-        >
-          <i class="bi bi-diagram-3-fill display-4 text-warning mb-3"></i>
+        <div class="feature-card p-4 rounded shadow">
+          <i class="bi bi-diagram-3-fill display-4 mb-3"
+             [ngClass]="isDev ? 'text-primary' : 'text-warning'"></i>
           <h5 class="mb-2">Conexiones & Instalaciones</h5>
-          <p class="text-muted"></p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Footer Section -->
+  <!-- Footer -->
   <footer class="mt-5 text-center text-muted">
     <p class="mb-0">© 2025 {{ nombreEmpresa }}. Todos los derechos reservados.</p>
   </footer>
 </div>
+

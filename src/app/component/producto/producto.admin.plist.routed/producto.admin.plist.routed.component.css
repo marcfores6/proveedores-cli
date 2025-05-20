@@ -345,10 +345,55 @@
   background-color: #0a58ca !important;
   transform: translateY(-1px);
 }
+.entorno-dev .modal-content {
+  background: #f0f8ff; /* azul clarito */
+  border-radius: 1.2rem;
+  box-shadow: 0 10px 30px rgba(13, 110, 253, 0.3);
+}
+
+.entorno-dev .modal-header {
+  background-color: #0d6efd !important;
+  color: white;
+  border-bottom: none;
+  border-top-left-radius: 1.2rem;
+  border-top-right-radius: 1.2rem;
+}
+
+.entorno-dev .modal-footer {
+  border-top: none;
+}
+
+.entorno-dev .modal-body {
+  color: #0b5ed7;
+}
+
+.entorno-dev .modal-body i {
+  color: #0d6efd !important;
+  animation: bounce 0.6s infinite alternate;
+}
+
+.entorno-dev .modal-footer .btn.btn-outline-secondary {
+  border-color: #0d6efd !important;
+  color: #0d6efd !important;
+}
+
+.entorno-dev .modal-footer .btn.btn-outline-secondary:hover {
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+
+.entorno-dev .btn-close {
+  filter: brightness(0) invert(1); /* icono de cierre blanco */
+}
 
 /* Evitar fondo blanco entre header y contenido */
 .entorno-dev .container-fluid {
   background-color: #e3f2fd !important;
   margin-top: 0 !important;
   padding-top: 1rem !important;
+}
+
+.entorno-dev .spinner-border {
+  border-color: #cfe2ff; /* borde base azul claro */
+  border-top-color: #0d6efd !important; /* color del spinner azul Bootstrap */
 }

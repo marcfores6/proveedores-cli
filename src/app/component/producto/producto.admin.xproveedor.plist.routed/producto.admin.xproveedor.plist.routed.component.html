@@ -154,7 +154,7 @@
               <td [ngClass]="getCellClassUnidadDePack(producto)">
                 {{ producto.unidadDePack || "Sin dato" }}
               </td>
-              
+
               <td [ngClass]="getCellClass(producto.cajasCapa)">
                 {{ producto.cajasCapa || "Sin dato" }}
               </td>
@@ -188,7 +188,7 @@
               <td [ngClass]="getCellClass(producto.peso_caja)">
                 {{ producto.peso_caja || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.largo_unidad)"> 
+              <td [ngClass]="getCellClass(producto.largo_unidad)">
                 {{ producto.largo_unidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.ancho_unidad)">
@@ -198,17 +198,17 @@
                 {{ producto.alto_unidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.peso_neto_unidad)">
-                {{ producto.peso_neto_unidad || "Sin dato"}}
+                {{ producto.peso_neto_unidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.peso_escurrido_unidad)">
-                {{ producto.peso_escurrido_unidad || "Sin dato"}}
+                {{ producto.peso_escurrido_unidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.diasCaducidad)">
                 {{ producto.diasCaducidad || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.iva)">
                 {{ getIvaTexto(producto.iva) }}
-              </td>                                         
+              </td>
               <td [ngClass]="getCellClass(producto.observaciones)">
                 {{ producto.observaciones || "Sin dato" }}
               </td>
@@ -220,7 +220,7 @@
               </td>
               <td [ngClass]="getCellClassCodigoPais(producto.paisOrigen)">
                 {{ getPaisTexto(producto.paisOrigen) }}
-              </td>                           
+              </td>
               <td [ngClass]="getCellClass(producto.moq)">
                 {{ producto.moq || "Sin dato" }}
               </td>
@@ -232,7 +232,10 @@
                   <button
                     *ngIf="producto.showEnviarButton"
                     class="btn btn-primary"
-                    (click)="confirmarEnviarProducto(producto); $event.stopPropagation()"
+                    (click)="
+                      confirmarEnviarProducto(producto);
+                      $event.stopPropagation()
+                    "
                   >
                     <i class="bi bi-send"></i> Enviar
                   </button>
@@ -248,6 +251,16 @@
                   >
                     <i class="bi bi-pencil-square"></i>
                   </button>
+                  
+                  <!--<button
+                    class="btn btn-danger"
+                    (click)="
+                      confirmarEliminarProducto(producto);
+                      $event.stopPropagation()
+                    "
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>-->
                 </div>
               </td>
             </tr>
@@ -315,6 +328,7 @@
   tabindex="-1"
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
+   [ngClass]="{ 'entorno-dev': isDev }"
 >
   <div class="modal-dialog">
     <div class="modal-content border-success">
@@ -345,7 +359,6 @@
   </div>
 </div>
 
-
 <!-- Modal de confirmación -->
 <div
   class="modal fade"
@@ -353,11 +366,15 @@
   tabindex="-1"
   aria-labelledby="confirmModalLabel"
   aria-hidden="true"
+   [ngClass]="{ 'entorno-dev': isDev }"
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-success shadow">
       <div class="modal-header bg-success text-white">
-        <h5 class="modal-title d-flex align-items-center" id="confirmModalLabel">
+        <h5
+          class="modal-title d-flex align-items-center"
+          id="confirmModalLabel"
+        >
           <i class="bi bi-question-circle-fill me-2 fs-4"></i> Confirmación
         </h5>
         <button
@@ -368,7 +385,9 @@
         ></button>
       </div>
       <div class="modal-body text-center">
-        <i class="bi bi-exclamation-triangle-fill text-success fs-1 mb-3 d-block"></i>
+        <i
+          class="bi bi-exclamation-triangle-fill text-success fs-1 mb-3 d-block"
+        ></i>
         <p class="fs-5">{{ confirmMessage }}</p>
       </div>
       <div class="modal-footer justify-content-center">
@@ -390,4 +409,3 @@
     </div>
   </div>
 </div>
-

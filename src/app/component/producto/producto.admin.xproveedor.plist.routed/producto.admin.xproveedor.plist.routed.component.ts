@@ -97,12 +97,12 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
             oPageFromServer.totalPages
           );
           this.productosFiltrados = oPageFromServer.content
-          .filter(producto => producto.estado !== 'ENVIADO')
-          .filter(producto =>
-            !this.strFiltro ||
-            producto.descripcion?.toLowerCase().includes(this.strFiltro.toLowerCase())
-          );
-        
+            .filter(producto => producto.estado !== 'ENVIADO')
+            .filter(producto =>
+              !this.strFiltro ||
+              producto.descripcion?.toLowerCase().includes(this.strFiltro.toLowerCase())
+            );
+
 
           this.productosFiltrados.forEach(producto => {
             producto.showEnviarButton = this.checkIfAllFieldsAreFilled(producto);
@@ -128,7 +128,7 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
 
   checkIfAllFieldsAreFilled(product: IProducto): boolean {
     const camposIgnorados: (keyof IProducto)[] = ['unidadDePack', 'ean_pack', 'documentos'];
-  
+
     const camposObligatorios: (keyof IProducto)[] = [
       'descripcion', 'marca', 'unidadDeMedida', 'centralizado', 'unidadDeCaja',
       'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor',
@@ -140,30 +140,30 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
       'partidaArancelaria', 'leadtime', 'paisOrigen',
       'moq', 'multiploDePedido', 'imagenes'
     ];
-  
+
     for (const campo of camposObligatorios) {
       const valor = product[campo];
-  
+
       // Comprobamos que no esté vacío
       if (valor === null || valor === undefined || valor === '') {
         return false;
       }
-  
+
       // Si es numérico, debe ser mayor que 0
       if (typeof valor === 'number' && valor <= 0) {
         return false;
       }
-  
+
       // En algunos casos los campos numéricos vienen como string (como '0'), validamos también
       if (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0) {
         return false;
       }
     }
-  
+
     return true;
   }
-  
-  
+
+
 
   checkCompleteFields(product: IProducto): boolean {
     // Comprobar si todos los campos necesarios están completos
@@ -273,14 +273,14 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
       valor === undefined ||
       (typeof valor === 'string' && valor.trim() === '') ||
       (typeof valor === 'number' && valor <= 0) ||
-      (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0) 
+      (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0)
     ) {
       return 'text-danger fw-bold';
     }
-  
+
     return '';
   }
-  
+
 
   loadProveedorDescripcion(): void {
     const proveedorId = this.oSessionService.getSessionProveedorId();
@@ -427,21 +427,21 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
       default: return 'Sin dato';
     }
   }
-  
+
 
   getPaisTexto(codigo: string | number | undefined): string {
     if (!codigo || typeof codigo !== 'string') return 'Sin dato';
-  
+
     const pais = this.paisesList.find(p => p.codigo === codigo);
     return pais ? pais.nombre : 'Sin dato';
   }
-  
+
 
   getCellClassCodigoPais(codigo: string | undefined | null): string {
     if (!codigo || typeof codigo !== 'string' || codigo.trim() === '') {
       return 'text-danger fw-bold';
     }
-  
+
     const encontrado = this.paisesList.find(p => p.codigo === codigo);
     return encontrado ? '' : 'text-danger fw-bold'; // si no existe el código, marcar en rojo
   }
@@ -449,17 +449,42 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   getCellClassUnidadDePack(producto: IProducto): string {
     const unidadDePack = producto.unidadDePack;
     const unidadDeCaja = producto.unidadDeCaja;
-  
+
     // Si unidadDeCaja es 1, permitir que unidadDePack sea nulo
-    if ((unidadDeCaja === 1) && (unidadDePack === null || unidadDePack === undefined )) {
+    if ((unidadDeCaja === 1) && (unidadDePack === null || unidadDePack === undefined)) {
       return ''; // No marcar en rojo
     }
-  
+
     // Si unidadDePack es nulo en cualquier otro caso, marcarlo en rojo
     return this.getCellClass(unidadDePack);
   }
-  
-  
+
+  confirmarEliminarProducto(producto: IProducto): void {
+    this.productoPendiente = producto;
+    this.mostrarConfirmacion(
+      `¿Estás seguro de que deseas eliminar el producto '${producto.descripcion}'? Esta acción no se puede deshacer.`,
+      this.eliminarProductoConfirmado.bind(this)
+    );
+  }
+
+  eliminarProductoConfirmado(): void {
+    if (this.productoPendiente) {
+      this.oProductoService.delete(this.productoPendiente.id).subscribe({
+        next: () => {
+          this.showModal(`Producto eliminado correctamente.`);
+          this.getPage();
+          this.productoPendiente = null;
+        },
+        error: (err: any) => {
+          console.error('Error al eliminar producto:', err);
+          this.showModal('Hubo un problema al eliminar el producto.');
+          this.productoPendiente = null;
+        }
+      });
+    }
+  }
+
+
 
   cargarPaises(): void {
     this.paisesList = [{

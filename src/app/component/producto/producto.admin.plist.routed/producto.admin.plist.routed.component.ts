@@ -10,6 +10,8 @@ import { BotoneraService } from '../../../service/botonera.service';
 import { SessionService } from '../../../service/session.service';
 import { EntornoService } from '../../../service/entorno.service';
 
+declare var bootstrap: any; // Para usar Bootstrap en TypeScript
+
 @Component({
   selector: 'app-producto.admin.plist.routed',
   templateUrl: './producto.admin.plist.routed.component.html',
@@ -142,6 +144,22 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
     this.getPage();
   }
 
+  showModal(mensaje: string) {
+    this.message = mensaje;
+    const modalElement = document.getElementById('mimodal');
+    if (modalElement) {
+      this.myModal = new bootstrap.Modal(modalElement, {
+        keyboard: false,
+      });
+      this.myModal.show();
+    }
+  }
+
+  hideModal = () => {
+    this.myModal?.hide();
+    this.getPage(); // o navega o recarga si quieres
+  };
+
   goToRpp(nrpp: number) {
     this.nPage = 0;
     this.nRpp = nrpp;
@@ -221,11 +239,6 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
     return encontrado ? '' : 'text-danger fw-bold'; // si no existe el código, marcar en rojo
   }
 
-  hideModal = () => {
-    this.myModal?.hide();
-    this.getPage(); // o navega o recarga si quieres
-  };
-
   getCellClassUnidadDePack(producto: IProducto): string {
     const unidadDePack = producto.unidadDePack;
     const unidadDeCaja = producto.unidadDeCaja;
@@ -246,6 +259,39 @@ export class ProductoAdminPlistRoutedComponent implements OnInit {
     }
   }
 
+  mostrarConfirmacion(mensaje: string, accion: () => void): void {
+    this.confirmMessage = mensaje;
+    this.accionConfirmada = accion;
+    setTimeout(() => {
+      this.confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
+        keyboard: false,
+      });
+      this.confirmModal.show();
+    }, 0);
+  }
+
+  confirmarEliminarProducto(producto: IProducto): void {
+    this.productoPendiente = producto;
+    this.mostrarConfirmacion(
+      `¿Estás seguro de que deseas eliminar el producto '${producto.descripcion}'?`,
+      this.eliminarProductoConfirmado.bind(this)
+    );
+  }
+
+  eliminarProductoConfirmado(): void {
+    if (!this.productoPendiente) return;
+
+    this.oProductoService.delete(this.productoPendiente.id).subscribe({
+      next: () => {
+        this.showModal(`Producto '${this.productoPendiente.descripcion}' eliminado correctamente.`);
+        this.productoPendiente = null;
+        this.getPage(); // Refrescar la lista
+      },
+      error: () => {
+        this.showModal('Error al eliminar el producto.');
+      }
+    });
+  }
 
 
   cargarPaises(): void {

@@ -68,7 +68,7 @@ export class ProductoService {
   update(codigo: number, formData: FormData): Observable<IProducto> {
     return this.oHttp.put<IProducto>('http://localhost:8086/producto/update/' + codigo, formData);
   }
-  
+
 
   getOne(codigo: number): Observable<IProducto> {
     let URL: string = '';
@@ -78,8 +78,8 @@ export class ProductoService {
     return this.oHttp.get<IProducto>(URL);
   }
 
-  delete(codigo: number) {
-    return this.oHttp.delete('http://localhost:8086/producto/delete/' + codigo);
+  delete(id: number): Observable<any> {
+    return this.oHttp.delete(`${this.serverURL}/${id}`, { responseType: 'text' });
   }
 
   getImagen(codigo: number): Observable<Blob> {
@@ -95,18 +95,18 @@ export class ProductoService {
   // 🔥 Subir nuevos documentos PDF
   uploadDocumentos(codigo: number, documentos: File[], tipos: string[]): Observable<IProducto> {
     const formData = new FormData();
-  
+
     documentos.forEach((documento, i) => {
       formData.append('documentos', documento);
       formData.append('tiposDocumentos', tipos[i]); // importante
     });
-  
+
     return this.oHttp.put<IProducto>(
-      `http://localhost:8086/producto/update/${codigo}`, 
+      `http://localhost:8086/producto/update/${codigo}`,
       formData
     );
   }
-  
+
 
   // 🔥 Eliminar un documento PDF existente
   deleteDocumento(idDocumento: number): Observable<any> {
@@ -116,6 +116,6 @@ export class ProductoService {
   enviarProducto(id: number): Observable<any> {
     return this.oHttp.put('http://localhost:8086/producto/' + id + '/enviar', {}, { responseType: 'text' });
   }
-  
-  
+
+
 }
