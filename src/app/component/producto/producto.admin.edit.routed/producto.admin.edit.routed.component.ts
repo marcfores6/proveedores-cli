@@ -346,7 +346,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
       modalElement.addEventListener('hidden.bs.modal', () => {
         if (this.shouldRedirectAfterModal) {
-          this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+          this.oRouter.navigate(['/producto/xproveedor/plist']);
         }
       }, { once: true });
 
@@ -364,7 +364,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
   hideModal = () => {
     this.myModal?.hide();
-    this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+    this.oRouter.navigate(['/producto/xproveedor/plist']);
   };
 
 

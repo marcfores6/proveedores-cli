@@ -1,96 +1,119 @@
 /* === Navbar === */
 
 .custom-navbar {
-    background: linear-gradient(90deg, #005507 0%, #007509 100%);
-    padding: 0.8rem 1rem;
+  background: linear-gradient(90deg, #005507 0%, #007509 100%);
+  padding: 0.8rem 1rem;
+  width: 100%;
+}
+
+i.bi.bi-collection::before {
+  margin-right: 8px;
+}
+
+.custom-navbar .navbar-brand {
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.custom-navbar .nav-link {
+  color: #ffffff;
+  margin-right: 1rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover {
+  color: #f1f1f1;
+}
+
+.custom-navbar .nav-link.active {
+  font-weight: bold;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.custom-navbar .navbar-toggler {
+  border-color: #ffffff;
+}
+
+.custom-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.5%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.custom-navbar .btn-outline-light {
+  color: #ffffff;
+  border-color: #ffffff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.custom-navbar .btn-outline-light:hover {
+  background-color: #ffffff;
+  color: #005507;
+}
+
+.navbar-brand img {
+  max-width: 150px;
+  height: auto;
+  background-color: white;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+@media (max-width: 992px) {
+  .custom-navbar .nav-link {
+    margin-right: 0;
+    padding: 0.5rem 1rem;
   }
 
-  i.bi.bi-collection::before {
-    margin-right: 8px;
+  .custom-navbar .navbar-text {
+    display: block;
+    text-align: center;
+    margin-top: 0.5rem;
   }
-  
-  .custom-navbar .navbar-brand {
-    font-size: 1.5rem;
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  }
-  
-  .custom-navbar .nav-link {
-    color: #ffffff;
-    margin-right: 1rem;
-    position: relative;
-    transition: color 0.3s ease;
-  }
-  
-  .custom-navbar .nav-link:hover {
-    color: #f1f1f1;
-  }
-  
-  .custom-navbar .nav-link.active {
-    font-weight: bold;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 0.5rem;
-    padding: 0.5rem 0.8rem;
-  }
-  
-  .custom-navbar .navbar-toggler {
-    border-color: #ffffff;
-  }
-  
-  .custom-navbar .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.5%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-  }
-  
-  /* Botones */
-  .custom-navbar .btn-outline-light {
-    color: #ffffff;
-    border-color: #ffffff;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .custom-navbar .btn-outline-light:hover {
-    background-color: #ffffff;
-    color: #005507;
-  }
-  
-  /* Responsive */
-  @media (max-width: 992px) {
-    .custom-navbar .nav-link {
-      margin-right: 0;
-      padding: 0.5rem 1rem;
-    }
-  
-    .custom-navbar .navbar-text {
-      display: block;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
-  }
-  
+}
+
+@media (max-width: 768px) {
   .navbar-brand img {
-    max-width: 150px;
-    height: auto;
-    background-color: white;
-    border-radius: 4px; 
-    padding: 4px; 
+    max-width: 120px;
   }
-  
-  @media (max-width: 768px) {
-    .navbar-brand img {
-      max-width: 120px;
-    }
+
+  .custom-navbar .navbar-collapse {
+    flex-direction: column;
+    align-items: stretch;
   }
-  
-  /* 🎨 Navbar azul para entorno de desarrollo */
+
+  .custom-navbar .nav-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  .custom-navbar .navbar-text {
+    text-align: center;
+    margin-top: 0.75rem;
+  }
+
+  .custom-navbar select {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+
 .dev-navbar {
-  background: linear-gradient(90deg, #0d6efd 0%, #1a73e8 100%) !important;
+  background: linear-gradient(90deg, #dbefff, #f0f8ff) !important;
+  border-bottom: 2px solid #0d6efd;
 }
 
 .dev-navbar .nav-link,
 .dev-navbar .navbar-brand,
-.dev-navbar .btn-outline-light {
-  color: white !important;
+.dev-navbar .btn-outline-light,
+.dev-navbar .navbar-text,
+.dev-navbar .dropdown-toggle,
+.dev-navbar select {
+  color: #0b2545 !important;
 }
 
 .dev-navbar .nav-link.active {
@@ -98,36 +121,6 @@
   border-radius: 0.5rem;
 }
 
-.dev-navbar .btn-outline-light:hover {
-  background-color: white;
-  color: #0d6efd !important;
-}
-
-.dev-navbar .bi {
-  color: white !important;
-}
-
-/* 🎨 Texto y fondo adaptado para entorno de desarrollo */
-.dev-navbar .nav-link,
-.dev-navbar .navbar-brand,
-.dev-navbar .navbar-text,
-.dev-navbar .dropdown-toggle,
-.dev-navbar select {
-  color: #0b2545 !important; /* Azul oscuro elegante */
-}
-
-/* Íconos del menú también en azul oscuro */
-.dev-navbar .bi {
-  color: #0b2545 !important;
-}
-
-/* Fondo más claro para dar contraste */
-.dev-navbar {
-  background: linear-gradient(90deg, #dbefff, #f0f8ff) !important;
-  border-bottom: 2px #0d6efd;
-}
-
-/* Hover para los botones en entorno dev */
 .dev-navbar .btn-outline-light {
   color: #0b2545 !important;
   border-color: #0b2545 !important;
@@ -138,17 +131,19 @@
   color: white !important;
 }
 
-/* 👕 Tamaño reducido del logo SOLO en entorno de desarrollo */
+.dev-navbar .bi {
+  color: #0b2545 !important;
+}
+
 .logo-dev {
   width: 110px !important;
   max-width: 110px !important;
 }
-/* 🔵 Color de texto para sesión en desarrollo */
+
 .text-dev {
-  color: #08377c !important; /* Azul oscuro */
+  color: #08377c !important;
 }
 
-/* 🔵 Botón logout adaptado al entorno de desarrollo */
 .btn-outline-dev {
   color: #08377c !important;
   border: 1px solid #08377c !important;
@@ -157,4 +152,18 @@
 .btn-outline-dev:hover {
   background-color: #08377c !important;
   color: white !important;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.container-fluid {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }

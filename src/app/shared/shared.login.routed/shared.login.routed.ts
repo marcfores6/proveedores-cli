@@ -118,7 +118,7 @@ export class SharedLoginRoutedComponent implements OnInit {
           }
   
           this.oSessionService.login(token);
-          this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+          this.oRouter.navigate(['/producto/xproveedor/plist']);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error de login:', error);

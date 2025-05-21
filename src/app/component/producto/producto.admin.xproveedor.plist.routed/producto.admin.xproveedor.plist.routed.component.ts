@@ -183,11 +183,11 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   }
 
   edit(oProducto: IProducto) {
-    this.oRouter.navigate(['admin/producto/edit', oProducto.id]);
+    this.oRouter.navigate(['producto/edit', oProducto.id]);
   }
 
   view(oProducto: IProducto) {
-    this.oRouter.navigate(['admin/producto/view', oProducto.id]);
+    this.oRouter.navigate(['producto/view', oProducto.id]);
   }
 
   remove(oProducto: IProducto) {

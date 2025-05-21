@@ -161,6 +161,7 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
 
   onSubmit(): void {
     if (this.oProductoForm.valid) {
+      this.normalizarIdProveedor();
       const formData = new FormData();
 
       // Añadir campos del formulario
@@ -221,6 +222,16 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
     }
   }
 
+  private normalizarIdProveedor(): void {
+    const control = this.oProductoForm.get('proveedor');
+    if (control) {
+      const valor = control.value;
+      if (valor && valor.length < 5) {
+        control.setValue(valor.padStart(5, '0'));
+      }
+    }
+  }
+
 
   addImageUrl(url: string): void {
     if (url && !this.imagenUrls.includes(url)) {
@@ -249,7 +260,7 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
 
       modalElement.addEventListener('hidden.bs.modal', () => {
         if (this.shouldRedirectAfterModal) {
-          this.oRouter.navigate(['/admin/producto/xproveedor/plist']);
+          this.oRouter.navigate(['/producto/xproveedor/plist']);
         }
       }, { once: true });
 
