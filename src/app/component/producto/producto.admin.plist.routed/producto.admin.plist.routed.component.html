@@ -206,19 +206,19 @@
               <td>
                 <div class="btn-group btn-group-sm">
                   <button
-                    class="btn btn-success"
+                    class="btn-ver"
                     (click)="view(producto); $event.stopPropagation()"
                   >
                     <i class="bi bi-eye"></i>
                   </button>
                   <button
-                    class="btn btn-warning"
+                    class="btn-editar"
                     (click)="edit(producto); $event.stopPropagation()"
                   >
                     <i class="bi bi-pencil-square"></i>
                   </button>
                   <button
-                    class="btn btn-danger"
+                    class="btn-borrar"
                     (click)="
                       confirmarEliminarProducto(producto);
                       $event.stopPropagation()

@@ -11,8 +11,9 @@ import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 
-declare var bootstrap: any; 
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-login',
@@ -28,8 +29,9 @@ declare var bootstrap: any;
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatSelectModule ,
-    RouterLink
+    MatSelectModule,
+    RouterLink,
+    MatIconModule
   ]
 })
 export class SharedLoginRoutedComponent implements OnInit {
@@ -38,6 +40,7 @@ export class SharedLoginRoutedComponent implements OnInit {
   proveedores: any[] = [];
   loginForm: FormGroup = new FormGroup({});
   nifError: string | null = null;
+  hidePassword: boolean = true;
 
 
   constructor(
@@ -66,7 +69,7 @@ export class SharedLoginRoutedComponent implements OnInit {
         }
       });
   }
-  
+
 
   buscarProveedores() {
     const nif = this.loginForm.get('nif')?.value;
@@ -74,7 +77,7 @@ export class SharedLoginRoutedComponent implements OnInit {
       this.oLoginService.getProveedoresPorNif(nif).subscribe({
         next: (proveedores) => {
           this.proveedores = proveedores;
-  
+
           if (this.proveedores.length === 0) {
             this.nifError = 'No se encontró ninguna empresa asociada a ese NIF';
           } else {
@@ -99,7 +102,7 @@ export class SharedLoginRoutedComponent implements OnInit {
       this.loginForm.patchValue({ proveedorId: '' });
     }
   }
-  
+
 
   onSubmit() {
     if (this.loginForm.valid) {
@@ -110,19 +113,19 @@ export class SharedLoginRoutedComponent implements OnInit {
       ).subscribe({
         next: (token: string) => {
           this.errorMessage = null;
-  
+
           const successModal = document.getElementById('successModal');
           if (successModal) {
             const modal = new bootstrap.Modal(successModal);
             modal.show();
           }
-  
+
           this.oSessionService.login(token);
           this.oRouter.navigate(['/producto/xproveedor/plist']);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error de login:', error);
-  
+
           if (error.status === 401) {
             try {
               const backendError = typeof error.error === 'string' ? JSON.parse(error.error) : error.error;
@@ -133,8 +136,8 @@ export class SharedLoginRoutedComponent implements OnInit {
           } else {
             this.errorMessage = 'Error de conexión con el servidor. Intenta de nuevo más tarde.';
           }
-          
-  
+
+
           const errorModal = document.getElementById('errorModal');
           if (errorModal) {
             const modal = new bootstrap.Modal(errorModal);
@@ -144,8 +147,8 @@ export class SharedLoginRoutedComponent implements OnInit {
       });
     }
   }
-  
-  
+
+
 
   onAdmin() {
     this.loginForm.setValue({

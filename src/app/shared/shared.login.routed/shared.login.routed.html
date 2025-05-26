@@ -10,7 +10,12 @@
       <!-- NIF -->
       <mat-form-field appearance="outline" class="w-100 mb-3">
         <mat-label>NIF de la empresa</mat-label>
-        <input matInput type="text" placeholder="Máximo 20 caracteres" formControlName="nif" />
+        <input
+          matInput
+          type="text"
+          placeholder="Máximo 20 caracteres"
+          formControlName="nif"
+        />
         <mat-error *ngIf="loginForm.get('nif')?.hasError('required')">
           El NIF es obligatorio.
         </mat-error>
@@ -18,18 +23,22 @@
           El formato no es válido.
         </mat-error>
       </mat-form-field>
-      <div class="text-danger mt-1" *ngIf="nifError">
-        {{ nifError }}
-      </div>
+      <div class="text-danger mt-1" *ngIf="nifError">{{ nifError }}</div>
 
-      <br>
-      
+      <br />
 
       <!-- Empresa (Proveedor) -->
-      <mat-form-field appearance="outline" class="w-100 mb-3" *ngIf="proveedores.length > 0">
+      <mat-form-field
+        appearance="outline"
+        class="w-100 mb-3"
+        *ngIf="proveedores.length > 0"
+      >
         <mat-label>Empresa</mat-label>
         <mat-select formControlName="proveedorId">
-          <mat-option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
+          <mat-option
+            *ngFor="let proveedor of proveedores"
+            [value]="proveedor.id"
+          >
             {{ proveedor.descripcion }}
           </mat-option>
         </mat-select>
@@ -38,24 +47,59 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Contraseña -->
       <mat-form-field appearance="outline" class="w-100 mb-4">
         <mat-label>Contraseña</mat-label>
-        <input matInput type="password" placeholder="********" formControlName="password" />
+        <input
+          matInput
+          [type]="hidePassword ? 'password' : 'text'"
+          placeholder="********"
+          formControlName="password"
+        />
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="hidePassword = !hidePassword"
+          [attr.aria-label]="'Ver contraseña'"
+          [attr.aria-pressed]="!hidePassword"
+        >
+          <mat-icon
+            >{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon
+          >
+        </button>
         <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
           La contraseña es obligatoria.
         </mat-error>
       </mat-form-field>
 
       <!-- Botón login -->
-      <button mat-flat-button color="primary" type="submit" class="w-100 login-btn-animated">
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        class="w-100 login-btn-animated"
+      >
         <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar sesión
-      </button>    
+      </button>
 
       <!-- Botones rápidos -->
       <div class="d-flex justify-content-center mt-4 gap-3 flex-wrap">
-        <button mat-stroked-button color="primary" class="quick-btn" (click)="onAdmin()">Admin</button>
-        <button mat-stroked-button color="accent" class="quick-btn" (click)="onContable()">Contable</button>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="quick-btn"
+          (click)="onAdmin()"
+        >
+          Admin
+        </button>
+        <button
+          mat-stroked-button
+          color="accent"
+          class="quick-btn"
+          (click)="onContable()"
+        >
+          Contable
+        </button>
       </div>
     </form>
 
@@ -63,7 +107,7 @@
       <a class="text-primary" routerLink="/recuperar-password">
         ¿Has olvidado tu contraseña?
       </a>
-    </div>  
+    </div>
 
     <!-- Mensaje de error -->
     <div class="error-message mt-4" *ngIf="errorMessage">
@@ -72,20 +116,29 @@
   </div>
 </div>
 
-
 <!-- Modal de error -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-danger shadow">
       <div class="modal-header bg-danger text-white">
         <h5 class="modal-title">Error de inicio de sesión</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
       </div>
       <div class="modal-body">
         <p class="text-danger">{{ errorMessage }}</p>
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          data-bs-dismiss="modal"
+        >
+          Cerrar
+        </button>
       </div>
     </div>
   </div>

@@ -367,3 +367,28 @@ label.form-label.fw-bold {
   border-color: #0d6efd !important;
   text-shadow: 1px 1px 2px rgba(13, 110, 253, 0.3) !important;
 }
+.btn-listado {
+  background-color: #ffc107;        /* Amarillo Bootstrap */
+  color: #ffffff;                   /* Texto oscuro elegante */
+  border: none;
+  border-radius: 0.6rem;            /* Esquinas redondeadas suaves */
+  padding: 8px 16px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;                      /* Espacio entre icono y texto */
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-listado:hover {
+  background-color: #e0a800;        /* Tono más oscuro al pasar el ratón */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+}
+
+.btn-listado:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.4);
+}

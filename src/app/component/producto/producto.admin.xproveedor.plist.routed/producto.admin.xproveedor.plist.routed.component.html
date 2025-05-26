@@ -240,27 +240,18 @@
                     <i class="bi bi-send"></i> Enviar
                   </button>
                   <button
-                    class="btn btn-success"
+                    class="btn-ver"
                     (click)="view(producto); $event.stopPropagation()"
                   >
                     <i class="bi bi-eye"></i>
                   </button>
+
                   <button
-                    class="btn btn-warning"
+                    class="btn-editar"
                     (click)="edit(producto); $event.stopPropagation()"
                   >
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  
-                  <!--<button
-                    class="btn btn-danger"
-                    (click)="
-                      confirmarEliminarProducto(producto);
-                      $event.stopPropagation()
-                    "
-                  >
-                    <i class="bi bi-trash"></i>
-                  </button>-->
                 </div>
               </td>
             </tr>
@@ -328,7 +319,7 @@
   tabindex="-1"
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
-   [ngClass]="{ 'entorno-dev': isDev }"
+  [ngClass]="{ 'entorno-dev': isDev }"
 >
   <div class="modal-dialog">
     <div class="modal-content border-success">
@@ -366,7 +357,7 @@
   tabindex="-1"
   aria-labelledby="confirmModalLabel"
   aria-hidden="true"
-   [ngClass]="{ 'entorno-dev': isDev }"
+  [ngClass]="{ 'entorno-dev': isDev }"
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-success shadow">
