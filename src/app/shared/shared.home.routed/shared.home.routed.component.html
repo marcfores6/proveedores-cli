@@ -67,7 +67,7 @@
       <a
         routerLink="/admin/conexion/plist"
         class="btn btn-lg shadow-lg px-4 py-3"
-        [ngClass]="isDev ? 'btn-primary' : 'btn-warning'"
+        [ngClass]="isDev ? 'btn-primary' : 'btn-success'"
       >
         <i class="bi bi-diagram-3-fill"></i>
         {{ isDev ? "Conexiones & Tests" : "Conexiones & Instalaciones" }}
@@ -132,7 +132,7 @@
         <div class="feature-card p-4 rounded shadow">
           <i
             class="bi bi-diagram-3-fill display-4 mb-3"
-            [ngClass]="isDev ? 'text-primary' : 'text-warning'"
+            [ngClass]="isDev ? 'text-primary' : 'text-success'"
           ></i>
           <h5 class="mb-2">Conexiones & Instalaciones</h5>
         </div>
@@ -146,4 +146,43 @@
       © 2025 {{ nombreEmpresa }}. Todos los derechos reservados.
     </p>
   </footer>
+</div>
+
+
+
+<div
+  class="modal fade"
+  id="mimodal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  [ngClass]="{ 'entorno-dev': isDev }"
+>
+  <div class="modal-dialog">
+    <div class="modal-content border-success">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+          (click)="hideModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          data-bs-dismiss="modal"
+          (click)="hideModal()"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

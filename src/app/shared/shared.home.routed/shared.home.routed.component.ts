@@ -20,6 +20,8 @@ export class SharedHomeRoutedComponent implements OnInit {
   isDev: boolean = false;
   logoUrl: string = 'assets/img/supermercados-family-cash.png';
   nombreEmpresa: string = 'Family Cash';
+  message: string = '';
+  myModal: any;
 
 
   constructor(private router: Router, private entornoService: EntornoService) { }
@@ -46,6 +48,20 @@ export class SharedHomeRoutedComponent implements OnInit {
     }
   }
 
+  showModal(message: string) {
+    this.message = message;
+    const modal = new (window as any).bootstrap.Modal(
+      document.getElementById('mimodal'),
+      {}
+    );
+    modal.show();
+  }
+
+  hideModal = () => {
+    this.myModal?.hide();
+  };
+
+
   private getNifFromToken(): string | null {
     const token = localStorage.getItem('token');
     if (!token) return null;
@@ -66,7 +82,7 @@ export class SharedHomeRoutedComponent implements OnInit {
     if (nif) {
       this.router.navigate([`/bynif/${nif}`]);
     } else {
-      alert('No se ha podido obtener el NIF del token. Inicia sesión de nuevo.');
+      this.showModal('No se ha podido obtener el NIF del token. Inicia sesión de nuevo.');
     }
   }
 

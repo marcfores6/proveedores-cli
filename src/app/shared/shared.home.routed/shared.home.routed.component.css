@@ -366,3 +366,93 @@ footer {
     max-width: 100%;
   }
 }
+
+/* === MIMODAL estilo azul para entorno-dev === */
+.entorno-dev #mimodal .modal-content {
+  border: 3px solid #0d6efd;
+  box-shadow: 0 10px 40px rgba(13, 110, 253, 0.3);
+  background-color: #f0f8ff;
+}
+
+.entorno-dev #mimodal .modal-header {
+  background-color: #0d6efd !important;
+  color: white;
+}
+
+.entorno-dev #mimodal .btn-success {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  color: white !important;
+}
+
+.entorno-dev #mimodal .btn-success:hover {
+  background-color: #0b5ed7 !important;
+}
+
+.entorno-dev #mimodal .modal-body {
+  color: #0b5ed7;
+}
+
+.entorno-dev #mimodal .btn-close {
+  filter: brightness(0) invert(1);
+}
+
+/* === Modal de mensaje estilo dinámico === */
+.modal-content {
+  background: #f8f9fa;
+  border-radius: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: none;
+}
+
+.modal-body {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+.modal-footer .btn {
+  min-width: 100px;
+}
+
+/* === Verde (Producción) === */
+.modal-content:not(.entorno-dev) .modal-header {
+  background-color: #198754; /* Bootstrap verde */
+  color: white;
+}
+
+.modal-content:not(.entorno-dev) .btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.modal-content:not(.entorno-dev) .btn-success:hover {
+  background-color: #146c43;
+}
+
+/* === Azul (Desarrollo) === */
+.entorno-dev .modal-header {
+  background-color: #0d6efd !important;
+  color: white;
+}
+
+.entorno-dev .btn-success {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  color: white !important;
+}
+
+.entorno-dev .btn-success:hover {
+  background-color: #0b5ed7 !important;
+}
+
