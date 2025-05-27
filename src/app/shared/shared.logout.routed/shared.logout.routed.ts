@@ -6,6 +6,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 import { SessionService } from '../../service/session.service';
 import { IJwt } from '../../model/jwt.interface';
+import { EntornoService } from '../../service/entorno.service';
 
 @Component({
   selector: 'app-login',
@@ -20,15 +21,22 @@ import { IJwt } from '../../model/jwt.interface';
 export class SharedLogoutRoutedComponent implements OnInit {
 
   errorMessage: string | null = null;
+  isDev: boolean = false; 
+
 
   constructor(
     private http: HttpClient,
     private oLoginService: LoginService,
     private oSessionService: SessionService,
-    private oRouter:Router 
+    private oRouter:Router,
+    private entornoService: EntornoService
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.entornoService.getEntorno$().subscribe(entorno => {
+      this.isDev = entorno === 'dev';
+    });
+  }
 
  
   onLogout() {

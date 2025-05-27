@@ -28,13 +28,6 @@
                 </div>
               </div>
               <div class="col-md-4 mb-3">
-                <label class="form-label">Unidad de Medida</label>
-                <input type="text" formControlName="unidadDeMedida" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeMedida')}" />
-                <div class="invalid-feedback">
-                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
                 <label class="form-label">ID Proveedor</label>
                 <input type="text" formControlName="proveedor" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('proveedor')}" />
                 <div class="invalid-feedback">
@@ -48,6 +41,15 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
+              </div>
+              <!--
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Unidad de Medida</label>
+                <input type="text" formControlName="unidadDeMedida" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeMedida')}" />
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Campo obligatorio
+                </div>
+                
               <div class="col-md-4 mb-3">
                 <label class="form-label">Centralizado</label>
                 <input type="text" formControlName="centralizado" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('centralizado')}" />
@@ -55,7 +57,7 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
-            </div>
+              -->
 
             <!-- DATOS LOGÍSTICOS -->
             <h5 class="seccion-titulo mt-4">Datos logísticos</h5>

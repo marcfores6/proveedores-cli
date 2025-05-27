@@ -96,4 +96,18 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
   
-  
+  .entorno-dev h2 {
+  color: #003366; /* Azul fuerte */
+}
+
+.entorno-dev .boton-verde:not(:disabled) {
+  background-color: #005bbb !important; /* Azul activo */
+}
+
+.entorno-dev .boton-verde:not(:disabled):hover {
+  background-color: #0071e3 !important; /* Azul más claro al hacer hover */
+}
+
+.entorno-dev .text-success {
+  color: #005bbb;
+}

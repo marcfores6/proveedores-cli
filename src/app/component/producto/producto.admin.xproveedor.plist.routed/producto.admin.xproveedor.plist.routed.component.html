@@ -75,6 +75,7 @@
         {{ noArticulosMessage }}
       </div>
 
+
       <!-- Loader -->
       <div *ngIf="loading" class="text-center my-4">
         <div class="spinner-border text-success" role="status">
@@ -91,20 +92,30 @@
             <tr>
               <th>Descripción</th>
               <th>Marca</th>
+              <th>Proveedor</th>
+              <th>Referencia Proveedor</th>
+              <!--
               <th>Unidad de Medida</th>
               <th>Centralizado</th>
-              <th>Unidad Caja</th>
+              -->
               <!--
               <th>Unidad Servicio</th>
               -->
-              <th>Unidad Pack</th>
-              <th>Cajas Capa</th>
-              <th>Cajas Pack</th>
-              <th>Proveedor</th>
-              <th>Referencia Proveedor</th>
               <th>EAN</th>
               <th>EAN Caja</th>
               <th>EAN Pack</th>
+              <th>Unidad Caja</th>
+              <th>Unidad Pack</th>
+              <th>Cajas Capa</th>
+              <th>Cajas Palet</th>
+              <th>Días Caducidad</th>
+              <th>IVA</th>
+              <th>Lead Time</th>
+              <th>Partida Arancelaria</th>
+              <th>País Origen Producto</th>
+              <th>Multiplo de Pedido</th>
+              <th>MOQ</th>
+              <th>Observaciones</th>
               <th>Largo Caja</th>
               <th>Ancho Caja</th>
               <th>Alto Caja</th>
@@ -114,14 +125,6 @@
               <th>Alto Unidad</th>
               <th>Peso Neto Unidad</th>
               <th>Peso Escurrido Unidad</th>
-              <th>Días Caducidad</th>
-              <th>IVA</th>
-              <th>Observaciones</th>
-              <th>Partida Arancelaria</th>
-              <th>Lead Time</th>
-              <th>País Origen</th>
-              <th>MOQ</th>
-              <th>Multiplo de Pedido</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -137,30 +140,17 @@
               <td [ngClass]="getCellClass(producto.marca)">
                 {{ producto.marca || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.unidadDeMedida)">
+              <!--<td [ngClass]="getCellClass(producto.unidadDeMedida)">
                 {{ producto.unidadDeMedida || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.centralizado)">
                 {{ producto.centralizado || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.unidadDeCaja)">
-                {{ producto.unidadDeCaja || "Sin dato" }}
-              </td>
+              </td>-->
               <!--
               <td [ngClass]="getCellClass(producto.unidadDeServicio)">
                 {{ producto.unidadDeServicio || "Sin dato" }}
-              </td>
+              </td> ESTOS NO SE MUESTRAN
               -->
-              <td [ngClass]="getCellClassUnidadDePack(producto)">
-                {{ producto.unidadDePack || "Sin dato" }}
-              </td>
-
-              <td [ngClass]="getCellClass(producto.cajasCapa)">
-                {{ producto.cajasCapa || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.cajasPalet)">
-                {{ producto.cajasPalet || "Sin dato" }}
-              </td>
               <td [ngClass]="getCellClass(producto.proveedor)">
                 {{ producto.proveedor || "Sin dato" }}
               </td>
@@ -175,6 +165,42 @@
               </td>
               <td [ngClass]="getCellClass(producto.ean_pack)">
                 {{ producto.ean_pack || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.unidadDeCaja)">
+                {{ producto.unidadDeCaja || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClassUnidadDePack(producto)">
+                {{ producto.unidadDePack || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.cajasCapa)">
+                {{ producto.cajasCapa || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.cajasPalet)">
+                {{ producto.cajasPalet || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.diasCaducidad)">
+                {{ producto.diasCaducidad || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.iva)">
+                {{ getIvaTexto(producto.iva) }}
+              </td>
+              <td [ngClass]="getCellClass(producto.leadtime)">
+                {{ producto.leadtime || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.partidaArancelaria)">
+                {{ producto.partidaArancelaria || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClassCodigoPais(producto.paisOrigen)">
+                {{ getPaisTexto(producto.paisOrigen) }}
+              </td>
+              <td [ngClass]="getCellClass(producto.multiploDePedido)">
+                {{ producto.multiploDePedido || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.moq)">
+                {{ producto.moq || "Sin dato" }}
+              </td>
+              <td [ngClass]="getCellClass(producto.observaciones)">
+                {{ producto.observaciones || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.largo_caja)">
                 {{ producto.largo_caja || "Sin dato" }}
@@ -203,30 +229,6 @@
               <td [ngClass]="getCellClass(producto.peso_escurrido_unidad)">
                 {{ producto.peso_escurrido_unidad || "Sin dato" }}
               </td>
-              <td [ngClass]="getCellClass(producto.diasCaducidad)">
-                {{ producto.diasCaducidad || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.iva)">
-                {{ getIvaTexto(producto.iva) }}
-              </td>
-              <td [ngClass]="getCellClass(producto.observaciones)">
-                {{ producto.observaciones || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.partidaArancelaria)">
-                {{ producto.partidaArancelaria || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.leadtime)">
-                {{ producto.leadtime || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClassCodigoPais(producto.paisOrigen)">
-                {{ getPaisTexto(producto.paisOrigen) }}
-              </td>
-              <td [ngClass]="getCellClass(producto.moq)">
-                {{ producto.moq || "Sin dato" }}
-              </td>
-              <td [ngClass]="getCellClass(producto.multiploDePedido)">
-                {{ producto.multiploDePedido || "Sin dato" }}
-              </td>
               <td>
                 <div class="btn-group btn-group-sm">
                   <button
@@ -252,6 +254,10 @@
                   >
                     <i class="bi bi-pencil-square"></i>
                   </button>
+                </div>
+
+                <div *ngIf="!producto.showEnviarButton" class="text-danger small">
+                  No se puede enviar: {{ getMotivoBloqueo(producto) }}
                 </div>
               </td>
             </tr>

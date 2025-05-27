@@ -7,8 +7,8 @@ export interface IProducto {
   descripcion?: string;
 
   marca?: string;
-  unidadDeMedida?: string;
-  centralizado?: string;
+  //unidadDeMedida?: string;
+  //centralizado?: string;
   apeso?: number;
   unidadDeCaja?: number;
   //unidadDeServicio?: number;

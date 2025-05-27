@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { EntornoService } from '../../service/entorno.service';
 
 declare var bootstrap: any;
 
@@ -41,13 +42,14 @@ export class SharedLoginRoutedComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({});
   nifError: string | null = null;
   hidePassword: boolean = true;
+  isDev: boolean = false;
 
 
   constructor(
     private oLoginService: LoginService,
     private oSessionService: SessionService,
     private oRouter: Router,
-    private oCryptoService: CryptoService
+     private entornoService: EntornoService
   ) {
     this.loginForm = new FormGroup({
       nif: new FormControl('', [Validators.required]),
@@ -59,6 +61,9 @@ export class SharedLoginRoutedComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.entornoService.getEntorno$().subscribe((nuevoEntorno) => {
+      this.isDev = nuevoEntorno === 'dev';
+    });
     this.loginForm.get('nif')?.valueChanges
       .subscribe(nif => {
         if (nif && nif.trim() !== '') {
@@ -68,6 +73,7 @@ export class SharedLoginRoutedComponent implements OnInit {
           this.loginForm.patchValue({ proveedorId: '' });
         }
       });
+      
   }
 
 

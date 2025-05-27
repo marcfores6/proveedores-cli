@@ -120,4 +120,24 @@
       min-width: 100%;
     }
   }
-  
+  .entorno-dev .logout-card {
+  box-shadow: 0 10px 30px rgba(0, 91, 187, 0.3);
+}
+
+.entorno-dev .logout-card:hover {
+  box-shadow: 0 15px 40px rgba(0, 91, 187, 0.5);
+}
+
+.entorno-dev .logout-title {
+  color: #003366;
+  text-shadow: 0 2px 4px rgba(0, 91, 187, 0.2);
+}
+
+.entorno-dev .btn-logout-confirm {
+  background-color: #005bbb;
+}
+
+.entorno-dev .btn-logout-confirm:hover {
+  background-color: #0071e3;
+  box-shadow: 0 6px 20px rgba(0, 91, 187, 0.7);
+}

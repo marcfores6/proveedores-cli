@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ProductoService } from '../../../service/producto.service';
 import { IProducto } from '../../../model/producto.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -86,10 +85,10 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
     this.oProductoForm = this.formBuilder.group({
       descripcion: new FormControl('', [Validators.required]),
       marca: new FormControl('', [Validators.required]),
-      unidadDeMedida: new FormControl('', [Validators.required]),
+      //unidadDeMedida: new FormControl('', [Validators.required]),
       proveedor: new FormControl('', [Validators.required]),
       referenciaProveedor: new FormControl('', [Validators.required]),
-      centralizado: new FormControl('', [Validators.required]),
+      //centralizado: new FormControl('', [Validators.required]),
 
       ean: new FormControl('', [
         Validators.required,

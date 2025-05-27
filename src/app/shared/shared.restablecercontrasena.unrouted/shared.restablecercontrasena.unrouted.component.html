@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-5" [ngClass]="{ 'entorno-dev': isDev }">
   <h2>Restablecer contraseña</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">

@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { EntornoService } from '../../service/entorno.service';
 
 @Component({
   selector: 'app-shared.restablecercontrasena.unrouted',
@@ -34,15 +35,21 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
   isLoading: boolean = false;
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
+  isDev: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    private entornoService: EntornoService
   ) { }
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
+
+    this.entornoService.getEntorno$().subscribe(entorno => {
+      this.isDev = entorno === 'dev';
+    });
 
     this.form = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(8)]],

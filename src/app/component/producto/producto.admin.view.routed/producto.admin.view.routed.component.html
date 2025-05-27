@@ -10,7 +10,7 @@
         <i class="bi bi-box-seam"></i>
       </h1>
 
-      <!-- 🟩 DATOS COMERCIALES -->
+      <!-- DATOS COMERCIALES -->
       <h4 class="text-success fw-bold mt-4">Datos comerciales</h4>
       <table class="table table-bordered table-striped text-center">
         <tbody>
@@ -23,17 +23,19 @@
             <td>{{ oProducto.marca | noDisponible }}</td>
           </tr>
           <tr>
-            <th>Unidad de Medida</th>
-            <td>{{ oProducto.unidadDeMedida | noDisponible }}</td>
-          </tr>
-          <tr>
             <th>Referencia del Proveedor</th>
             <td>{{ oProducto.referenciaProveedor | noDisponible }}</td>
+          </tr>
+          <!--
+          <tr>
+            <th>Unidad de Medida</th>
+            <td>{{ oProducto.unidadDeMedida | noDisponible }}</td>
           </tr>
           <tr>
             <th>Centralizado</th>
             <td>{{ oProducto.centralizado | noDisponible }}</td>
           </tr>
+          -->
         </tbody>
       </table>
 

@@ -28,15 +28,16 @@
                 </div>
               </div>
               <div class="col-md-4 mb-3">
-                <label class="form-label">Unidad de Medida</label>
-                <input type="text" formControlName="unidadDeMedida" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeMedida')}" />
+                <label class="form-label">Referencia Proveedor</label>
+                <input type="text" formControlName="referenciaProveedor" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('referenciaProveedor')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
+              <!--
               <div class="col-md-4 mb-3">
-                <label class="form-label">Referencia Proveedor</label>
-                <input type="text" formControlName="referenciaProveedor" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('referenciaProveedor')}" />
+                <label class="form-label">Unidad de Medida</label>
+                <input type="text" formControlName="unidadDeMedida" class="form-control" [ngClass]="{'is-invalid': isFieldInvalid('unidadDeMedida')}" />
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
@@ -48,6 +49,7 @@
                   <i class="bi bi-exclamation-circle"></i> Campo obligatorio
                 </div>
               </div>
+              -->
             </div>
 
             <!-- DATOS LOGÍSTICOS -->
@@ -109,7 +111,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('required') || oProductoForm.get('unidadDeCaja')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
-
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
 
               <!--
@@ -132,6 +136,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDePack')?.hasError('required') || oProductoForm.get('unidadDePack')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
 
               <div class="col-md-4 mb-3">
@@ -143,6 +150,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('cajasCapa')?.hasError('required') || oProductoForm.get('cajasCapa')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Cajas por Palet</label>
@@ -153,6 +163,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('cajasPalet')?.hasError('required') || oProductoForm.get('cajasPalet')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Días de Caducidad</label>
@@ -162,6 +175,9 @@
                 </div>
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('diasCaducidad')?.hasError('required') || oProductoForm.get('diasCaducidad')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
                 </div>
               </div>
             
@@ -196,6 +212,9 @@
                 </div>
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('leadtime')?.hasError('required') || oProductoForm.get('leadtime')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
                 </div>
               </div>
               
@@ -244,6 +263,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('moq')?.hasError('required') || oProductoForm.get('moq')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
             
               <div class="col-md-8 mb-3">
@@ -267,6 +289,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('largo_caja')?.hasError('required') || oProductoForm.get('largo_caja')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Ancho Caja</label>
@@ -277,6 +302,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('ancho_caja')?.hasError('required') || oProductoForm.get('ancho_caja')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Alto Caja</label>
@@ -286,6 +314,9 @@
                 </div>
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('alto_caja')?.hasError('required') || oProductoForm.get('alto_caja')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
                 </div>
               </div>
               <div class="col-md-4 mb-3">
@@ -312,6 +343,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('largo_unidad')?.hasError('required') || oProductoForm.get('largo_unidad')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Ancho Unidad</label>
@@ -322,6 +356,9 @@
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('ancho_unidad')?.hasError('required') || oProductoForm.get('ancho_unidad')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
                 </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label">Alto Unidad</label>
@@ -331,6 +368,9 @@
                 </div>
                 <div class="invalid-feedback" *ngIf="oProductoForm.get('alto_unidad')?.hasError('required') || oProductoForm.get('alto_unidad')?.hasError('min')">
                   <i class="bi bi-exclamation-circle"></i> Debe ser mayor que cero
+                </div>
+                <div class="invalid-feedback" *ngIf="oProductoForm.get('unidadDeCaja')?.hasError('soloEnteros')">
+                  <i class="bi bi-exclamation-circle"></i> Debe ser un número entero
                 </div>
               </div>
               <div class="col-md-4 mb-3">
@@ -421,8 +461,21 @@
             <!-- Subida de nuevos documentos -->
             <div class="col-12">
               <label class="form-label fw-bold">Añadir nuevos documentos (PDF)</label>
-              <input type="file" id="documentos" (change)="onFileSelectDocumentos($event)" accept=".pdf" class="form-control" multiple />
+              <input
+                type="file"
+                id="documentos"
+                (change)="onFileSelectDocumentos($event)"
+                accept=".pdf"
+                class="form-control"
+                [ngClass]="{ 'is-invalid': faltanTiposObligatorios }"
+                multiple
+              />
+              <div *ngIf="faltanTiposObligatorios" class="invalid-feedback d-block">
+                <i class="bi bi-exclamation-circle"></i> Debes añadir al menos una ficha técnica y una ficha logística
+              </div>
             </div>
+
+
 
             <!-- Vista previa de documentos nuevos -->
             <form #f="ngForm">

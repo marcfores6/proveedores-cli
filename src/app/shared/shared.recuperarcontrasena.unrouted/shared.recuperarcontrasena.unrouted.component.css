@@ -78,4 +78,18 @@
   .boton-verde:hover {
     background-color: #388e3c !important; /* verde más claro al pasar el ratón */
   }
-  
+  .entorno-dev .login-title {
+  color: #003366;
+}
+
+.entorno-dev .boton-verde {
+  background-color: #005bbb !important;
+}
+
+.entorno-dev .boton-verde:hover {
+  background-color: #0071e3 !important;
+}
+
+.entorno-dev .text-center {
+  color: #005bbb;
+}

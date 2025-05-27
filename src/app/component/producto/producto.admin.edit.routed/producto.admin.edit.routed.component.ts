@@ -13,7 +13,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { EntornoService } from '../../../service/entorno.service';
 
-
 declare let bootstrap: any;
 
 @Component({
@@ -39,6 +38,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
   idElementoPendienteEliminar: number | null = null;
   tipoElementoPendiente: 'imagen' | 'documento' | null = null;
   esConfirmacionEliminacion: boolean = false;
+  faltanTiposObligatorios: boolean = false;
   ivaOptions = [
     { id: 1, label: '4%' },
     { id: 2, label: '10%' },
@@ -78,7 +78,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     this.cargarPaises();
     this.cargarProducto();
 
-     const entornoAnterior = localStorage.getItem('entornoActual');
+    const entornoAnterior = localStorage.getItem('entornoActual');
 
     this.entornoService.getEntorno$().subscribe({
       next: (nuevoEntorno) => {
@@ -109,13 +109,12 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       }
     });
 
+    this.comprobarDocumentosEnTiempoReal();
   }
 
   cargarProducto(): void {
     this.oProductoService.get(this.id).subscribe({
       next: (data: IProducto) => {
-        this.oProducto = data;
-
         this.oProducto = data;
 
         // Forzar tipo 'T' por defecto si algún documento no lo tiene
@@ -128,9 +127,9 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         this.oProductoForm = this.fb.group({
           descripcion: new FormControl(data.descripcion ?? '', { nonNullable: true, validators: [Validators.required] }),
           marca: new FormControl(data.marca ?? '', { nonNullable: true, validators: [Validators.required] }),
-          unidadDeMedida: new FormControl(data.unidadDeMedida ?? '', { nonNullable: true, validators: [Validators.required] }),
+          /*unidadDeMedida: new FormControl(data.unidadDeMedida ?? '', { nonNullable: true, validators: [Validators.required] }),*/
           referenciaProveedor: new FormControl(data.referenciaProveedor ?? '', { nonNullable: true, validators: [Validators.required] }),
-          centralizado: new FormControl(data.centralizado ?? '', { nonNullable: true, validators: [Validators.required] }),
+          /*centralizado: new FormControl(data.centralizado ?? '', { nonNullable: true, validators: [Validators.required] }),*/
 
           ean: new FormControl(data.ean ?? '', {
             nonNullable: true,
@@ -155,34 +154,34 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
           unidadDeCaja: new FormControl(data.unidadDeCaja ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.min(1)]
+            validators: [Validators.required, Validators.min(1), this.soloEnterosValidator]
           }),
-          unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true }), // puede ser 0 o vacío
+          unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true, validators:[this.soloEnterosValidator]}), // puede ser 0 o vacío
 
           largo_caja: new FormControl(data.largo_caja ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
           ancho_caja: new FormControl(data.ancho_caja ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
           alto_caja: new FormControl(data.alto_caja ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
 
           largo_unidad: new FormControl(data.largo_unidad ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
           ancho_unidad: new FormControl(data.ancho_unidad ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
           alto_unidad: new FormControl(data.alto_unidad ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
 
           peso_neto_unidad: new FormControl(data.peso_neto_unidad ?? '', {
@@ -200,16 +199,16 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           }),
           cajasCapa: new FormControl(data.cajasCapa ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
           cajasPalet: new FormControl(data.cajasPalet ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
 
           diasCaducidad: new FormControl(data.diasCaducidad ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]
+            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
           }),
           iva: new FormControl(data.iva ?? '', {
             nonNullable: true,
@@ -217,7 +216,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           }),
           leadtime: new FormControl(data.leadtime ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.min(1)]
+            validators: [Validators.required, Validators.min(1), this.soloEnterosValidator]
           }),
           partidaArancelaria: new FormControl(data.partidaArancelaria ?? '', {
             nonNullable: true,
@@ -234,7 +233,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
           moq: new FormControl(data.moq ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.min(1)]
+            validators: [Validators.required, Validators.min(1), this.soloEnterosValidator]
           }),
 
           multiplo_de_pedido: new FormControl(this.normalizarMultiplo(data.multiploDePedido ?? ''), {
@@ -253,8 +252,10 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           this.calcularTotalOperacion();
         });
 
-        // Ejecutar una vez con los valores iniciales
-        this.calcularTotalOperacion();
+        this.oProductoForm.get('multiplo_de_pedido')?.valueChanges.subscribe(() => {
+          this.calcularTotalOperacion();
+        });
+
 
         // Establecer moq con unidadDeCaja al cargar
         const unidadDeCaja = data.unidadDeCaja ?? 1;
@@ -277,9 +278,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
         const controls = this.oProductoForm.controls as { [key: string]: FormControl<any> };
         if (controls['descripcion'].value === '') controls['descripcion'].markAsTouched();
         if (controls['marca'].value === '') controls['marca'].markAsTouched();
-        if (controls['unidadDeMedida'].value === '') controls['unidadDeMedida'].markAsTouched();
         if (controls['referenciaProveedor'].value === '') controls['referenciaProveedor'].markAsTouched();
-        if (controls['centralizado'].value === '') controls['centralizado'].markAsTouched();
         if (controls['ean'].value === '') controls['ean'].markAsTouched();
         if (controls['ean_caja'].value === '') controls['ean_caja'].markAsTouched();
         if (controls['unidadDeCaja'].value === '') controls['unidadDeCaja'].markAsTouched();
@@ -358,9 +357,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       }
     }
   }
-
-
-
 
   hideModal = () => {
     this.myModal?.hide();
@@ -451,11 +447,39 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
     const tieneImagenesExistentes = !!(this.oProducto && this.oProducto.imagenes && this.oProducto.imagenes.length > 0);
     const tieneNuevasImagenes = inputImagenes?.files && inputImagenes.files.length > 0;
+    const tieneDecimal = Object.entries(this.oProductoForm.controls).some(([key, control]) =>
+      control.errors?.['soloEnteros']
+    );
+
+    if (tieneDecimal) {
+      this.showModal('Algunos campos deben ser números enteros (sin decimales). Revisa los campos en rojo.', false);
+      return;
+    }
 
     if (!tieneImagenesExistentes && !tieneNuevasImagenes) {
       this.showModal('Debes añadir al menos una imagen para poder guardar el producto.', false);
       return;
     }
+
+    // Validar que haya al menos una ficha técnica (T) y una ficha logística (L)
+    // Validar que haya al menos una ficha técnica (T) y una ficha logística (L)
+    const todosLosTipos = [
+      ...(this.oProducto?.documentos?.map(doc => doc.tipo) || []),
+      ...this.documentoNuevos.map(doc => doc.tipo)
+    ];
+
+    const tieneFichaTecnica = todosLosTipos.includes('T');
+    const tieneFichaLogistica = todosLosTipos.includes('L');
+
+    if (!tieneFichaTecnica || !tieneFichaLogistica) {
+      this.showModal('Debes añadir al menos una ficha técnica y una ficha logística.', false);
+      this.faltanTiposObligatorios = true; // ⚠️ Variable para marcar en el HTML
+      return;
+    } else {
+      this.faltanTiposObligatorios = false;
+    }
+
+
 
 
     const formData = new FormData();
@@ -553,9 +577,6 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
       });
     }
   }
-
-
-
 
   removeDocumento(index: number): void {
     this.documentoPreviews.splice(index, 1);
@@ -678,14 +699,44 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     return expectedChecksum === checksum ? null : { digitoControlIncorrecto: true };
   };
 
+     comprobarDocumentosEnTiempoReal(): void {
+      setInterval(() => {
+        const todosLosTipos = [
+          ...(this.oProducto?.documentos?.map(doc => doc.tipo) || []),
+          ...this.documentoNuevos.map(doc => doc.tipo)
+        ];
+        this.faltanTiposObligatorios = !(
+          todosLosTipos.includes('T') &&
+          todosLosTipos.includes('L')
+        );
+      }, 300); // Cada 300ms, como en las imágenes
+    }
 
+    calcularTotalOperacion(): void {
+    const unidadesCaja = this.oProductoForm.get('unidadDeCaja')?.value || 0;
+    const cajasPalet = this.oProductoForm.get('cajasPalet')?.value || 0;
+    const multiplo = this.oProductoForm.get('multiplo_de_pedido')?.value;
 
+    let total = 0;
 
-  calcularTotalOperacion(): void {
-    const cajas = this.oProductoForm.get('cajasPalet')?.value || 0;
-    const unidades = this.oProductoForm.get('unidadDeCaja')?.value || 0;
-    this.totalOperacion = cajas * unidades;
+    switch (multiplo) {
+      case 'Caja':
+        total = unidadesCaja;
+        break;
+      case 'Palet':
+        total = unidadesCaja * cajasPalet;
+        break;
+      case 'Camión':
+        total = unidadesCaja * cajasPalet * 33;
+        break;
+      default:
+        total = 0;
+    }
+
+    this.totalOperacion = total;
   }
+
+
 
 
   normalizarMultiplo(valor: any): string {
@@ -695,6 +746,19 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     }
     return ''; // valor por defecto si viene mal o null
   }
+
+
+  soloEnterosValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (value === null || value === '') return null;
+
+    const parsed = Number(value);
+    if (!Number.isInteger(parsed)) {
+      return { soloEnteros: true };
+    }
+
+    return null;
+  };
 
 
 

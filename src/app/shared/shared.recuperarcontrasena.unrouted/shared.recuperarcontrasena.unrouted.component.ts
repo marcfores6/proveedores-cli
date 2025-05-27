@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { IProveedor } from '../../model/proveedor.interface';
 import { ProveedorService } from '../../service/proveedor.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { EntornoService } from '../../service/entorno.service';
 
 @Component({
   selector: 'app-shared.recuperarcontrasena.unrouted',
@@ -33,14 +34,19 @@ export class SharedRecuperarContrasenaUnroutedComponent implements OnInit {
   proveedores: IProveedor[] = [];
   isLoading: boolean = false;
   emailRequired: boolean = false; // Para controlar si mostramos el campo de email
+  isDev: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private proveedorService: ProveedorService
+    private proveedorService: ProveedorService,
+    private entornoService: EntornoService
   ) {}
 
   ngOnInit(): void {
+    this.entornoService.getEntorno$().subscribe(entorno => {
+      this.isDev = entorno === 'dev';
+    });
     this.recuperarForm = this.fb.group({
       nif: ['', Validators.required],
       proveedorId: ['', Validators.required],

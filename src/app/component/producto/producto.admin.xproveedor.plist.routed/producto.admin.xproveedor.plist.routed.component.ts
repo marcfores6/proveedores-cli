@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, FormBuilder } from '@angular/forms';
 import { SessionService } from '../../../service/session.service';
 import { ProveedorService } from '../../../service/proveedor.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { EntornoService } from '../../../service/entorno.service';
+import { IProductoDocumento } from '../../../model/productoDocumento.interface';
 
 declare var bootstrap: any; // Para usar Bootstrap en TypeScript
 
@@ -127,41 +127,72 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
   }
 
   checkIfAllFieldsAreFilled(product: IProducto): boolean {
-    const camposIgnorados: (keyof IProducto)[] = ['unidadDePack', 'ean_pack', 'documentos'];
+  // Validar imágenes
+  if (!product.imagenes || product.imagenes.length === 0) return false;
 
-    const camposObligatorios: (keyof IProducto)[] = [
-      'descripcion', 'marca', 'unidadDeMedida', 'centralizado', 'unidadDeCaja',
-      'cajasCapa', 'cajasPalet', 'proveedor', 'referenciaProveedor',
-      'ean', 'ean_caja',
-      'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja',
-      'largo_unidad', 'ancho_unidad', 'alto_unidad',
-      'peso_neto_unidad', 'peso_escurrido_unidad',
-      'diasCaducidad', 'iva', 'observaciones',
-      'partidaArancelaria', 'leadtime', 'paisOrigen',
-      'moq', 'multiploDePedido', 'imagenes'
-    ];
+  // Validar documentos (al menos uno de tipo 'T' y uno 'L')
+  const documentos = product.documentos as IProductoDocumento[] || [];
+  const tieneFichaT = documentos.some(d => d.tipo === 'T');
+  const tieneFichaL = documentos.some(d => d.tipo === 'L');
+  if (!tieneFichaT || !tieneFichaL) return false;
 
-    for (const campo of camposObligatorios) {
-      const valor = product[campo];
+  // Campos obligatorios visibles en la tabla
+  const campos: (keyof IProducto)[] = [
+    'descripcion', 'marca', 'proveedor', 'referenciaProveedor',
+    'ean', 'ean_caja',
+    'unidadDeCaja', 'cajasCapa', 'cajasPalet', 'diasCaducidad', 'iva',
+    'leadtime', 'partidaArancelaria', 'paisOrigen',
+    'multiploDePedido', 'moq', 'observaciones',
+    'largo_caja', 'ancho_caja', 'alto_caja', 'peso_caja',
+    'largo_unidad', 'ancho_unidad', 'alto_unidad',
+    'peso_neto_unidad', 'peso_escurrido_unidad'
+  ];
 
-      // Comprobamos que no esté vacío
-      if (valor === null || valor === undefined || valor === '') {
-        return false;
+  // Validación genérica de campos
+  for (const campo of campos) {
+    const valor = product[campo];
+    if (valor === null || valor === undefined || valor === '') return false;
+    if (typeof valor === 'number' && valor <= 0) return false;
+    if (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0) return false;
+  }
+
+  // Validación especial de unidadDePack (solo si unidadDeCaja !== 1)
+  if (product.unidadDeCaja !== 1) {
+    if (!product.unidadDePack || product.unidadDePack <= 0) return false;
+  }
+
+  return true;
+}
+
+
+
+
+    getMotivoBloqueo(producto: IProducto): string {
+      if (!producto.imagenes || producto.imagenes.length === 0) return 'Falta imagen';
+      if (!producto.documentos || producto.documentos.length === 0) return 'Faltan documentos';
+
+      const documentos = producto.documentos as IProductoDocumento[];
+      const tieneFichaT = documentos.some(doc => doc.tipo === 'T');
+      const tieneFichaL = documentos.some(doc => doc.tipo === 'L');
+      if (!tieneFichaT) return 'Falta ficha técnica (T)';
+      if (!tieneFichaL) return 'Falta ficha logística (L)';
+
+      if (!producto.descripcion) return 'Falta descripción';
+      if (!producto.marca) return 'Falta marca';
+      if (!producto.referenciaProveedor) return 'Falta referencia proveedor';
+      if (!producto.ean) return 'Falta EAN';
+      if (!producto.ean_caja) return 'Falta EAN caja';
+      if (!producto.unidadDeCaja || producto.unidadDeCaja <= 0) return 'Falta unidad de caja';
+
+      if (producto.unidadDeCaja !== 1 && (!producto.unidadDePack || producto.unidadDePack <= 0)) {
+        return 'Falta unidad de pack';
       }
 
-      // Si es numérico, debe ser mayor que 0
-      if (typeof valor === 'number' && valor <= 0) {
-        return false;
-      }
+      // Agrega más comprobaciones si lo deseas...
 
-      // En algunos casos los campos numéricos vienen como string (como '0'), validamos también
-      if (typeof valor === 'string' && !isNaN(+valor) && +valor <= 0) {
-        return false;
-      }
+      return 'Campos obligatorios incompletos';
     }
 
-    return true;
-  }
 
 
 

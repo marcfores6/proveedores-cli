@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class EntornoService {
   private readonly STORAGE_KEY = 'entorno';
   private entornoSubject = new BehaviorSubject<'dev' | 'prod'>(this.getEntornoFromStorage());
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   private getEntornoFromStorage(): 'dev' | 'prod' {
     const entorno = localStorage.getItem(this.STORAGE_KEY);
@@ -26,12 +27,17 @@ export class EntornoService {
 
   setEntorno(entorno: 'dev' | 'prod'): void {
     localStorage.setItem(this.STORAGE_KEY, entorno);
-    this.entornoSubject.next(entorno); // 🔄 Emite el cambio a los suscriptores
+    this.entornoSubject.next(entorno);
+
+    // 🔐 Seguridad: cerrar sesión y redirigir al login
+    localStorage.removeItem('token');
+    sessionStorage.clear();
+    this.router.navigate(['/login'], { queryParams: { motivo: 'entorno' } });
   }
 
   getApiUrl(): string {
     return this.getEntorno() === 'dev'
       ? 'http://localhost:8086'
-      : 'http://localhost:8086'; // cambia aquí si usas otro host en producción
+      : 'http://localhost:8086'; // cambia si usas otro host en producción
   }
 }
