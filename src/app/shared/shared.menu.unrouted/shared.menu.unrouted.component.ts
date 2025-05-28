@@ -74,6 +74,7 @@ export class SharedMenuUnroutedComponent implements OnInit {
 
 
   initializeSession(): void {
+     console.log('Llamando a initializeSession');
   this.activeSession = this.oSessionService.isSessionActive();
   this.userNif = this.oSessionService.getSessionNif();
   this.isAdmin = this.oAuthHelper.isAdmin();
