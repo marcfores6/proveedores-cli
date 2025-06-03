@@ -65,13 +65,13 @@ export class AuthService {
 
   recuperarPassword(data: { nif: string; proveedorId: number }) {
     return this.oHttp.post<{ mensaje: string }>(
-      'http://localhost:8086/proveedor/recuperar-password', // 👈 URL CORRECTA
+      'https://proveedores-back-familycash.onrender.com/proveedor/recuperar-password', // 👈 URL CORRECTA
       data
     );
   }
   
   addEmailToProveedor(proveedorId: number, email: string): Observable<any> {
-    return this.oHttp.post(`http://localhost:8086/proveedor/}/add-email`, { proveedorId, email });
+    return this.oHttp.post(`https://proveedores-back-familycash.onrender.com/proveedor/}/add-email`, { proveedorId, email });
   }
   
 

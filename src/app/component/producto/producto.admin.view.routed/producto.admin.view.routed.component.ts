@@ -64,7 +64,7 @@ export class ProductoAdminViewRoutedComponent implements OnInit {
             .map(img =>
               img.imagenUrl!.startsWith('http')
                 ? img.imagenUrl!
-                : 'http://localhost:8086' + img.imagenUrl!
+                : 'https://proveedores-back-familycash.onrender.com' + img.imagenUrl!
             );
           this.totalImagenes = this.oProducto.imagenes.length;
           this.activeIndex = 0;

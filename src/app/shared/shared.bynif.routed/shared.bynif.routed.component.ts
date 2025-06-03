@@ -85,7 +85,7 @@ export class SharedBynifRoutedComponent implements OnInit {
     // ✅ Añadir cabecera X-Entorno
     const entorno = this.entornoService.getEntorno();
 
-    fetch(`http://localhost:8086/proveedor/update-password?${params.toString()}`, {
+    fetch(`https://proveedores-back-familycash.onrender.com/proveedor/update-password?${params.toString()}`, {
       method: 'PUT',
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -160,7 +160,7 @@ export class SharedBynifRoutedComponent implements OnInit {
     // ✅ Añadir cabecera X-Entorno
     const entorno = this.entornoService.getEntorno();
 
-    fetch(`http://localhost:8086/proveedor/${this.oProveedor.id}/update-email?${params.toString()}`, {
+    fetch(`https://proveedores-back-familycash.onrender.com/proveedor/${this.oProveedor.id}/update-email?${params.toString()}`, {
       method: 'PUT',
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),

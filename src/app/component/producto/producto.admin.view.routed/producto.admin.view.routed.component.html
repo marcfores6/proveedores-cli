@@ -164,7 +164,7 @@
                 [src]="
                   img.imagenUrl!.startsWith('http')
                     ? img.imagenUrl
-                    : 'http://localhost:8086' + img.imagenUrl
+                    : 'https://proveedores-back-familycash.onrender.com' + img.imagenUrl
                 "
                 class="d-block w-100"
                 style="
@@ -214,7 +214,7 @@
               *ngFor="let doc of oProducto.documentos"
             >
               <a
-                [href]="'http://localhost:8086' + doc.documentoUrl"
+                [href]="'https://proveedores-back-familycash.onrender.com' + doc.documentoUrl"
                 target="_blank"
               >
                 {{ doc.nombreOriginal || "Documento sin nombre" }}

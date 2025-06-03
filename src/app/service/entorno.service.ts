@@ -37,7 +37,7 @@ export class EntornoService {
 
   getApiUrl(): string {
     return this.getEntorno() === 'dev'
-      ? 'http://localhost:8086'
-      : 'http://localhost:8086'; // cambia si usas otro host en producción
+      ? 'hhttps://proveedores-back-familycash.onrender.com'
+      : 'https://proveedores-back-familycash.onrender.com'; // cambia si usas otro host en producción
   }
 }

@@ -59,7 +59,7 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
       validators: this.passwordsIgualesValidator
     });
 
-    this.http.get(`http://localhost:8086/proveedor/bytoken/${this.token}`).subscribe((res: any) => {
+    this.http.get(`https://proveedores-back-familycash.onrender.com/proveedor/bytoken/${this.token}`).subscribe((res: any) => {
       if (res && !res.email) {
         this.form.controls['email'].setValidators([Validators.required, Validators.email]);
         this.form.controls['email'].updateValueAndValidity();
@@ -80,7 +80,7 @@ export class SharedRestablecerContrasenaUnroutedComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.http.post('http://localhost:8086/proveedor/restablecer-password', null, {
+    this.http.post('https://proveedores-back-familycash.onrender.com/proveedor/restablecer-password', null, {
       params: {
         token: this.token,
         newPassword: newPassword,

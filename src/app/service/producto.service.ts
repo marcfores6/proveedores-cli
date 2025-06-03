@@ -62,17 +62,17 @@ export class ProductoService {
   create(formData: FormData): Observable<IProducto> {
     let URL: string = '';
     URL += this.serverURL;
-    return this.oHttp.post<IProducto>('http://localhost:8086/producto/new', formData);
+    return this.oHttp.post<IProducto>('http://proveedeores.familycash.es/producto/new', formData);
   }
 
   update(codigo: number, formData: FormData): Observable<IProducto> {
-    return this.oHttp.put<IProducto>('http://localhost:8086/producto/update/' + codigo, formData);
+    return this.oHttp.put<IProducto>('http://proveedeores.familycash.es/producto/update/' + codigo, formData);
   }
 
 
   getOne(codigo: number): Observable<IProducto> {
     let URL: string = '';
-    URL += 'http://localhost:8086';
+    URL += 'http://proveedeores.familycash.es';
     URL += '/producto';
     URL += '/' + codigo;
     return this.oHttp.get<IProducto>(URL);
@@ -83,13 +83,13 @@ export class ProductoService {
   }
 
   getImagen(codigo: number): Observable<Blob> {
-    return this.oHttp.get('http://localhost:8086/producto/' + codigo + '/imagen', {
+    return this.oHttp.get('http://proveedeores.familycash.es/producto/' + codigo + '/imagen', {
       responseType: 'blob',
     });
   }
 
   deleteImagen(codigo: number): Observable<any> {
-    return this.oHttp.delete('http://localhost:8086/producto/imagen/' + codigo);
+    return this.oHttp.delete('http://proveedeores.familycash.es/producto/imagen/' + codigo);
   }
 
   // 🔥 Subir nuevos documentos PDF
@@ -102,7 +102,7 @@ export class ProductoService {
     });
 
     return this.oHttp.put<IProducto>(
-      `http://localhost:8086/producto/update/${codigo}`,
+      `http://proveedeores.familycash.es/producto/update/${codigo}`,
       formData
     );
   }
@@ -110,11 +110,11 @@ export class ProductoService {
 
   // 🔥 Eliminar un documento PDF existente
   deleteDocumento(idDocumento: number): Observable<any> {
-    return this.oHttp.delete('http://localhost:8086/producto/documento/' + idDocumento);
+    return this.oHttp.delete('http://proveedeores.familycash.es/producto/documento/' + idDocumento);
   }
 
   enviarProducto(id: number): Observable<any> {
-    return this.oHttp.put('http://localhost:8086/producto/' + id + '/enviar', {}, { responseType: 'text' });
+    return this.oHttp.put('http://proveedeores.familycash.es/producto/' + id + '/enviar', {}, { responseType: 'text' });
   }
 
 

@@ -15,11 +15,11 @@ export class LoginService {
 
   login(nif: string, password: string, proveedorId: number) {
     const loginData = { nif, password, proveedorId };
-    return this.oHttp.post<string>('http://localhost:8086/auth/login', loginData, { responseType: 'text' as 'json' });
+    return this.oHttp.post<string>('https://proveedores-back-familycash.onrender.com/auth/login', loginData, { responseType: 'text' as 'json' });
   }
   
   getProveedoresPorNif(nif: string) {
-    return this.oHttp.get<any[]>(`http://localhost:8086/auth/proveedores-por-nif?nif=${nif}`);
+    return this.oHttp.get<any[]>(`https://proveedores-back-familycash.onrender.com/auth/proveedores-por-nif?nif=${nif}`);
   }
   
 }

@@ -3,11 +3,11 @@ import { HttpHeaders } from "@angular/common/http";
 export const environment = {
   production: false,
   entorno: 'dev',
-  apiUrl: 'http://localhost:8086' // ⚠ Asegúrate que apunta a tu backend local
+  apiUrl: 'https://proveedores-back-familycash.onrender.com' // ⚠ Asegúrate que apunta a tu backend local
 };
 
 
-export const serverURL: string = 'http://localhost:8086';
+export const serverURL: string = 'https://proveedores-back-familycash.onrender.com';
 
 export const httpOptions = {
   headers: new HttpHeaders({
