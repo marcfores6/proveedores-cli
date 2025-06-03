@@ -16,7 +16,7 @@ import { EntornoService } from '../../service/entorno.service';
 })
 export class SharedMenuUnroutedComponent implements OnInit {
 
-  strRuta: string = 'https://proveedores.familycash.es/';
+  strRuta: string = '';
   activeSession: boolean = false;
   userNif: string = '';
   proveedorDescripcion: string = '';
