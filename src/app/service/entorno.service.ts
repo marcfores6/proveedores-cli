@@ -37,7 +37,7 @@ export class EntornoService {
 
   getApiUrl(): string {
     return this.getEntorno() === 'dev'
-      ? 'hhttps://proveedores-back-familycash.onrender.com'
+      ? 'https://proveedores-back-familycash.onrender.com'
       : 'https://proveedores-back-familycash.onrender.com'; // cambia si usas otro host en producción
   }
 }

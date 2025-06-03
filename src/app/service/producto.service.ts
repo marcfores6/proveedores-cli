@@ -1,47 +1,29 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { httpOptions, serverURL } from '../environment/environment';
-import { IProducto } from '../model/producto.interface';
 import { Observable } from 'rxjs';
 import { IPage } from '../model/model.interface';
+import { IProducto } from '../model/producto.interface';
+import { EntornoService } from './entorno.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductoService {
-  serverURL: string = serverURL + '/producto';
 
-  constructor(private oHttp: HttpClient) { }
+  constructor(
+    private oHttp: HttpClient,
+    private entornoService: EntornoService
+  ) { }
 
-  getPage(
-    page: number,
-    size: number,
-    field: string,
-    dir: string,
-    filtro: string
-  ): Observable<IPage<IProducto>> {
-    let URL: string = '';
-    URL += this.serverURL;
-    if (!page) {
-      page = 0;
-    }
-    URL += '?page=' + page;
-    if (!size) {
-      size = 10;
-    }
-    URL += '&size=' + size;
-    if (field) {
-      URL += '&sort=' + field;
-      if (dir === 'asc') {
-        URL += ',asc';
-      } else {
-        URL += ',desc';
-      }
-    }
-    if (filtro) {
-      URL += '&filter=' + filtro;
-    }
-    return this.oHttp.get<IPage<IProducto>>(URL, httpOptions);
+  private get serverURL(): string {
+    return `${this.entornoService.getApiUrl()}/producto`;
+  }
+
+  getPage(page: number, size: number, field: string, dir: string, filtro: string): Observable<IPage<IProducto>> {
+    let URL = `${this.serverURL}?page=${page ?? 0}&size=${size ?? 10}`;
+    if (field) URL += `&sort=${field},${dir === 'asc' ? 'asc' : 'desc'}`;
+    if (filtro) URL += `&filter=${filtro}`;
+    return this.oHttp.get<IPage<IProducto>>(URL);
   }
 
   getPageByProveedor(page: number, size: number): Observable<IPage<IProducto>> {
@@ -50,32 +32,20 @@ export class ProductoService {
     });
   }
 
-
-
   get(codigo: number): Observable<IProducto> {
-    let URL: string = '';
-    URL += this.serverURL;
-    URL += '/' + codigo;
-    return this.oHttp.get<IProducto>(URL);
+    return this.oHttp.get<IProducto>(`${this.serverURL}/${codigo}`);
+  }
+
+  getOne(codigo: number): Observable<IProducto> {
+    return this.oHttp.get<IProducto>(`${this.serverURL}/${codigo}`);
   }
 
   create(formData: FormData): Observable<IProducto> {
-    let URL: string = '';
-    URL += this.serverURL;
-    return this.oHttp.post<IProducto>('http://proveedeores.familycash.es/producto/new', formData);
+    return this.oHttp.post<IProducto>(`${this.serverURL}/new`, formData);
   }
 
   update(codigo: number, formData: FormData): Observable<IProducto> {
-    return this.oHttp.put<IProducto>('http://proveedeores.familycash.es/producto/update/' + codigo, formData);
-  }
-
-
-  getOne(codigo: number): Observable<IProducto> {
-    let URL: string = '';
-    URL += 'http://proveedeores.familycash.es';
-    URL += '/producto';
-    URL += '/' + codigo;
-    return this.oHttp.get<IProducto>(URL);
+    return this.oHttp.put<IProducto>(`${this.serverURL}/update/${codigo}`, formData);
   }
 
   delete(id: number): Observable<any> {
@@ -83,39 +53,30 @@ export class ProductoService {
   }
 
   getImagen(codigo: number): Observable<Blob> {
-    return this.oHttp.get('http://proveedeores.familycash.es/producto/' + codigo + '/imagen', {
+    return this.oHttp.get(`${this.serverURL}/${codigo}/imagen`, {
       responseType: 'blob',
     });
   }
 
   deleteImagen(codigo: number): Observable<any> {
-    return this.oHttp.delete('http://proveedeores.familycash.es/producto/imagen/' + codigo);
+    return this.oHttp.delete(`${this.serverURL}/imagen/${codigo}`);
   }
 
-  // 🔥 Subir nuevos documentos PDF
   uploadDocumentos(codigo: number, documentos: File[], tipos: string[]): Observable<IProducto> {
     const formData = new FormData();
-
-    documentos.forEach((documento, i) => {
-      formData.append('documentos', documento);
-      formData.append('tiposDocumentos', tipos[i]); // importante
+    documentos.forEach((doc, i) => {
+      formData.append('documentos', doc);
+      formData.append('tiposDocumentos', tipos[i]);
     });
-
-    return this.oHttp.put<IProducto>(
-      `http://proveedeores.familycash.es/producto/update/${codigo}`,
-      formData
-    );
+    return this.oHttp.put<IProducto>(`${this.serverURL}/update/${codigo}`, formData);
   }
 
-
-  // 🔥 Eliminar un documento PDF existente
   deleteDocumento(idDocumento: number): Observable<any> {
-    return this.oHttp.delete('http://proveedeores.familycash.es/producto/documento/' + idDocumento);
+    return this.oHttp.delete(`${this.serverURL}/documento/${idDocumento}`);
   }
 
   enviarProducto(id: number): Observable<any> {
-    return this.oHttp.put('http://proveedeores.familycash.es/producto/' + id + '/enviar', {}, { responseType: 'text' });
+    return this.oHttp.put(`${this.serverURL}/${id}/enviar`, {}, { responseType: 'text' });
   }
-
 
 }
