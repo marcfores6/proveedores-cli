@@ -12,6 +12,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { EntornoService } from '../../../service/entorno.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 declare let bootstrap: any;
 
@@ -69,6 +70,8 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private entornoService: EntornoService,
+    private productoService: ProductoService,
+    private sanitizer: DomSanitizer,
   ) {
     this.oProductoForm = this.fb.group({});
   }
@@ -156,7 +159,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
             nonNullable: true,
             validators: [Validators.required, Validators.min(1), this.soloEnterosValidator]
           }),
-          unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true, validators:[this.soloEnterosValidator]}), // puede ser 0 o vacío
+          unidadDePack: new FormControl(data.unidadDePack ?? '', { nonNullable: true, validators: [this.soloEnterosValidator] }), // puede ser 0 o vacío
 
           largo_caja: new FormControl(data.largo_caja ?? '', {
             nonNullable: true,
@@ -699,20 +702,20 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     return expectedChecksum === checksum ? null : { digitoControlIncorrecto: true };
   };
 
-     comprobarDocumentosEnTiempoReal(): void {
-      setInterval(() => {
-        const todosLosTipos = [
-          ...(this.oProducto?.documentos?.map(doc => doc.tipo) || []),
-          ...this.documentoNuevos.map(doc => doc.tipo)
-        ];
-        this.faltanTiposObligatorios = !(
-          todosLosTipos.includes('T') &&
-          todosLosTipos.includes('L')
-        );
-      }, 300); // Cada 300ms, como en las imágenes
-    }
+  comprobarDocumentosEnTiempoReal(): void {
+    setInterval(() => {
+      const todosLosTipos = [
+        ...(this.oProducto?.documentos?.map(doc => doc.tipo) || []),
+        ...this.documentoNuevos.map(doc => doc.tipo)
+      ];
+      this.faltanTiposObligatorios = !(
+        todosLosTipos.includes('T') &&
+        todosLosTipos.includes('L')
+      );
+    }, 300); // Cada 300ms, como en las imágenes
+  }
 
-    calcularTotalOperacion(): void {
+  calcularTotalOperacion(): void {
     const unidadesCaja = this.oProductoForm.get('unidadDeCaja')?.value || 0;
     const cajasPalet = this.oProductoForm.get('cajasPalet')?.value || 0;
     const multiplo = this.oProductoForm.get('multiplo_de_pedido')?.value;
@@ -760,6 +763,16 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     return null;
   };
 
+  // Verifica si la imagen viene del servidor FTP
+  esImagenDesdeFtp(url?: string): boolean {
+    return !!url && url.startsWith('https://proveedores.familycash.es/assets/');
+  }
+
+
+  // Limpia la URL para que Angular no la bloquee
+  getUrlSegura(url?: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url || '');
+  }
 
 
   cargarPaises(): void {

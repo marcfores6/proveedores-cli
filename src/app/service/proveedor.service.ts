@@ -55,4 +55,6 @@ export class ProveedorService {
     return this.oHttp.get<IProveedor[]>(`${this.entornoService.getApiUrl()}/auth/proveedores-por-nif?nif=${nif}`);
   }
 
+  
+
 }
