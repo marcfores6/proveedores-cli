@@ -435,9 +435,15 @@
               <label class="form-label fw-bold">Documentos actuales</label>
               <ul class="list-group">
                 <li class="list-group-item d-flex align-items-center justify-content-between flex-wrap" *ngFor="let doc of oProducto.documentos">
-                  <a [href]="getUrlSegura(doc.documentoUrl)" target="_blank" class="btn btn-outline-primary btn-sm">
+                  <a [href]="getUrlSegura(doc.documentoUrl)" target="_blank"
+                    class="btn btn-sm"
+                    [ngClass]="{
+                      'btn-outline-success': !isDev,
+                      'btn-outline-primary': isDev
+                    }">
                     {{ doc.nombreOriginal }}
                   </a>
+
                  
                 
                   <select

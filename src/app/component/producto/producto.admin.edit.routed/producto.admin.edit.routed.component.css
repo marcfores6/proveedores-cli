@@ -328,3 +328,17 @@
 .entorno-dev .modal-header.bg-danger {
   background-color: #dc3545 !important;
 }
+
+
+/* === Hover documentos según entorno === */
+.btn-outline-success:hover {
+  background-color: #00a340;
+  color: white;
+  border-color: #008c34;
+}
+
+.entorno-dev .btn-outline-primary:hover {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0b5ed7;
+}
