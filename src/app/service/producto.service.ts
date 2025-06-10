@@ -26,11 +26,21 @@ export class ProductoService {
     return this.oHttp.get<IPage<IProducto>>(URL);
   }
 
-  getPageByProveedor(page: number, size: number): Observable<IPage<IProducto>> {
-    return this.oHttp.get<IPage<IProducto>>(`${this.serverURL}/pagebyproveedor`, {
-      params: { page: page.toString(), size: size.toString() }
-    });
+getPageByProveedor(page: number, size: number, sortField?: string, sortDir?: string) {
+  const params: any = {
+    page: page.toString(),
+    size: size.toString()
+  };
+
+  if (sortField && sortDir) {
+    params.sort = `${sortField},${sortDir}`;
   }
+
+  return this.oHttp.get<IPage<IProducto>>(`${this.serverURL}/pagebyproveedor`, { params });
+}
+
+
+
 
   get(codigo: number): Observable<IProducto> {
     return this.oHttp.get<IProducto>(`${this.serverURL}/${codigo}`);

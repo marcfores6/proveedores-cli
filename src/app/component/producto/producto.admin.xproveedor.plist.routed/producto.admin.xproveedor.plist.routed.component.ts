@@ -85,46 +85,50 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     this.isDev = this.entornoService.getEntorno() === 'dev';
   }
 
-  getPage() {
-    this.loading = true; // Iniciar el cargador
-    this.oProductoService
-      .getPageByProveedor(this.nPage, this.nRpp)
-      .subscribe({
-        next: (oPageFromServer: IPage<IProducto>) => {
-          this.oPage = oPageFromServer;
-          this.arrBotonera = this.oBotoneraService.getBotonera(
-            this.nPage,
-            oPageFromServer.totalPages
+  getPage(): void {
+  this.loading = true;
+
+  this.oProductoService
+    .getPageByProveedor(this.nPage, this.nRpp, this.strField, this.strDir)
+    .subscribe({
+      next: (oPageFromServer: IPage<IProducto>) => {
+        this.oPage = oPageFromServer;
+
+        this.arrBotonera = this.oBotoneraService.getBotonera(
+          this.nPage,
+          oPageFromServer.totalPages
+        );
+
+        // Filtro por texto y estado
+        this.productosFiltrados = oPageFromServer.content
+          .filter(p => p.estado !== 'ENVIADO')
+          .filter(p =>
+            !this.strFiltro ||
+            p.descripcion?.toLowerCase().includes(this.strFiltro.toLowerCase())
           );
-          this.productosFiltrados = oPageFromServer.content
-            .filter(producto => producto.estado !== 'ENVIADO')
-            .filter(producto =>
-              !this.strFiltro ||
-              producto.descripcion?.toLowerCase().includes(this.strFiltro.toLowerCase())
-            );
 
+        // Botón "Enviar" si cumple todos los requisitos
+        this.productosFiltrados.forEach(p => {
+          p.showEnviarButton = this.checkIfAllFieldsAreFilled(p);
+        });
 
-          this.productosFiltrados.forEach(producto => {
-            producto.showEnviarButton = this.checkIfAllFieldsAreFilled(producto);
-          });
+        // Contador de productos listos para enviar
+        this.productosParaEnviar = this.productosFiltrados.filter(p => p.showEnviarButton).length;
 
-          this.productosParaEnviar = this.productosFiltrados.filter(p => p.showEnviarButton).length;
+        // Mostrar mensaje si no hay productos
+        this.noArticulosMessage = this.productosFiltrados.length === 0
+          ? 'No hay productos pendientes por enviar.'
+          : null;
 
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar productos:', err);
+        this.loading = false;
+      }
+    });
+}
 
-          if (this.productosFiltrados.length === 0) {
-            this.noArticulosMessage = 'No hay productos pendientes por enviar.';
-          } else {
-            this.noArticulosMessage = null;
-          }
-
-          this.loading = false; // Detener el cargador
-        },
-        error: (err) => {
-          console.log(err);
-          this.loading = false; // Detener el cargador en caso de error
-        }
-      });
-  }
 
   checkIfAllFieldsAreFilled(product: IProducto): boolean {
   // Validar imágenes
@@ -250,11 +254,12 @@ export class ProductoAdminXProveedorPlistRoutedComponent implements OnInit {
     return false;
   }
 
-  sort(field: string) {
-    this.strField = field;
-    this.strDir = this.strDir === 'asc' ? 'desc' : 'asc';
-    this.getPage();
-  }
+  sort(field: string): void {
+  this.strField = field;
+  this.strDir = this.strDir === 'asc' ? 'desc' : 'asc';
+  this.getPage(); // Recarga con nueva ordenación
+}
+
 
   goToRpp(nrpp: number) {
     this.nPage = 0;

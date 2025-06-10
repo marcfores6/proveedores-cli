@@ -163,28 +163,28 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
 
           largo_caja: new FormControl(data.largo_caja ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
           ancho_caja: new FormControl(data.ancho_caja ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
+             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
           alto_caja: new FormControl(data.alto_caja ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
+             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
 
           largo_unidad: new FormControl(data.largo_unidad ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
+             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
           ancho_unidad: new FormControl(data.ancho_unidad ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
+             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
           alto_unidad: new FormControl(data.alto_unidad ?? '', {
             nonNullable: true,
-            validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), this.soloEnterosValidator]
+             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
 
           peso_neto_unidad: new FormControl(data.peso_neto_unidad ?? '', {
@@ -686,13 +686,16 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     }
 
     const digits = value.split('').map(d => parseInt(d, 10));
-    const checksum = digits.pop();
+    const checksum = digits.pop()!;
     const length = digits.length;
 
     let sum = 0;
+
     if (length === 12) {
+      // EAN-13
       sum = digits.reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 1 : 3), 0);
     } else if (length === 13) {
+      // EAN-14 usa el mismo algoritmo que EAN-13
       sum = digits.reverse().reduce((acc, digit, idx) => acc + digit * (idx % 2 === 0 ? 3 : 1), 0);
     } else {
       return { formatoInvalido: true };
@@ -701,6 +704,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
     const expectedChecksum = (10 - (sum % 10)) % 10;
     return expectedChecksum === checksum ? null : { digitoControlIncorrecto: true };
   };
+
 
   comprobarDocumentosEnTiempoReal(): void {
     setInterval(() => {

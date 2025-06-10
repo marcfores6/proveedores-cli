@@ -125,3 +125,14 @@ body {
 .dev-style .proveedor-table tbody tr:nth-child(even) td {
   background-color: #f5faff !important;
 }
+/* Lápiz azul en entorno dev */
+.dev-style .animate-pencil {
+  border-color: #0d6efd !important;
+  color: #0d6efd !important;
+}
+
+.dev-style .animate-pencil:hover {
+  transform: scale(1.15) rotate(-5deg);
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.6); /* Azul Bootstrap */
+  background-color: #cfe2ff !important; /* Fondo azul más fuerte al hacer hover */
+}

@@ -9,7 +9,6 @@
         <i class="bi bi-list"></i> Listado de Productos
       </h2>
 
-
       <!-- Buscador -->
       <div class="mb-4 d-flex justify-content-center align-items-center">
         <input
@@ -66,8 +65,28 @@
         >
           <thead class="table-success text-white bg-success">
             <tr>
-              <th>Descripción</th>
-              <th>Marca</th>
+              <th (click)="sort('descripcion')" class="sortable">
+                Descripción
+                <i
+                  *ngIf="strField === 'descripcion'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('marca')" class="sortable">
+                Marca
+                <i
+                  *ngIf="strField === 'marca'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
               <!--
               <th>Unidad de Medida</th>
               <th>Centralizado</th>
@@ -75,33 +94,306 @@
               <!--
               <th>Unidad Servicio</th>
               -->
-              <th>Proveedor</th>
-              <th>Referencia Proveedor</th>
-              <th>EAN</th>
-              <th>EAN Caja</th>
-              <th>EAN Pack</th>
-              <th>Unidad Caja</th>
-              <th>Unidad Pack</th>
-              <th>Cajas Capa</th>
-              <th>Cajas Pack</th>
-              <th>Días Caducidad</th>
-              <th>IVA</th>
-              <th>Lead Time</th>
-              <th>Partida Arancelaria</th>
-              <th>País Origen</th>
-              <th>Multiplo de Pedido</th>
-              <th>MOQ</th>
-              <th>Observaciones</th>
-              <th>Largo Caja</th>
-              <th>Ancho Caja</th>
-              <th>Alto Caja</th>
-              <th>Peso Caja</th>
-              <th>Largo Unidad</th>
-              <th>Ancho Unidad</th>
-              <th>Alto Unidad</th>
-              <th>Peso Neto Unidad</th>
-              <th>Peso Escurrido Unidad</th>
-              
+              <th (click)="sort('proveedor')" class="sortable">
+                Proveedor
+                <i
+                  *ngIf="strField === 'proveedor'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('referenciaProveedor')" class="sortable">
+                Referencia Proveedor
+                <i
+                  *ngIf="strField === 'referenciaProveedor'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('ean')" class="sortable">
+                EAN
+                <i
+                  *ngIf="strField === 'ean'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('ean_caja')" class="sortable">
+                EAN Caja
+                <i
+                  *ngIf="strField === 'ean_caja'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('ean_pack')" class="sortable">
+                EAN Pack
+                <i
+                  *ngIf="strField === 'ean_pack'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('unidadDeCaja')" class="sortable">
+                Unidad Caja
+                <i
+                  *ngIf="strField === 'unidadDeCaja'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('unidadDePack')" class="sortable">
+                Unidad Pack
+                <i
+                  *ngIf="strField === 'unidadDePack'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('cajasCapa')" class="sortable">
+                Cajas Capa
+                <i
+                  *ngIf="strField === 'cajasCapa'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('cajasPalet')" class="sortable">
+                Cajas Palet
+                <i
+                  *ngIf="strField === 'cajasPalet'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('diasCaducidad')" class="sortable">
+                Días Caducidad
+                <i
+                  *ngIf="strField === 'diasCaducidad'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('iva')" class="sortable">
+                IVA
+                <i
+                  *ngIf="strField === 'iva'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('leadtime')" class="sortable">
+                Lead Time
+                <i
+                  *ngIf="strField === 'leadtime'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('partidaArancelaria')" class="sortable">
+                Partida Arancelaria
+                <i
+                  *ngIf="strField === 'partidaArancelaria'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('paisOrigen')" class="sortable">
+                País Origen
+                <i
+                  *ngIf="strField === 'paisOrigen'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('multiploDePedido')" class="sortable">
+                Multiplo de Pedido
+                <i
+                  *ngIf="strField === 'multiploDePedido'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('moq')" class="sortable">
+                MOQ
+                <i
+                  *ngIf="strField === 'moq'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('observaciones')" class="sortable">
+                Observaciones
+                <i
+                  *ngIf="strField === 'observaciones'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('largo_caja')" class="sortable">
+                Largo Caja
+                <i
+                  *ngIf="strField === 'largo_caja'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sort('ancho_caja')" class="sortable">
+                Ancho Caja
+                <i
+                  *ngIf="strField === 'ancho_caja'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('alto_caja')" class="sortable">
+                Alto Caja
+                <i
+                  *ngIf="strField === 'alto_caja'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('peso_caja')" class="sortable">
+                Peso Caja
+                <i
+                  *ngIf="strField === 'peso_caja'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('largo_unidad')" class="sortable">
+                Largo Unidad
+                <i
+                  *ngIf="strField === 'largo_unidad'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('ancho_unidad')" class="sortable">
+                Ancho Unidad
+                <i
+                  *ngIf="strField === 'ancho_unidad'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('alto_unidad')" class="sortable">
+                Alto Unidad
+                <i
+                  *ngIf="strField === 'alto_unidad'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('peso_neto_unidad')" class="sortable">
+                Peso Neto Unidad
+                <i
+                  *ngIf="strField === 'peso_neto_unidad'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
+              <th (click)="sort('peso_escurrido_unidad')" class="sortable">
+                Peso Escurrido Unidad
+                <i
+                  *ngIf="strField === 'peso_escurrido_unidad'"
+                  class="bi"
+                  [ngClass]="{
+                    'bi-caret-up-fill': strDir === 'asc',
+                    'bi-caret-down-fill': strDir === 'desc'
+                  }"
+                ></i>
+              </th>
+
               <th>Acciones</th>
             </tr>
           </thead>
@@ -136,7 +428,7 @@
               <td [ngClass]="getCellClass(producto.referenciaProveedor)">
                 {{ producto.referenciaProveedor || "Sin dato" }}
               </td>
-               <td [ngClass]="getCellClass(producto.ean)">
+              <td [ngClass]="getCellClass(producto.ean)">
                 {{ producto.ean || "Sin dato" }}
               </td>
               <td [ngClass]="getCellClass(producto.ean_caja)">
@@ -208,7 +500,7 @@
               <td [ngClass]="getCellClass(producto.peso_escurrido_unidad)">
                 {{ producto.peso_escurrido_unidad || "Sin dato" }}
               </td>
-              
+
               <td>
                 <div class="btn-group btn-group-sm">
                   <button
