@@ -167,24 +167,24 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           }),
           ancho_caja: new FormControl(data.ancho_caja ?? '', {
             nonNullable: true,
-             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
           alto_caja: new FormControl(data.alto_caja ?? '', {
             nonNullable: true,
-             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
 
           largo_unidad: new FormControl(data.largo_unidad ?? '', {
             nonNullable: true,
-             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
           ancho_unidad: new FormControl(data.ancho_unidad ?? '', {
             nonNullable: true,
-             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
           alto_unidad: new FormControl(data.alto_unidad ?? '', {
             nonNullable: true,
-             validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
+            validators: [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]
           }),
 
           peso_neto_unidad: new FormControl(data.peso_neto_unidad ?? '', {
@@ -259,6 +259,7 @@ export class ProductoAdminEditRoutedComponent implements OnInit {
           this.calcularTotalOperacion();
         });
 
+        this.calcularTotalOperacion();
 
         // Establecer moq con unidadDeCaja al cargar
         const unidadDeCaja = data.unidadDeCaja ?? 1;

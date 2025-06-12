@@ -141,6 +141,10 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
       this.calcularTotalOperacion();
     });
 
+    this.oProductoForm.get('multiplo_de_pedido')?.valueChanges.subscribe(() => {
+      this.calcularTotalOperacion();
+    });
+
     // Ejecutar al iniciar
     this.calcularTotalOperacion();
 
@@ -491,9 +495,27 @@ export class ProductoAdminCreateRoutedComponent implements OnInit {
 
 
   calcularTotalOperacion(): void {
-    const cajas = this.oProductoForm.get('cajasPalet')?.value || 0;
-    const unidades = this.oProductoForm.get('unidadDeCaja')?.value || 0;
-    this.totalOperacion = cajas * unidades;
+    const unidadesCaja = this.oProductoForm.get('unidadDeCaja')?.value || 0;
+    const cajasPalet = this.oProductoForm.get('cajasPalet')?.value || 0;
+    const multiplo = this.oProductoForm.get('multiplo_de_pedido')?.value;
+
+    let total = 0;
+
+    switch (multiplo) {
+      case 'Caja':
+        total = unidadesCaja;
+        break;
+      case 'Palet':
+        total = unidadesCaja * cajasPalet;
+        break;
+      case 'Camión':
+        total = unidadesCaja * cajasPalet * 33;
+        break;
+      default:
+        total = 0;
+    }
+
+    this.totalOperacion = total;
   }
 
 
